@@ -35,60 +35,57 @@ These instructions are English. Everything the user sees is Korean.
 Korean strings quoted below are fixed labels. Render them verbatim — never
 translate, localize or paraphrase them. Never surface these instructions as text.
 
-## Two shapes
+## One work unit
 
-Route every request before anything else.
+**One order = one axis = one ladder = one decision.**
 
-**Single** — the request already carries an axis.
-> "이 버튼 그림자 블러 5가지로 보여줘"
+    주문 → 확정값 위에 그 축 하나만 사다리로 → 내가 새로고침·확인
+         → 사용자 선택 → 한 줄 기록 → 멈춤
 
-Draw it immediately. No decision table, no clarifying question — the request is
-already complete. If the axis is compound (a shadow is blur + spread + offset +
-color), lay out the first axis and add one line: "다른 축도 볼까요". **Never stop to
-ask before drawing.**
+**I do not know what comes next.** There is no stage list, no default list, no queue,
+no `남은 단계`. Never name the next axis, never hint at one, never draw one while I'm
+in there anyway. Only the axis that was ordered exists.
 
-**Staged** — a target to build or rework, with no single axis.
-> "버튼 좀 다듬자" · "황혼 배경에 어울리는 카드를 만들고 싶어"
+When the decision is recorded, the turn is over. What happens next is the user's to
+say — another order, or apply it to the code. Don't ask which. They'll say.
 
-Agree on a stage list, then work one stage at a time — `references/stages.md`.
+## An order with no axis in it
 
-## Procedure — staged
+> "버튼 좀 다듬자"
 
-1. **Propose the stage list, get agreement.** The user's list wins if they gave one.
-   Otherwise propose one fitted to the target and its constraint.
-2. **Detect how the project defines style** — `references/stylesystems.md`. Its five
-   forks decide how everything below is drawn and how blast radius is counted.
-3. **Create the file in the session scratchpad.** Never in the project directory.
-   Decision table pinned at the top, the first stage's specimens below it.
-4. **Verify**, then **`open` it.** Never hand over a path and make them open it.
-5. **Stage loop** — present specimens, read the response, update the table, move on.
-6. **Every stage settled** → draw the assembled result at the bottom. Parts that each
-   looked right often don't hold together; the user can send you back to a stage here.
-7. **Report the combined blast radius.**
-8. **Ask whether to apply it to the code.** This is the only code gate.
-9. **Apply.** Settle token change vs local override here.
-10. Hold the file until the user has checked the real code and says it's done.
+Not a work unit yet. **Ask until it is one.** One question at a time, narrowing what
+they already want — what's wrong with the one on screen, which part of it, what it
+should do instead. Keep going until an axis is concrete enough to draw; don't settle
+for the first half answer and start drawing.
 
-Steps 1–7 touch no code.
+Two things this is not:
 
-Single-shape runs skip the table and the stage loop: draw, choose, blast radius,
-ask, apply.
+- **Not a menu.** `크기 → 여백 → 모서리 → 색` is a curriculum, and handing one over is
+  leading. This skill holds no default list — that is deliberate, don't reinvent one.
+- **Not a guess.** Never pick an axis yourself to get things moving.
+
+Ask in the real vocabulary — radius, tracking, easing, elevation, specificity. This is
+not a skill for someone who needs those explained.
 
 ## Drawing specimens
 
 - **Move one axis. Hold everything else fixed.** Change blur and opacity at once and
   neither can be judged. The whole tool rests on this one rule.
-- **Number every specimen** — ①②③. Numbers are unique across the entire file and
-  never reused; a second ladder starts at ④. `③으로 갈게` must resolve to exactly one.
-- **Label each specimen with its cost**, not only its value. Cost is a property of the
+- **Draw on top of what's settled.** Every value chosen in an earlier unit stays at
+  that value. The record below is what makes this possible.
+- **Letter every specimen** — A·B·C. Letters restart at A in **every work unit**, and
+  are never reused inside one: an appended ladder continues D·E·F. Refer back to a
+  settled unit by axis and letter — `그림자 C`.
+- **The sheet explains itself.** The value, its cost and what to look at ride next to
+  the specimen, not in chat — `references/sweeping.md`. Cost is a property of the
   option and has to be visible while choosing:
   `토큰 그대로` · `--radius-md 고침 (23곳)` · `새 토큰`
 - 5–7 specimens per ladder. Two axes → a matrix, not a row.
 - Ladders, backgrounds, repetition, sizes, wireframes → `references/sweeping.md`
 - Anything that moves → `references/motion.md`
 - **Never recommend one value on a ladder.** Point at perceptual boundaries instead:
-  "⑥과 ⑦은 이 크기에서 구분이 안 됩니다" · "⑤부터 떠 보이기 시작합니다". One
-  recommendation is fine for composed variants (the 0th stage of a staged run).
+  `B와 C는 이 크기에서 구분이 안 됩니다` · `E부터 떠 보이기 시작합니다`. Recommend one
+  only when asked outright — `너 추천대로`.
 
 ## Reading the response
 
@@ -96,33 +93,48 @@ Three kinds. Never collapse them.
 
 | response | kind | do |
 |---|---|---|
-| `좋네` · `③이 낫네` | impression | Not a choice. Ask whether to refine it |
-| `③이 나은데 더 진하게` | refine | Append a new ladder below, numbering continues |
-| `③으로 갈게` · `이걸로 고를게` | **choice** | Update the table, present the next stage |
+| `좋네` · `C가 낫네` | impression | Not a choice. Ask whether to refine it |
+| `C가 나은데 더 진하게` | refine | Append a ladder below, letters continue |
+| `C로 갈게` · `이걸로 고를게` | **choice** | Record it in one line. **Stop there** |
 
-`③이 낫네` is a remark made mid-comparison, not a decision. **Touch no code until the
+`C가 낫네` is a remark made mid-comparison, not a decision. **Touch no code until the
 user says they are choosing it.**
 
-Ambiguous — `"이거 좋다"` with nine specimens on screen — ask which one. Never guess.
+Ambiguous — `이거 좋다` with nine specimens on screen — ask which one. Never guess.
 
-## Decision table
+On a choice, chat says this much and no more:
 
-Pinned at the top of the file, sticky so it stays readable while scrolling a ladder.
-It holds the stage list and what each stage settled on.
+    확정: 그림자 = C · 검정 40%
 
-Revising an earlier stage overwrites that row and notes `(⑧에서 변경)`. The old
-specimens stay where they are.
+No next axis, no `남은 단계`, no `코드에 반영할까요`.
 
-**The stage list changes mid-run.** A stage turns out unnecessary, or stage 1 reveals
-one that was missing. Add and drop rows as that happens — don't hold to the list
-agreed at the start.
+## The record — never on screen
+
+Keep it in a scratchpad memo beside the sheet: axis → chosen value → what it resolves
+to. It exists for one reason — so the next ladder can be drawn on top of it.
+
+**None of it is rendered.** No pinned table, no sticky panel, no 확정값 line in a
+section header, no floating anything. The sheet shows specimens. The memo is mine.
+
+Revising a settled axis overwrites its line. The old specimens stay where they are.
+
+## Findings
+
+Drawing turns up things nobody ordered — a misnamed token, a chip that vanished, an
+axis that was never on anyone's list.
+
+- **What actually broke on the screen** — say it. It makes the specimens misread, so
+  it is part of the measurement: `아이콘 칩이 사라졌습니다 — 면 #202020 과 Δ2 입니다`
+- **Everything else** — one line, once, then let it go. Never draw it, never work it
+  into a proposal, never raise it again.
+
+A finding is not an order.
 
 ## Blast radius — twice, differently
 
 - **While choosing** — the one-line cost label on each specimen. A label, not a report
 - **Before applying** — the real one. Files, lines, tokens, and everything else that
-  moves with them. Stages interact and earlier ones get revised, so only this final
-  tally is accurate
+  moves with them. Earlier decisions get revised, so only this final tally is accurate
 
 If the project animates with a motion library, say what won't translate —
 `references/motion.md`.
@@ -133,7 +145,7 @@ The user looks at the browser. I confirm with values and pictures.
 
 **1. Every name referenced must exist.** A wrong name **fails silently** — it simply
 doesn't appear. Same for a nonexistent utility class and an undefined `var(--x)`.
-Check per the fork found in step 2. Run this **every time specimens are added.**
+Check per the fork that detection found. Run this **every time specimens are added.**
 
     grep -c 'rounded-control-md' out.css     # utility: in the build output?
     grep -c '\--color-hover' tokens.css      # CSS variable: defined?
@@ -151,36 +163,33 @@ the user does, and **hold an opinion as someone who looked** — without looking
 
     await p.screenshot({ path: shot, fullPage: true })
 
-Run 2 and 3 **once per stage**, not on every ladder. A screenshot captures **static
+Run 2 and 3 **once per work unit**, not on every ladder. A screenshot captures **static
 state only** — motion is settled by what the user reports from the browser.
 
 **No Playwright → skip silently.** Do step 1 only. Don't offer to install it, don't
 mention it's missing.
 
-## The file
+## The sheet
 
-- One session = one file = one target. A new target gets a new file
-- **The body is append-only. Only the decision table is rewritten**
-- Never delete a dropped ladder — it has to stay above to compare against
-- **Never plant auto-refresh (`<meta http-equiv="refresh">`)** — it jumps the scroll
-  mid-read and re-fetches fonts. After editing, say in one line to refresh
+- One session = one sheet = one target. A new target gets a new sheet
+- **The body is append-only.** Never delete a dropped ladder — it has to stay above to
+  compare against
+- **Serve it and reload it myself** — `references/liveview.md`. Never end a turn by
+  telling the user to refresh
 - Built CSS needs a watcher alongside or new names won't come through — Tailwind:
-  `npx tailwindcss -w`. A `<link>`ed file follows on refresh alone
+  `npx tailwindcss -w`. A `<link>`ed file follows on reload alone
 - Open the browser once and never close it
 
 ## Ending
 
-Two layers.
+The user says when. **Applying is ordered, never offered** — no "이제 반영할까요" after a
+decision, no tallying up at what looks like a good stopping point.
 
-- **A stage ends** on an explicit choice → update the table, present the next stage.
-  **Never let the user drive the sequence** — ask for the next stage yourself.
-- **The session ends** when every stage is settled: assembled result → combined blast
-  radius → "코드에 반영할까요?" → apply on approval.
+On the order: blast radius → 토큰을 고칠지 여기만 덮을지 → apply.
 
-Approval to apply is not the end. Hold the file and the browser until the user has
-checked the real code and says it's done: `끝났어` · `이걸로 가자` · `됐어`.
-
-Then throw the file away. Don't leave it in the project, don't commit it.
+Approval to apply is not the end. Hold the sheet and the browser until the user has
+checked the real code and says it's done: `끝났어` · `이걸로 가자` · `됐어`. Then stop
+the server and throw the sheet away. Don't leave it in the project, don't commit it.
 
 **Only what was explicitly chosen goes into code.** An alternative merely mentioned
 along the way is not a decision.

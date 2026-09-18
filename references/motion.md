@@ -49,7 +49,7 @@ Stagger only reads with enough items. Six minimum.
 ## What can't be settled here
 
 - **Screenshots capture static state only.** Verification step 3 can't see motion at
-  all, so a motion stage rests entirely on what the user reports from the browser.
+  all, so a motion unit rests entirely on what the user reports from the browser.
   Say so rather than implying it was checked.
 - **State-attribute styling (`data-[open]:`) is hand-imitated** — the real library sets
   those attributes. Entry and exit timing around mount/unmount will differ.
@@ -66,5 +66,5 @@ Stagger only reads with enough items. Six minimum.
 ## Reduced motion
 
 Whatever gets chosen, the applied code needs a `prefers-reduced-motion: reduce` branch.
-Don't make it a stage — raise it once at the apply gate and carry the chosen value into
+Don't make it a unit of its own — raise it once at the apply gate and carry the value into
 a reduced variant (usually opacity only, no transform).

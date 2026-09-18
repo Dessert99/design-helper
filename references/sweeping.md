@@ -24,6 +24,32 @@ tokenized project is to find which existing step fits, not to invent a new one.
 
 Two axes → a matrix. Rows are one axis, columns the other, both labeled on the edges.
 
+## Captions — the sheet explains itself
+
+The user reads the screen, not the chat. Everything needed to judge a specimen sits
+next to it.
+
+Three lines per specimen:
+
+```
+A   ×1.8                                        토큰 그대로
+    윗변 100% · 그림자 100%
+    가장 세게 번집니다. B 와 그림자가 같아 한 쌍으로 붙습니다.
+```
+
+1. letter · the value being moved · its cost
+2. what that value resolves to, when the value alone doesn't show it
+3. one line on what it does to the eye
+
+Under the ladder, where the perceptual steps break:
+
+```
+경계 — B·C 는 이 크기에서 구분이 안 됩니다. E 부터 떠 보이기 시작합니다.
+```
+
+Then chat is a pointer, not the explanation — two or three lines at most. A paragraph
+per specimen in chat means the sheet was written wrong.
+
 ## Context
 
 A specimen judged in the wrong context is judged wrong.
@@ -86,4 +112,4 @@ white. If a skin is on it, the skin gets judged instead of the structure.
 - Draw the real breakpoints if width is the question, not one arbitrary viewport
 - Keep a real page's worth of content. Three blocks won't show a layout failing
 
-Structure is settled first, skin afterwards — a separate stage.
+Structure is settled first, skin afterwards — a separate order.
