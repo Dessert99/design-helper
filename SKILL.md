@@ -1,143 +1,157 @@
 ---
 name: design-assist-skill
-description: 색·간격·크기·모서리·타이포·레이아웃·상태·변형·전환 등 눈에 보이는
-  것을 정해야 할 때 쓴다. 글이나 표로 설명하고 고르라 하지 말고, HTML 을 만들어
-  브라우저로 띄워 눈으로 고르게 한다. 사용자가 "어떻게 할까"·"A 랑 B 중에 뭐가
-  나아"·"제안해줘" 라고 묻거나, UI 를 새로 만들거나 고치기 직전에 반드시 먼저
-  읽는다. 코드를 쓰기 전에 걸린다.
+description: Use whenever anything visible must be decided — color, spacing, size,
+  radius, type, layout, state, variant, transition. Never describe the options in
+  prose or a table and ask the user to pick; build one HTML file, open it in a
+  browser, let them decide with their eyes. Read this BEFORE writing or changing
+  any UI code, and whenever the user asks "어떻게 할까" · "A 랑 B 중에 뭐가 나아" ·
+  "제안해줘". It fires before code.
 ---
 
-# 눈으로 정한다
+# Decide by eye
 
-**글·표·ASCII·이모지는 그림이 아니다.** 모양을 말로 설명하고 고르라 하지 않는다.
-"패딩을 12px 로 할까요 16px 로 할까요" 는 질문이 아니다 — 둘 다 그려서 보여준다.
+**Prose, tables, ASCII and emoji are not pictures.** Never describe a shape in
+words and ask the user to choose. "12px or 16px padding?" is not a question —
+draw both.
 
-**어떤 기술 스택도 전제하지 않는다.** 4번에서 레포를 보고 맞춘다.
+**Assume no stack.** Step 4 reads the repo and matches it.
 
-## 절차
+## Language
 
-1. **안을 2개 이상 만든다.** 고칠 대상이 있으면 `현재` 를 맨 왼쪽에 둔다.
-   신규면 안만 2~3개.
-2. **한 장의 HTML 에 나란히.** 파일을 쪼개지 않는다 — 나란히 놓아야 차이가 보인다.
-   라이트·다크가 있으면 둘 다 그린다.
-3. **세션 scratchpad 에 만든다.** 프로젝트 디렉터리에 만들지 않는다. 일회용이다.
-4. **프로젝트가 스타일을 어떻게 정의하는지 먼저 확인한다.** 넘겨짚지 말고
-   프로젝트 루트에서 이 셋을 돌린다. 결과가 아래 다섯 갈래로 갈린다.
+These instructions are English. Everything the user sees is Korean.
+
+- Chat replies, questions, recommendations → Korean
+- Every string rendered inside the HTML → Korean
+- Code, class names, file names, commit messages → English
+
+Korean strings quoted below are fixed labels. Render them verbatim — never
+translate, localize or paraphrase them. Never surface these instructions as text.
+
+## Procedure
+
+1. **Build 2+ options.** If something exists to change, put `현재` leftmost.
+   New work: 2–3 options only.
+2. **One HTML file, side by side.** Never split files — differences only read
+   side by side. If light and dark both exist, draw both.
+3. **Write it in the session scratchpad.** Never in the project directory.
+   It is disposable.
+4. **Find how the project defines style first.** Don't guess. Run these three at
+   the project root; the result forks five ways.
 
        ls tailwind.config.* 2>/dev/null
        grep -rlm1 '@tailwind\|^\s*:root' --include='*.css' --include='*.scss' \
          --exclude-dir={node_modules,.next,dist,build} . | head
        grep -o 'styled-components\|@emotion/[a-z]*\|"sass"' package.json | sort -u
 
-   `--include` 의 글롭은 **반드시 따옴표로 묶는다.** zsh 는 그것을 먼저 펼치려다
-   `no matches found` 로 죽는다. 그리고 프론트엔드가 하위 폴더에 있으면
-   (`frontend/` 등) 거기서 돌린다 — 루트에서는 아무것도 안 잡힌다.
+   **Quote the `--include` globs.** zsh expands them first and dies with
+   `no matches found`. If the frontend lives in a subfolder (`frontend/` etc.),
+   run them there — the root finds nothing.
 
-   - `tailwind.config.*` · `@tailwind` → **유틸리티.** 그 설정으로 CSS 를 빌드해
-     유틸리티 클래스로 그린다
-   - `:root { --* }` · `tokens.css` · `theme.css` → **CSS 변수.** 그 파일을
-     `<link>` 로 걸고 `var(--x)` 로 그린다
-   - `*.scss` · `_variables.scss` → **SCSS 변수.** 값을 읽어 CSS 변수로 옮겨 쓴다
-   - `styled-components` · `@emotion` · `theme.ts` → **CSS-in-JS.** 정적 HTML 에
-     그대로 못 쓴다. theme 객체의 값을 읽어 CSS 변수로 옮긴다
-   - 아무것도 없음 → **백지.** 값을 직접 쓴다
+   - `tailwind.config.*` · `@tailwind` → **utility.** Build CSS with that config,
+     draw with utility classes
+   - `:root { --* }` · `tokens.css` · `theme.css` → **CSS variables.** `<link>`
+     the file, draw with `var(--x)`
+   - `*.scss` · `_variables.scss` → **SCSS variables.** Read the values, carry
+     them over as CSS variables
+   - `styled-components` · `@emotion` · `theme.ts` → **CSS-in-JS.** Unusable in
+     static HTML. Read the theme object's values, carry them over as CSS variables
+   - nothing → **blank slate.** Write the values directly
 
-5. **그 방식으로 그릴지, 백지로 그릴지 가른다.**
-   - **기존 것을 고치는 경우** → 4번에서 찾은 방식 그대로 쓴다. 임의값으로 그리면
-     "우리 것과 어울리나" 를 판단할 수 없어 비교가 무의미해진다.
-   - **새 프로젝트이거나 지금과 다른 방향을 찾는 경우** → 기존 값에 묶지 않는다.
-     기존 값은 지금의 답이지 정답이 아니다.
-   - **애매하면 한 줄로 묻는다.** "우리 것 안에서 볼까, 백지에서 볼까"
+5. **Decide: draw in that system, or blank slate.**
+   - **Changing something that exists** → use exactly what step 4 found. Arbitrary
+     values make "does this fit ours?" unanswerable, and the comparison worthless.
+   - **New project, or hunting a different direction** → don't bind to existing
+     values. They are today's answer, not the right one.
+   - **Unsure → ask in one line.** "우리 것 안에서 볼까, 백지에서 볼까"
 
-   그리고 **무엇으로 그렸는지 반드시 밝힌다** — "프로젝트 <방식>" 인지
-   "임의값 탐색안" 인지. 화면만 봐서는 구분할 수 없다.
-6. **검증한다** — 아래 「검증」.
-7. **`open` 으로 브라우저에 띄운다.** 경로만 알려주고 사용자가 열게 하지 않는다.
-8. **정할 것을 2~3개로 좁혀 묻고 멈춘다.** 추천은 하나만, 이유는 "그게 놓일 자리"로.
+   And **always state what it was drawn with** — "프로젝트 <방식>" or
+   "임의값 탐색안". The screen alone can't tell them apart.
+6. **Verify** — see Verify below.
+7. **`open` it in the browser.** Never hand over a path and make the user open it.
+8. **Narrow to 2–3 decisions, ask, stop.** One recommendation only; justify it by
+   where the thing will sit.
 
-## 상호작용
+## Interaction
 
-hover·focus·전환처럼 움직이는 것도 여기서 정한다. 진짜 브라우저라 CSS 로 되는
-것은 실제로 동작한다 — `:hover`·`:focus-visible`·`:active`, `transition`·`animation`,
-`<details>`, `<dialog>`, `:checked`·`:has()`. 정지 그림으로는 "hover 때 얼마나
-어두워지나"·"전환이 얼마나 빠른가" 를 정할 수 없으니, 상태가 있는 부품이면
-이것을 반드시 그린다.
+hover, focus and transitions get decided here too. It's a real browser, so
+anything CSS can do actually works — `:hover` · `:focus-visible` · `:active`,
+`transition` · `animation`, `<details>`, `<dialog>`, `:checked` · `:has()`.
+A still picture can't settle "how much darker on hover" or "how fast the
+transition", so always draw this for stateful parts.
 
-**상태가 있는 부품은 두 줄로 깐다.** hover 는 한 번에 하나만 걸려서 안 두 개를
-동시에 비교할 수 없기 때문이다.
+**Lay stateful parts in two rows.** hover fires one at a time, so two options
+can't be compared at once.
 
-- `실물` — 마우스로 직접 만져보는 것. 속도·느낌을 본다
-- `강제 상태` — default · hover · focus · active · disabled 를 클래스로 고정해
-  나란히. 색·명도 차이를 눈으로 대조한다
+- `실물` — touched directly with the mouse. Judges speed and feel
+- `강제 상태` — default · hover · focus · active · disabled pinned by class, side
+  by side. Contrasts color and lightness by eye
 
-**여기서 검증하면 안 되는 것.** 이건 모양만 같은 껍데기다. `data-[open]:` 같은
-상태 속성 기반 스타일은 실제 라이브러리가 붙이는 속성이라 직접 흉내낸 것이고,
-포커스 트랩·키보드 네비게이션·스크린리더는 진짜 구현이 필요하다.
-모양과 전환은 정할 수 있어도 **동작의 정확성은 못 본다.**
+**What must not be verified here.** This is a shell that only matches in shape.
+State-attribute styling like `data-[open]:` is imitated by hand — the real
+library sets those attributes. Focus traps, keyboard nav and screen readers need
+the real implementation. Shape and transition are decidable here;
+**correctness of behavior is not.**
 
-## 검증
+## Verify
 
-사용자는 브라우저로 본다. 나는 값과 그림으로 확인한다.
+The user looks at the browser. I confirm with values and pictures.
 
-**1. 이름으로 참조한 것이 실재하는지 본다.** 이름을 틀리면 **조용히 무시되고**
-화면에만 안 나타난다 — 없는 유틸리티 클래스도, 정의 안 된 `var(--x)` 도 같다.
-확인 방법은 4번에서 찾은 방식을 따른다.
+**1. Check that every name referenced actually exists.** A wrong name
+**fails silently** and simply doesn't appear — same for a nonexistent utility
+class and an undefined `var(--x)`. Follow whatever step 4 found.
 
-    grep -c 'rounded-control-md' out.css     # 유틸리티: 빌드 산출에 있나
-    grep -c '\--color-hover' tokens.css      # CSS 변수: 정의돼 있나
+    grep -c 'rounded-control-md' out.css     # utility: in the build output?
+    grep -c '\--color-hover' tokens.css      # CSS variable: defined?
 
-값을 직접 써서 그린 경우(백지)는 조용한 실패가 없으므로 건너뛴다.
+Skip this when the values were written directly (blank slate) — nothing fails
+silently there.
 
-**2. Playwright 로 computed style 을 본다.** 이름은 실재하는데 다른 규칙에
-덮인 경우는 1번으로 안 잡힌다.
+**2. Read computed style with Playwright.** A name that exists but is overridden
+by another rule won't be caught by step 1.
 
     await p.$eval('.frame', e => getComputedStyle(e).padding)
 
-**3. Playwright 로 스크린샷을 찍어 `Read` 로 읽는다.** 깨진 레이아웃을 사용자보다
-먼저 잡고, **본 사람으로서 의견을 낸다** — 안 보면 "뭐가 나아 보여?" 에 답할 수
-없고 판단을 통째로 사용자에게 떠넘기게 된다.
+**3. Screenshot with Playwright and read it with `Read`.** Catch a broken layout
+before the user does, and **hold an opinion as someone who looked** — without
+looking, "뭐가 나아 보여?" is unanswerable and the whole judgment gets dumped
+back on the user.
 
     await p.screenshot({ path: shot, fullPage: true })
 
-단 스크린샷은 **정지 상태만** 잡는다. hover·전환은 여기 안 나오므로 그것은
-사용자가 브라우저에서 보고 말해 주는 것으로 정한다.
+A screenshot captures **static state only**. hover and transitions aren't in it —
+those are settled by what the user reports from the browser.
 
-**Playwright 가 없으면 설치를 안내하지 말고 조용히 건너뛴다.** 1번만 하고
-그대로 진행한다. 없다는 말도 꺼내지 않는다.
+**No Playwright → skip silently.** Do step 1 only and move on. Don't offer to
+install it, don't mention it's missing.
 
-## 피드백은 같은 파일에 쌓는다
+## Feedback accumulates in one file
 
-브라우저는 처음 한 번만 열고 닫지 않는다. 자동 새로고침을 심는다:
+Open the browser once and never close it. **Never plant auto-refresh
+(`<meta http-equiv="refresh">`)** — it jumps the scroll mid-read and re-fetches
+fonts. After editing the file, say in one line to refresh.
 
-    <meta http-equiv="refresh" content="2">
-    <script>
-      addEventListener('load', () => scrollTo(0, +location.hash.slice(2) || 0));
-      let t; addEventListener('scroll', () => {
-        clearTimeout(t);
-        t = setTimeout(() => history.replaceState(0, '', '#y' + Math.round(scrollY)), 150);
-      });
-    </script>
+When the CSS is built (utility, SCSS), run a watcher alongside or newly written
+names won't come through — Tailwind: `npx tailwindcss -w`. A `<link>`ed file
+follows on refresh alone.
 
-`file://` 에서는 `sessionStorage` 가 막히는 브라우저가 있어 스크롤 위치는 해시로 되살린다.
-CSS 를 빌드해서 쓰는 경우(유틸리티·SCSS) watch 를 같이 띄워야 새로 쓴 이름이
-따라온다 — Tailwind 면 `npx tailwindcss -w`. `<link>` 로 건 파일은 새로고침만으로 따라온다.
+**Append each new option to the bottom of the file.**
 
-안이 추가될 때마다 **파일 아래에 append 한다.**
+- Never create a new file — earlier options must stay above to compare against
+- Never rewrite the whole thing. `Edit` the bottom only
+- Never delete a dropped option. Mark it `안 3 (버림)` and leave it
 
-- 새 파일을 만들지 않는다 — 지나온 안이 위에 남아야 비교가 된다
-- 전체를 다시 쓰지 않는다. `Edit` 로 아래에만 붙인다
-- 버린 안도 지우지 않는다. `안 3 (버림)` 으로 표시만 한다
+## The user ends it
 
-## 끝은 사용자가 정한다
+**Feedback continues until the user explicitly says it's over.**
 
-**사용자가 명시적으로 "끝났어" 라고 할 때까지 피드백은 계속된다.**
+- `좋네` · `괜찮다` · `2번이 나아` are **not an ending.** They signal to refine
+  that option.
+- Only an explicit ending ends it: `끝났어` · `이걸로 가자` · `됐어`.
+- Never move on first with `그럼 코드로 갈까요`. Ask for the next option.
+- Until it ends, don't delete the file and don't close the browser.
 
-- `좋네` · `괜찮다` · `2번이 나아` 는 **종료가 아니다.** 그 안을 다듬는 신호다.
-- 종료는 `끝났어` · `이걸로 가자` · `됐어` 처럼 명시적일 때만이다.
-- 내가 먼저 `그럼 코드로 갈까요` 로 넘어가지 않는다. 다음 안을 묻는다.
-- 종료 전까지 파일을 지우지 않고 브라우저도 닫지 않는다.
+## After it ends
 
-## 종료 뒤
-
-- **승인한 것만 코드로.** 제안에서 언급만 한 대안은 결정이 아니다.
-- 만든 파일은 버린다. 프로젝트에 남기지 않고 커밋하지 않는다.
+- **Only what was approved goes into code.** An alternative merely mentioned in a
+  proposal is not a decision.
+- Throw the file away. Don't leave it in the project, don't commit it.
