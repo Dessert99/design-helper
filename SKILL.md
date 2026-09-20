@@ -1,5 +1,5 @@
 ---
-name: deciding-by-eye
+name: design-helper
 description: Use whenever anything visible must be decided — a CSS value, spacing,
   radius, shadow, border, color, layout, wireframe, state, motion. Never describe
   the options in prose or a table and ask the user to pick; render them side by side
