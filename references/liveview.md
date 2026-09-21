@@ -9,9 +9,11 @@ sheet is served, not opened as a file.
 
 ## Serve it
 
-Once per session, in the background, from the scratchpad directory:
+Once per session, in the background, from a scratch directory outside the project —
+the sheet is disposable and must never land in the repo:
 
-    python3 -m http.server 8765 --directory "$SCRATCH" >/dev/null 2>&1 &
+    SHEET_DIR=$(mktemp -d)    # or the session's own scratch dir, if there is one
+    python3 -m http.server 8765 --directory "$SHEET_DIR" >/dev/null 2>&1 &
 
 Port busy → walk up (8766, 8767…). Never kill whatever is already there. Then open the
 URL, not the path:

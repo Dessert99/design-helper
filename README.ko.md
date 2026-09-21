@@ -30,7 +30,23 @@
 
 ## 설치
 
-<!-- git clone + ~/.claude/skills/ 심링크 -->
+아무 데나 clone 한 뒤, 쓰는 에이전트의 스킬 디렉토리에 심링크를 겁니다. 심링크는
+복사본이 아니라 원본을 가리키는 포인터라서, clone 을 고치면 바로 반영되고 따로
+동기화할 사본이 생기지 않습니다.
+
+```sh
+git clone https://github.com/Dessert99/design-helper.git ~/skills/design-helper
+
+ln -sfn ~/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
+ln -sfn ~/skills/design-helper ~/.codex/skills/design-helper    # Codex
+```
+
+두 에이전트가 읽는 방식은 같습니다. `SKILL.md` 의 `description` 은 세션이 시작할 때
+읽고, 본문과 `references/` 는 스킬이 실제로 동작할 때 읽습니다. 그래서 본문 수정은
+곧바로 적용되고, `description` 을 고쳤을 때만 세션을 새로 시작하면 됩니다.
+
+지우려면 심링크만 지우면 됩니다 — `rm ~/.claude/skills/design-helper`. clone 은
+그대로 남습니다.
 
 ### 언어 설정
 

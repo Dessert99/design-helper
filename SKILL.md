@@ -157,9 +157,9 @@ another rule won't be caught by step 1.
 
     await p.$eval('.frame', e => getComputedStyle(e).padding)
 
-**3. Screenshot with Playwright and read it with `Read`.** Catch a broken layout before
-the user does, and **hold an opinion as someone who looked** — without looking,
-"뭐가 나아 보여?" is unanswerable and the judgment gets dumped back on them.
+**3. Screenshot with Playwright, then open the image and look at it.** Catch a broken
+layout before the user does, and **hold an opinion as someone who looked** — without
+looking, "뭐가 나아 보여?" is unanswerable and the judgment gets dumped back on them.
 
     await p.screenshot({ path: shot, fullPage: true })
 

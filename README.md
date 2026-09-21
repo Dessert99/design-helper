@@ -30,7 +30,23 @@
 
 ## Install
 
-<!-- git clone + symlink into ~/.claude/skills/ -->
+Clone it anywhere, then symlink that clone into the skills directory of whichever
+agent you use. A symlink is a pointer, not a copy — edits to the clone take effect
+immediately, and there is no second copy to keep in sync.
+
+```sh
+git clone https://github.com/Dessert99/design-helper.git ~/skills/design-helper
+
+ln -sfn ~/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
+ln -sfn ~/skills/design-helper ~/.codex/skills/design-helper    # Codex
+```
+
+Both agents load it the same way. The `description` in `SKILL.md` is read at session
+start; the body and everything under `references/` are read when the skill fires. So
+edits to the body apply right away, while a changed `description` needs a new session.
+
+To remove it, delete the symlink — `rm ~/.claude/skills/design-helper`. The clone is
+untouched.
 
 ### Language
 
