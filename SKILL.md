@@ -64,6 +64,11 @@ Two things this is not:
   leading. This skill holds no default list — that is deliberate, don't reinvent one.
 - **Not a guess.** Never pick an axis yourself to get things moving.
 
+**Unless there is nothing on screen at all.** A target that doesn't exist yet offers no
+dissatisfaction to narrow, so the questions above have nothing to pull on. That one case
+opens with a coordinate sweep — `references/sweeping.md`. What it yields is an anchor,
+not a decision, and the blank slate is over after it.
+
 Ask in the real vocabulary — radius, tracking, easing, elevation, specificity. This is
 not a skill for someone who needs those explained.
 
@@ -81,6 +86,10 @@ not a skill for someone who needs those explained.
   option and has to be visible while choosing:
   `토큰 그대로` · `--radius-md 고침 (23곳)` · `새 토큰`
 - 5–7 specimens per ladder. Two axes → a matrix, not a row.
+- **The ladder is a window, and the user moves it** — in the browser, with no turn of
+  mine in between. Controls move **the ordered axis's window and the context it is
+  judged in, nothing else.** A second axis never appears on a sheet →
+  `references/controls.md`
 - Ladders, backgrounds, repetition, sizes, wireframes → `references/sweeping.md`
 - Anything that moves → `references/motion.md`
 - **Never recommend one value on a ladder.** Point at perceptual boundaries instead:
@@ -97,6 +106,11 @@ Three kinds. Never collapse them.
 | `C가 나은데 더 진하게` | refine | Append a ladder below, letters continue |
 | `C로 갈게` · `이걸로 고를게` | **choice** | Record it in one line. **Stop there** |
 
+A fourth input arrives with no message attached: `이걸로 확정` on the sheet appends to
+`$WS/state.jsonl`. **Read that file at the start of every turn**, before anything else —
+`references/liveview.md`. A `choice` line is the third row of the table and is already
+unambiguous; don't ask it back. An `anchor` line from a coordinate sweep is not a choice.
+
 `C가 낫네` is a remark made mid-comparison, not a decision. **Touch no code until the
 user says they are choosing it.**
 
@@ -110,11 +124,14 @@ No next axis, no `남은 단계`, no `코드에 반영할까요`.
 
 ## The record — never on screen
 
-Keep it in a scratchpad memo beside the sheet: axis → chosen value → what it resolves
+Keep it in `$WS/memo.md`, beside the sheet: axis → chosen value → what it resolves
 to. It exists for one reason — so the next ladder can be drawn on top of it.
 
 **None of it is rendered.** No pinned table, no sticky panel, no 확정값 line in a
 section header, no floating anything. The sheet shows specimens. The memo is mine.
+
+An anchor from a blank-slate matrix is recorded as `출발점:`, never `확정:` — every
+property it bundles is still open.
 
 Revising a settled axis overwrites its line. The old specimens stay where they are.
 
@@ -147,8 +164,8 @@ The user looks at the browser. I confirm with values and pictures.
 doesn't appear. Same for a nonexistent utility class and an undefined `var(--x)`.
 Check per the fork that detection found. Run this **every time specimens are added.**
 
-    grep -c 'rounded-control-md' out.css     # utility: in the build output?
-    grep -c '\--color-hover' tokens.css      # CSS variable: defined?
+    grep -c 'rounded-control-md' "$WS/sheet.css"   # utility: in the build output?
+    grep -c '\--color-hover' tokens.css            # CSS variable: defined?
 
 Skip it when values were written directly (blank slate) — nothing fails silently.
 
@@ -163,6 +180,10 @@ looking, "뭐가 나아 보여?" is unanswerable and the judgment gets dumped ba
 
     await p.screenshot({ path: shot, fullPage: true })
 
+A `fullPage` shot can't see what a horizontal scrollbar is hiding and catches the sticky
+tray wherever it was scrolled to. **Count the rungs in the DOM, not in the picture** —
+`references/controls.md`.
+
 Run 2 and 3 **once per work unit**, not on every ladder. A screenshot captures **static
 state only** — motion is settled by what the user reports from the browser.
 
@@ -172,12 +193,16 @@ mention it's missing.
 ## The sheet
 
 - One session = one sheet = one target. A new target gets a new sheet
+- **Everything lives in `$WS`, outside the project** — sheet, server, built CSS, memo,
+  `state.jsonl`, screenshots, pid files. `references/liveview.md`. Nothing is written into the
+  project until the apply, and no build tool gets a helper file there either
 - **The body is append-only.** Never delete a dropped ladder — it has to stay above to
   compare against
 - **Serve it and reload it myself** — `references/liveview.md`. Never end a turn by
   telling the user to refresh
 - Built CSS needs a watcher alongside or new names won't come through — Tailwind:
-  `npx tailwindcss -w`. A `<link>`ed file follows on reload alone
+  the per-version command in `references/stylesystems.md`, output to `$WS/sheet.css`.
+  A `<link>`ed file follows on reload alone
 - Open the browser once and never close it
 
 ## Ending
@@ -188,8 +213,10 @@ decision, no tallying up at what looks like a good stopping point.
 On the order: blast radius → 토큰을 고칠지 여기만 덮을지 → apply.
 
 Approval to apply is not the end. Hold the sheet and the browser until the user has
-checked the real code and says it's done: `끝났어` · `이걸로 가자` · `됐어`. Then stop
-the server and throw the sheet away. Don't leave it in the project, don't commit it.
+checked the real code and says it's done: `끝났어` · `이걸로 가자` · `됐어`. Then run
+the teardown in `references/liveview.md` — server, watcher and `$WS` all go in one
+command — and check `git status` shows nothing of mine. The user should never have to
+clean up after this skill, or even know there was anything to clean up.
 
 **Only what was explicitly chosen goes into code.** An alternative merely mentioned
 along the way is not a decision.

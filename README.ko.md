@@ -10,6 +10,10 @@
 
 <!-- 채팅창에서 "12px 이 나을까요 16px 이 나을까요" 는 답할 수 없는 질문이라는 것 -->
 
+- ex) 이 컴포넌트의 테두리 변화를 빠르게 보고 싶다.
+- ex) 이 페이지의 기본 레이아웃을 정하고 싶아.
+
+
 ## 하는 일
 
 <!-- 설명 대신 한 사이클 트레이스 -->
@@ -55,6 +59,6 @@ ln -sfn ~/skills/design-helper ~/.codex/skills/design-helper    # Codex
 
 ## 문서
 
-<!-- SKILL.md + references/{sweeping,stylesystems,motion,liveview}.md -->
+<!-- SKILL.md + references/{sweeping,controls,stylesystems,motion,liveview}.md -->
 
 ## 라이선스

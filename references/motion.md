@@ -20,6 +20,11 @@ row that restarts every specimen in the same frame.
 The `void el.offsetWidth` reflow is what makes the restart take — without it the class
 removal and re-add collapse into nothing.
 
+`.spec` is also what the engine in `references/controls.md` stamps, so the two meet here.
+Put `run` on the figure and key the CSS off it — `.spec.run .thing { animation: … }` —
+and remember that **any scrub re-stamps the ladder and clears `run`.** Duration and
+easing scrub like any other axis; the replay button just has to be pressed again after.
+
 **2. Replay.** It's over before it's judged. Keep the button reachable, or loop.
 
 **3. A slow-motion toggle.** This is the one that matters. **A 200ms easing difference
@@ -51,8 +56,8 @@ Stagger only reads with enough items. Six minimum.
 - **Screenshots capture static state only.** Verification step 3 can't see motion at
   all, so a motion unit rests entirely on what the user reports from the browser.
   Say so rather than implying it was checked.
-- **State-attribute styling (`data-[open]:`) is hand-imitated** — the real library sets
-  those attributes. Entry and exit timing around mount/unmount will differ.
+- **Entry and exit timing around mount/unmount will differ** — the real library sets the
+  state attributes, the sheet imitates them (`references/sweeping.md`).
 - **Motion libraries don't take these values directly.** If the project uses Framer
   Motion, GSAP or similar, spring physics has no CSS equivalent — a cubic-bezier is an
   approximation, not a translation. **This belongs in the blast radius report**, not

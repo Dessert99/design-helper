@@ -55,6 +55,6 @@ untouched.
 
 ## Docs
 
-<!-- SKILL.md + references/{sweeping,stylesystems,motion,liveview}.md -->
+<!-- SKILL.md + references/{sweeping,controls,stylesystems,motion,liveview}.md -->
 
 ## License
