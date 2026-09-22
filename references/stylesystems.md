@@ -55,15 +55,26 @@ for this build only, so just the sheet is scanned.
 `$WS` that pulls the project's stylesheet in by absolute path and points the scanner at
 `$WS`:
 
+    V=$(node -p "require('./node_modules/tailwindcss/package.json').version")
     cat > "$WS/sheet.in.css" <<EOF
     @import "$PWD/src/app.css";
     @source "$WS";
     EOF
-    npx @tailwindcss/cli -i "$WS/sheet.in.css" -o "$WS/sheet.css" -w >/dev/null 2>&1 &
+    npx "@tailwindcss/cli@$V" -i "$WS/sheet.in.css" -o "$WS/sheet.css" -w >/dev/null 2>&1 &
     echo $! > "$WS/tailwind.pid"
 
 `$PWD/src/app.css` is the file detection found the import in. Everything it declares —
 `@theme`, `@source`, `@config` — comes along with it.
+
+**Pin the version, because the CLI is usually not installed.** Most v4 projects build
+through `@tailwindcss/postcss` and never depend on `@tailwindcss/cli`, so `npx` fetches
+it over the network — and unpinned it fetches `latest`, which can differ from what the
+project compiles with. Pinning to the project's own `tailwindcss` version makes the
+sheet and the app agree.
+
+No network and no cached CLI → **the utility fork is unavailable.** Fall back to reading
+the values out of `@theme` and drawing with CSS variables, and say which it was: the
+screen can't tell them apart and `프로젝트 유틸리티` would no longer be true.
 
 Blast radius — count the class, then the token behind it:
 

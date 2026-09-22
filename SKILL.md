@@ -170,9 +170,11 @@ Check per the fork that detection found. Run this **every time specimens are add
 Skip it when values were written directly (blank slate) — nothing fails silently.
 
 **2. Read computed style with Playwright.** A name that exists but is overridden by
-another rule won't be caught by step 1.
+another rule won't be caught by step 1. Read it **off the component, across the rungs,
+and confirm they actually differ** — a value that never reached the specimen leaves five
+identical pictures and throws nothing.
 
-    await p.$eval('.frame', e => getComputedStyle(e).padding)
+    await p.$$eval('.spec .target', e => e.map(x => getComputedStyle(x).borderRadius))
 
 **3. Screenshot with Playwright, then open the image and look at it.** Catch a broken
 layout before the user does, and **hold an opinion as someone who looked** — without

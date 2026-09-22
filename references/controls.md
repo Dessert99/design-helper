@@ -50,13 +50,24 @@ With Tailwind the specimen carries a class, not a value. `scale` becomes class n
 `draw` swaps them. Everything else is unchanged — the engine indexes the array, so it
 never does arithmetic on the entries.
 
+**Mark the component node `target` in the template.** `draw` receives the wrapper, and
+the wrapper holds every context block — the backgrounds, the sizes, the repetition. A
+variable set on it reaches the component by inheritance; **a class does not.** It has to
+be put on each component node by hand, and there is more than one of them.
+
 ```js
 axes: [{ scale: ['rounded-none','rounded-sm','rounded','rounded-md','rounded-lg'],
          n: 5, center: 2, spread: 1 }],
 inSystem: 'all',
-draw: (el, c) => { const t = el.firstElementChild;
-                   t.className = t.className.replace(/rounded\S*/g, '') + ' ' + c; },
+draw: (el, c) => el.querySelectorAll('.target').forEach(t => {
+  t.className = t.className.replace(/\brounded\S*/g, '').replace(/\s+/g, ' ').trim() + ' ' + c;
+}),
 ```
+
+Getting this wrong **fails silently and looks fine**: the class lands on the wrapper, the
+component keeps whatever it was born with, and every rung renders identically. Nothing
+throws. Verification step 2 in `SKILL.md` is what catches it — read the computed style
+off the component and confirm the rungs actually differ.
 
 Free mode is numeric only, so the `스케일에 맞춤` checkbox hides itself here.
 
@@ -98,7 +109,7 @@ and draws a dashed outline.
     <label><input type="checkbox" data-scrub="snap"> 스케일에 맞춤</label>
   </div>
   <template>
-    <div class="on-white rep">…the real component, repeated…</div>
+    <div class="on-white rep">…the real component, marked `target`, repeated…</div>
     <div class="on-gray rep">…</div>
     <div class="on-dark rep">…only when the project has a dark surface…</div>
   </template>
