@@ -237,7 +237,9 @@ mention it's missing.
 - One session = one sheet = one target. A new target gets a new sheet
 - **Everything lives in `$WS`, outside the project** — sheet, server, built CSS, memo,
   screenshots, pid files. `references/liveview.md`. Nothing is written into the
-  project until the apply, and no build tool gets a helper file there either
+  project until the apply, and no build tool gets a helper file there either. The local
+  server deletes this workspace after two minutes without requests; expired sheets
+  must be regenerated, not treated as recoverable records.
 - **The body is append-only.** Never delete a dropped ladder — it has to stay above to
   compare against
 - **Serve it and reload it myself** — `references/liveview.md`. Never end a turn by
@@ -245,7 +247,15 @@ mention it's missing.
 - Built CSS needs a watcher alongside or new names won't come through — Tailwind:
   the per-version command in `references/stylesystems.md`, output to `$WS/sheet.css`.
   A `<link>`ed file follows on reload alone
-- Open the browser once and never close it
+- **Present every revised sheet in the foreground.** When a new or revised comparison
+  is ready, activate its existing browser tab/window and show the changed section.
+  If the tab or browser was closed, reopen the same sheet URL. Restore the server first
+  if needed. Reloading in the background alone is not presentation. Reuse the session;
+  never create duplicate comparison tabs/windows. Open only after confirming the
+  comparison tab is absent; if detection or activation is unavailable, explain the
+  limitation instead of blindly opening the URL. Do this when
+  presenting a ready revision, not on each intermediate edit or chat-only response.
+  See `references/liveview.md#present-every-revision`.
 
 ## Ending
 
