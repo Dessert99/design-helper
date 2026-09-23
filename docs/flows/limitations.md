@@ -19,11 +19,11 @@
 
 `SKILL.md`와 `sweeping.md`에는 두 축을 행과 열로 분리해 매트릭스로 비교하라는 설명이 있다. 테두리 두께별로 행을 나누고 밝기별로 열을 나누는 비교가 이에 해당한다.
 
-그러나 단일 축 원칙과 컨트롤의 백지 예외 제한이 함께 존재한다. 현재 엔진은 모든 `kind: 'matrix'`에 `여기서 시작`을 붙이고 `anchor`를 전송한다. 따라서 두 속성의 조합을 골라도 개별 속성의 확정으로 기록되지 않는다.
+그러나 단일 축 원칙과 컨트롤의 백지 예외 제한이 함께 존재한다. 좌표 탐색은 채팅으로 출발점을 받으며, 단일 축 선택과 달리 개별 속성 확정으로 취급하지 않는다.
 
 비교용 두 축 매트릭스와 출발점용 매트릭스를 어떻게 구분하고, 무엇을 확정으로 기록할지 정해지기 전에는 두 축 확정의 정상 흐름으로 설명하지 않는다.
 
-근거: [SKILL — Drawing specimens](../../SKILL.md#drawing-specimens), [Sweeping — Default ladders](../../references/sweeping.md#default-ladders), [Controls — Recording a choice](../../references/controls.md#recording-a-choice), [The engine](../../references/controls.md#the-engine)
+근거: [SKILL — Drawing specimens](../../SKILL.md#drawing-specimens), [Sweeping — Default ladders](../../references/sweeping.md#default-ladders), [Controls — Choosing in chat](../../references/controls.md#choosing-in-chat), [The engine](../../references/controls.md#the-engine)
 
 ## 실행 예제와 지침 사이의 차이
 
@@ -36,26 +36,12 @@
 
 근거: [SKILL — Drawing specimens](../../SKILL.md#drawing-specimens), [Controls — The engine](../../references/controls.md#the-engine)
 
-### 핀의 내용 보존
-
-설명은 후보를 핀으로 두고 다른 후보와 비교하도록 한다. 하지만 엔진은 `{ sec, letter }`만 저장하고, 다시 그릴 때 그 문자에 해당하는 현재 표본을 복제한다. 창을 움직여 문자가 가리키는 값이 바뀌면 핀의 내용도 바뀔 수 있다. 선택 당시 값의 고정 사본으로 취급할 수 없다.
-
-근거: [Controls — The pin tray](../../references/controls.md#the-pin-tray), [The engine](../../references/controls.md#the-engine)의 `paintPins()`와 `commit()`
-
 <a id="느린재생"></a>
 ### 느린 재생
 
 모션 지침은 `0.25x`를 요구하지만 CSS 예제는 모든 animation/transition duration을 `4s !important`로 덮어쓴다. 이는 각 원래 시간을 네 배로 늘리는 동작이 아니며 duration 후보의 차이를 없앤다. 대표 예시 10은 실제 속도에서 선택하는 흐름으로 제한했다.
 
 근거: [Motion — Three devices](../../references/motion.md#three-devices)
-
-### 확정 기록과 화면의 선택 강조
-
-현재 클릭 핸들러는 POST를 기다리지 않고 `.picked`를 붙인다. 요청 실패 시에도 강조가 남을 수 있다. 기록의 근거는 새 서버 기록 또는 명시적인 채팅 선택이며, 화면 강조만으로 기록 성공을 보장하지 않는다.
-
-또한 서버 기록을 에이전트에게 자동 푸시하는 코드가 없다. 지침은 에이전트가 다음 턴 시작 시 파일을 읽도록 한다.
-
-근거: [Controls — The engine](../../references/controls.md#the-engine), [Live view — What the sheet sends back](../../references/liveview.md#what-the-sheet-sends-back)
 
 ### 맥락과 표본 배치
 
@@ -82,12 +68,3 @@
 따라서 같은 작업 폴더가 남아 있는 세션의 서버 복구와, 새로운 세션에서 이전 결정을 복원하는 기능을 구분한다. 후자는 보장된 기능으로 문서화하지 않는다.
 
 근거: [Live view — It reaps itself](../../references/liveview.md#it-reaps-itself), [At the end](../../references/liveview.md#at-the-end)
-
-<a id="정리범위"></a>
-### 종료 시 프로젝트 변경 정리 범위
-
-`SKILL.md`와 `liveview.md`는 마지막에 코드 반영을 허용하면서도 `git status`에 스킬이 만든 것이 없어야 한다고 적는다. 이 문장을 모든 코드 변경에 적용하면 의도한 반영 결과까지 제거하게 된다.
-
-대표 예시 11에서는 정리 대상을 임시 자원으로 해석했다. 반영 코드와 기존 사용자 변경은 보존한다. 원문에서도 정리 대상이 임시 자원임을 명시할 필요가 있다.
-
-근거: [SKILL — The sheet](../../SKILL.md#the-sheet), [Ending](../../SKILL.md#ending), [Live view — The workspace](../../references/liveview.md#the-workspace), [At the end](../../references/liveview.md#at-the-end)

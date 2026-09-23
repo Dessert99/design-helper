@@ -1,7 +1,7 @@
 # Controls
 
-The sheet is interactive. Scrubbing a ladder, switching background, pinning a specimen
-and recording a choice all happen **in the browser, with no turn of mine in between.**
+The sheet lets the user scrub a ladder and switch context in the browser.
+Selection and refinement requests happen in chat, using the specimen letters.
 
 **What controls may move — the whole guardrail:**
 
@@ -86,11 +86,6 @@ and draws a dashed outline.
 ## Markup
 
 ```html
-<div id="tray">
-  <div class="chip"><!-- 현재 코드값 --></div>
-  <div class="chip"><!-- 직전 확정 --></div>
-</div>
-
 <div class="ctx">
   <button data-ctx="bg" data-val="pair">흰·회</button>
   <button data-ctx="bg" data-val="dark">다크</button>
@@ -143,37 +138,15 @@ The engine dims a boundary whose window moved and appends `— 창을 옮겼습�
 **That dimming is an order to me, not to the user:** next turn, look again and rewrite
 the line. Never leave a dimmed boundary standing while reporting as if it held.
 
-## The pin tray
+## Choosing in chat
 
-`핀` clones a specimen into the sticky tray at the top. It survives reloads and it
-crosses sections, so a radius rung can sit beside a shadow settled forty minutes ago.
-Click a pinned chip to drop it.
+Label every specimen with a letter and its value. No pin, apply, confirm, or anchor
+buttons. The user says `난 B가 좋아` to apply or `A에서 블러를 더 보고 싶어` to
+compare further. Follow `SKILL.md` for interpretation and application.
 
-Seed the tray at build time with reference points, never with taste:
-
-    현재 코드값 · 시스템 기본 · 직전 확정
-
-Those are facts. A row of looks I invented is a preset gallery — `SKILL.md` rules it out.
-
-## Recording a choice
-
-`이걸로 확정` POSTs one line to `$WS/state.jsonl` — `references/liveview.md` has the
-server that accepts it.
-
-```json
-{"at":"2026-09-23T04:11:02.884Z","kind":"choice","axis":"그림자 블러","letter":"C",
- "value":[12],"context":{"bg":"pair","rep":"many","size":"both"},
- "window":{"snap":true,"axes":[{"center":3,"spread":1}],"extra":[]}}
-```
-
-**Only `이걸로 확정` exists.** There is no `괜찮네` button and there never will be one —
-an impression is not a choice.
-
-`kind` is `choice` on a ladder and `anchor` on the matrix — `여기서 시작`, an anchor is
-not a decision. `references/sweeping.md`.
-
-A failed POST flashes `기록 실패 — 채팅으로 알려주세요` and nothing is lost; the user
-says it in chat as before.
+When the user scrubs, letters refer to the current window. Read the actual user tab
+and its `.spec` data attributes before resolving a letter; do not infer its value
+from a fresh tab or the initial config. If unavailable, ask for the displayed value.
 
 ## The engine
 
@@ -185,7 +158,7 @@ Paste as-is, after the `L` block, before the reloader.
   const S = sessionStorage, $ = (s, r = document) => [...r.querySelectorAll(s)];
   const load = (k, d) => { try { return JSON.parse(S.getItem(k)) ?? d } catch { return d } };
   const save = (k, v) => { try { S.setItem(k, JSON.stringify(v)) } catch {} };
-  const LET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', state = {}, pins = load('pins', []);
+  const LET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', state = {};
   const ctx = load('ctx', { bg: 'pair', rep: 'many', size: 'both' });
 
   const syncCtx = () => {
@@ -207,17 +180,6 @@ Paste as-is, after the `L` block, before the reloader.
     return out;
   };
 
-  const flash = t => {
-    let el = document.getElementById('flash');
-    if (!el) { el = document.createElement('div'); el.id = 'flash'; document.body.append(el); }
-    el.textContent = t; el.classList.add('on');
-    clearTimeout(el.t); el.t = setTimeout(() => el.classList.remove('on'), 2400);
-  };
-
-  const post = o => fetch('/state', { method: 'POST', body: JSON.stringify({ at: new Date().toISOString(), ...o }) })
-    .then(r => flash(r.ok ? '확정 기록됨' : '기록 실패 — 채팅으로 알려주세요'))
-    .catch(() => flash('기록 실패 — 채팅으로 알려주세요'));
-
   const cap = (cf, letter, vals, extra) => {
     const txt = vals.map((x, k) => x + (cf.axes[k].unit || '')).join(' · ');
     const inSys = cf.inSystem === 'all' || vals.every(x => (cf.inSystem || []).includes(x));
@@ -228,9 +190,7 @@ Paste as-is, after the `L` block, before the reloader.
       (cf.token ? ` <span class="cost${inSys ? '' : ' off'}">${inSys ? '토큰 그대로'
         : `${cf.token} 고침 (${cf.uses}곳) · 또는 새 토큰`}</span>` : '') +
       `<p class="resolved">${cf.resolve ? cf.resolve(...vals) : ''}</p>` +
-      `<p class="eye">${cf.eye ? cf.eye(...vals) : ''}</p>` +
-      `<div class="acts"><button class="pin">핀</button>` +
-      `<button class="pick">${cf.kind === 'matrix' ? '여기서 시작' : '이걸로 확정'}</button></div>`;
+      `<p class="eye">${cf.eye ? cf.eye(...vals) : ''}</p>`;
     return c;
   };
 
@@ -265,22 +225,7 @@ Paste as-is, after the `L` block, before the reloader.
     edge(id);
   };
 
-  const paintPins = () => {
-    const tray = document.getElementById('tray'); if (!tray) return;
-    $('.chip.mine', tray).forEach(e => e.remove());
-    pins.forEach(p => {
-      const fig = document.querySelector('#' + p.sec + ' [data-letter="' + p.letter + '"]'); if (!fig) return;
-      const d = document.createElement('div'); d.className = 'chip mine';
-      d.append(fig.querySelector('.body').cloneNode(true));
-      const l = document.createElement('small');
-      l.textContent = document.getElementById(p.sec).dataset.axis + ' ' + p.letter;
-      d.append(l);
-      d.onclick = () => { pins.splice(pins.indexOf(p), 1); save('pins', pins); paintPins(); };
-      tray.append(d);
-    });
-  };
-
-  const commit = id => { save('ctl:' + id, state[id]); build(id); paintPins(); };
+  const commit = id => { save('ctl:' + id, state[id]); build(id); };
 
   $('[data-ctx]').forEach(b => b.onclick = () => { ctx[b.dataset.ctx] = b.dataset.val; syncCtx(); });
   syncCtx();
@@ -304,25 +249,6 @@ Paste as-is, after the `L` block, before the reloader.
     });
     build(sec.id);
   });
-  paintPins();
-
-  document.addEventListener('click', e => {
-    const b = e.target.closest('.pin, .pick'); if (!b) return;
-    const fig = b.closest('.spec'), sec = fig.closest('section'), cf = L[sec.id];
-    if (b.classList.contains('pin')) {
-      if (!pins.some(p => p.sec === sec.id && p.letter === fig.dataset.letter))
-        pins.push({ sec: sec.id, letter: fig.dataset.letter });
-      save('pins', pins); paintPins(); return;
-    }
-    post({
-      kind: cf.kind === 'matrix' ? 'anchor' : 'choice',
-      axis: sec.dataset.axis, letter: fig.dataset.letter,
-      value: JSON.parse(fig.dataset.vals), context: { ...ctx }, window: state[sec.id],
-    });
-    $('.spec.picked').forEach(x => x.classList.remove('picked'));
-    fig.classList.add('picked');
-  });
-
   document.addEventListener('keydown', e => {
     if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
     const fig = e.target.closest && e.target.closest('.spec'); if (!fig) return;
@@ -346,14 +272,8 @@ body { margin:0; padding:24px; background:#111; color:#ddd;
        font:14px/1.6 system-ui, -apple-system, sans-serif }
 .val, .cost, .add { font-family: ui-monospace, SFMono-Regular, monospace }
 
-#tray { position:sticky; top:0; z-index:9; display:flex; gap:12px; overflow-x:auto;
-        padding:12px; margin:-24px -24px 24px; background:#181818;
-        border-bottom:1px solid #2a2a2a }
-#tray .chip { flex:0 0 auto; text-align:center }
-#tray .chip small { display:block; color:#888; margin-top:4px }
-
 .ctx { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:32px }
-.ctx button, .acts button { background:#222; color:#ccc; border:1px solid #3a3a3a;
+.ctx button { background:#222; color:#ccc; border:1px solid #3a3a3a;
         border-radius:4px; padding:3px 8px; font-size:12px; cursor:pointer }
 .ctx button[aria-pressed="true"] { background:#2f3a44; color:#eee; border-color:#4a5a66 }
 
@@ -362,7 +282,6 @@ section { margin:48px 0; overflow-x:auto }
 .ladder { display:grid; grid-template-columns:repeat(var(--cols,1), minmax(0,1fr)); gap:24px }
 .spec { margin:0 }
 .spec:focus-visible { outline:1px solid #555; outline-offset:8px }
-.spec.picked figcaption b { color:#7ec8ff }
 figcaption { margin-top:12px; color:#999 }
 figcaption b { color:#eee; margin-right:6px }
 .cost { color:#6a9c6a }
@@ -370,14 +289,9 @@ figcaption b { color:#eee; margin-right:6px }
 .spec:has(.cost.off) .body { outline:1px dashed #d9a441; outline-offset:6px }
 .add { color:#888; border:1px solid #444; padding:0 4px; border-radius:3px }
 .resolved, .eye { margin:4px 0 0 }
-.acts { margin-top:8px; display:flex; gap:6px }
 .edge { color:#aaa; margin-top:16px }
 .edge.stale { opacity:.45 }
 .edge.stale::after { content:' — 창을 옮겼습니다. 경계는 다시 봐야 합니다' }
-
-#flash { position:fixed; right:16px; bottom:16px; background:#222; padding:8px 12px;
-         border:1px solid #3a3a3a; border-radius:6px; opacity:0; transition:opacity .2s }
-#flash.on { opacity:1 }
 
 html[data-bg="pair"] .on-dark { display:none }
 html[data-bg="dark"] .on-white, html[data-bg="dark"] .on-gray { display:none }

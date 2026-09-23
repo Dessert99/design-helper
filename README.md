@@ -16,7 +16,7 @@
 
 ### One work unit
 
-<!-- one order = one axis = one ladder = one decision, then it stops -->
+<!-- one order = one axis = one ladder = one decision, then apply and verify -->
 <!-- no stage list, no plan: what to look at next is always the user's call -->
 
 ### What it doesn't do

@@ -144,5 +144,7 @@ While choosing, one line per specimen:
 ```
 
 Before applying, the real tally: which files, which lines, which tokens, and what else
-moves with them. Then ask the question this exists for — **change the token, or
-override just here?** Changing a token is the cheap edit and the expensive decision.
+moves with them. Apply within the authorized target: reuse a token or override locally
+by default. Change a shared token only when its wider scope is already authorized.
+Ask about scope only when a necessary decision cannot be inferred; do not make this
+a routine approval gate after selection.

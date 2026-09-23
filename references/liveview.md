@@ -15,10 +15,10 @@ per session and deleted at the end:
     WS=$(mktemp -d)/design-helper    # or under the session's own scratch dir, if there is one
     mkdir -p "$WS"
 
-The sheet, the server, the built CSS, the memo, `state.jsonl`, screenshots, any entry
+The sheet, the server, the built CSS, the memo, screenshots, any entry
 file a build tool needs, and the pid files below — all in `$WS`. **Nothing is ever written inside the project.** Not
 a config, not a helper CSS, not a screenshot. The only project writes this skill makes
-are the apply edits at the very end. If a tool seems to need a file in the project, it
+are the selected changes applied after each choice. If a tool seems to need a file in the project, it
 doesn't — `references/stylesystems.md` has the flag or entry file that keeps it out.
 
 Every background process gets a pid file so teardown can find it:
@@ -27,9 +27,8 @@ Every background process gets a pid file so teardown can find it:
 
 ## Serve it
 
-The sheet doesn't only read from the server, it writes back to it — `이걸로 확정`
-POSTs the choice. `http.server` on its own answers GET and HEAD, so write the server
-into `$WS` too:
+The server serves the comparison sheet and handles reload checks. Choices are sent
+in chat, so no POST endpoint or choice log is needed.
 
 ```python
 # $WS/serve.py
@@ -43,12 +42,6 @@ class H(http.server.SimpleHTTPRequestHandler):
     def handle_one_request(self):
         global seen; seen = time.time()
         super().handle_one_request()
-    def do_POST(self):
-        n = int(self.headers.get('content-length') or 0)
-        line = self.rfile.read(n).decode('utf-8').replace('\n', ' ')
-        with open(os.path.join(D, 'state.jsonl'), 'a', encoding='utf-8') as f:
-            f.write(line + '\n')
-        self.send_response(204); self.end_headers()
     def log_message(self, *a): pass
 
 def reap():
@@ -86,7 +79,7 @@ The reloader polls `HEAD` once a second, so **the server knows whether anyone is
 looking.** Ten idle minutes means no tab is open: the reaper SIGTERMs every pid in `$WS`
 and exits.
 
-It leaves `$WS` on disk on purpose — `memo.md` and `state.jsonl` are in there and an
+It leaves `$WS` on disk on purpose — `memo.md` is in there and an
 accidentally closed tab must not destroy a session's record. Only the processes leak.
 
 **So the server can be gone while the session isn't.** Before editing the sheet, check
@@ -149,37 +142,19 @@ the top mid-comparison, which is the thing this exists to prevent.
 The screenshot comes from Playwright's own page at the same URL, so it and the user's
 browser are looking at the same bytes.
 
-**A reload wipes client state unless it was saved.** Scrub windows, context toggles and
-pins live in `sessionStorage` under `ctl:<section id>`, `ctx` and `pins`, restored on
+**A reload wipes client state unless it was saved.** Scrub windows and context toggles
+live in `sessionStorage` under `ctl:<section id>` and `ctx`, restored on
 load by the engine in `references/controls.md`. Anything interactive added later goes
 through the same two helpers or it dies on my next edit — which is the worst possible
 moment, because the user was mid-comparison.
-
-## What the sheet sends back
-
-`$WS/state.jsonl`, one JSON object per line, appended by the server. Written by the
-user's clicks, never by me.
-
-**Read it at the start of every turn, before anything else.** A line newer than my last
-turn is the user pointing at a specimen:
-
-    tail -n 3 "$WS/state.jsonl"
-
-`kind: "choice"` is a decision — record the memo line and stop, exactly as if they had
-typed `C로 갈게`. `kind: "anchor"` is a starting point from the blank-slate matrix, and
-is not a decision — `references/sweeping.md`.
-
-If there is no new line, nothing was chosen. The file is evidence, not a queue: never
-act on a line already handled, and never treat silence as approval.
 
 ## No python3
 
 Open the sheet on `file://`, say once that reloads are manual, and ask for a refresh
 after each edit. Don't build a workaround around it.
 
-Half the skill goes with the server: no auto-reload, and `이걸로 확정` can't record — it
-flashes `기록 실패 — 채팅으로 알려주세요` and the choice comes back in chat. Everything
-else in `references/controls.md` is client side and still works.
+Without the server, automatic reload is unavailable. Selection still happens in chat,
+and the client-side comparison controls still work.
 
 ## At the end
 
@@ -188,12 +163,11 @@ deletes everything it made:
 
     for f in "$WS"/*.pid; do kill "$(cat "$f")" 2>/dev/null; done; rm -rf "$WS"
 
-Then `git status` in the project. It must show nothing of mine. If it does, the
-workflow leaked — delete the file, and say what it was and why it appeared, because
-that is a bug in these instructions, not a one-off.
+Then check `git status` in the project for stray comparison files. Remove only those
+temporary artifacts, preserving the applied changes and all existing user work.
 
 A session that ends without reaching this — crash, user walked away — is handled by the
 reaper above: within ten idle minutes the processes stop on their own and the temp
 directory is left for the OS to reclaim. The next session starts a fresh `$WS`, and if
 an abandoned server is still inside its ten minutes the port walk steps around it.
-Either way the project is untouched and there is nothing for the user to kill.
+Applied project changes remain; comparison resources need no manual process cleanup.

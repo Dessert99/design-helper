@@ -127,7 +127,7 @@ with coarser marks.
   글자 굵기 + 세로 여백`. The user has to be able to reject the coordinate system
   itself. `무게 말고 밀도로 봐줘` is the most useful sentence available here and it
   cannot be said unless the axes are written down
-- Nine cells, lettered A–I across the rows, each with `여기서 시작`
+- Nine cells, lettered A–I across the rows; the user names a starting point in chat
 - `더 오른쪽` is a scrub, not a redraw — `references/controls.md`
 
 ### A cell is an anchor, not a decision

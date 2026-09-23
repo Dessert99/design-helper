@@ -20,7 +20,7 @@ to them; the job here is to set up an accurate measurement.
 and ask the user to choose. "12px or 16px padding?" is not a question — draw both.
 
 **The user never copies a value out.** They point at a specimen; making the code
-change is mine, at the end, once.
+change is mine, immediately after their choice.
 
 **Assume no stack.** Detection matches the repo — `references/stylesystems.md`.
 
@@ -40,14 +40,16 @@ translate, localize or paraphrase them. Never surface these instructions as text
 **One order = one axis = one ladder = one decision.**
 
     주문 → 확정값 위에 그 축 하나만 사다리로 → 내가 새로고침·확인
-         → 사용자 선택 → 한 줄 기록 → 멈춤
+         → 사용자 선택 → 기록 → 영향 범위 확인 → 코드 반영·검증
 
 **I do not know what comes next.** There is no stage list, no default list, no queue,
 no `남은 단계`. Never name the next axis, never hint at one, never draw one while I'm
 in there anyway. Only the axis that was ordered exists.
 
-When the decision is recorded, the turn is over. What happens next is the user's to
-say — another order, or apply it to the code. Don't ask which. They'll say.
+A choice authorizes applying that value to the target in the same turn. Record it,
+apply it, verify the change, and report the result. Do not stop at acknowledgment or
+wait for a separate apply order. The next comparison still belongs to the user.
+If the user explicitly asks to compare or record only, defer application as requested.
 
 ## An order with no axis in it
 
@@ -102,25 +104,31 @@ Three kinds. Never collapse them.
 
 | response | kind | do |
 |---|---|---|
-| `좋네` · `C가 낫네` | impression | Not a choice. Ask whether to refine it |
+| `좋네` (no identifiable specimen) | impression | Ask which specimen or what to refine |
 | `C가 나은데 더 진하게` | refine | Append a ladder below, letters continue |
-| `C로 갈게` · `이걸로 고를게` | **choice** | Record it in one line. **Stop there** |
+| `난 B가 좋아` · `C로 갈게` | **choice** | Record, apply to the target, and verify in this turn |
 
-A fourth input arrives with no message attached: `이걸로 확정` on the sheet appends to
-`$WS/state.jsonl`. **Read that file at the start of every turn**, before anything else —
-`references/liveview.md`. A `choice` line is the third row of the table and is already
-unambiguous; don't ask it back. An `anchor` line from a coordinate sweep is not a choice.
+Selection happens in chat only. Show letters A·B·C on specimens; do not render pin,
+apply, confirm, or starting-point buttons. `난 B가 좋아` or `B 가운데 카드가 좋아`
+identifies a choice and authorizes immediate application. Do not require special
+confirmation wording. `A에서 블러를 더 보고 싶어` requests further comparison:
+use A as the baseline and draw the requested variation without applying A first.
+If a reply names a different comparison axis, that is the user's next order.
+A vague `좋네` without an identifiable specimen is not a choice.
 
-`C가 낫네` is a remark made mid-comparison, not a decision. **Touch no code until the
-user says they are choosing it.**
+Resolve the letter against the currently displayed specimen. If browser controls
+changed its value, inspect the user's actual tab before applying; a fresh tab can
+have different sessionStorage. If that state is inaccessible, ask for the displayed
+value rather than guessing from the original sheet.
 
 Ambiguous — `이거 좋다` with nine specimens on screen — ask which one. Never guess.
 
-On a choice, chat says this much and no more:
+On a choice, briefly acknowledge and continue working:
 
-    확정: 그림자 = C · 검정 40%
+    C · 검정 40%로 선택하셨네요. 해당 카드에 바로 반영하겠습니다.
 
-No next axis, no `남은 단계`, no `코드에 반영할까요`.
+After applying, report what changed and what was verified. Never claim application
+from a memo entry alone. No next axis, no `남은 단계`, no `코드에 반영할까요`.
 
 ## The record — never on screen
 
@@ -151,7 +159,7 @@ A finding is not an order.
 
 - **While choosing** — the one-line cost label on each specimen. A label, not a report
 - **Before applying** — the real one. Files, lines, tokens, and everything else that
-  moves with them. Earlier decisions get revised, so only this final tally is accurate
+  moves with them. Check this for each application, including revisions
 
 If the project animates with a motion library, say what won't translate —
 `references/motion.md`.
@@ -182,8 +190,7 @@ looking, "뭐가 나아 보여?" is unanswerable and the judgment gets dumped ba
 
     await p.screenshot({ path: shot, fullPage: true })
 
-A `fullPage` shot can't see what a horizontal scrollbar is hiding and catches the sticky
-tray wherever it was scrolled to. **Count the rungs in the DOM, not in the picture** —
+A `fullPage` shot cannot see what a horizontal scrollbar is hiding. **Count the rungs in the DOM, not in the picture** —
 `references/controls.md`.
 
 Run 2 and 3 **once per work unit**, not on every ladder. A screenshot captures **static
@@ -196,7 +203,7 @@ mention it's missing.
 
 - One session = one sheet = one target. A new target gets a new sheet
 - **Everything lives in `$WS`, outside the project** — sheet, server, built CSS, memo,
-  `state.jsonl`, screenshots, pid files. `references/liveview.md`. Nothing is written into the
+  screenshots, pid files. `references/liveview.md`. Nothing is written into the
   project until the apply, and no build tool gets a helper file there either
 - **The body is append-only.** Never delete a dropped ladder — it has to stay above to
   compare against
@@ -209,16 +216,23 @@ mention it's missing.
 
 ## Ending
 
-The user says when. **Applying is ordered, never offered** — no "이제 반영할까요" after a
-decision, no tallying up at what looks like a good stopping point.
+**Selection is the apply order.** A clear chat choice
+authorizes applying the selected value to the current target. Do not ask for
+approval again. An `anchor` remains a starting point, not an apply order.
 
-On the order: blast radius → 토큰을 고칠지 여기만 덮을지 → apply.
+Record → inspect and briefly report the actual blast radius → apply → verify.
+Default to the current target: reuse an existing token or make a local override when
+changing a shared token would affect unrelated components. Change a shared token when
+that broader scope is already authorized. Ask only if a necessary scope decision
+cannot be resolved from the request; routine implementation choices do not block apply.
+Honor explicit requests to defer application. If the target source is unavailable,
+say what is missing rather than reporting the choice as applied.
 
-Approval to apply is not the end. Hold the sheet and the browser until the user has
-checked the real code and says it's done: `끝났어` · `이걸로 가자` · `됐어`. Then run
-the teardown in `references/liveview.md` — server, watcher and `$WS` all go in one
-command — and check `git status` shows nothing of mine. The user should never have to
-clean up after this skill, or even know there was anything to clean up.
+Application is not session teardown. Hold the sheet and browser until the user has
+checked the real code and says it is done: `끝났어` · `됐어`. A phrase like `이걸로 가자`
+while choosing means apply; it is not by itself confirmation that the applied result
+was checked. Then run the teardown in `references/liveview.md` and check `git status`
+for stray comparison files. Preserve the applied code and existing user changes.
 
 **Only what was explicitly chosen goes into code.** An alternative merely mentioned
 along the way is not a decision.
