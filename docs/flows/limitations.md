@@ -23,7 +23,7 @@
 
 비교용 두 축 매트릭스와 출발점용 매트릭스를 어떻게 구분하고, 무엇을 확정으로 기록할지 정해지기 전에는 두 축 확정의 정상 흐름으로 설명하지 않는다.
 
-근거: [SKILL — Drawing specimens](../../SKILL.md#drawing-specimens), [Sweeping — Default ladders](../../references/sweeping.md#default-ladders), [Controls — Choosing in chat](../../references/controls.md#choosing-in-chat), [The engine](../../references/controls.md#the-engine)
+근거: [SKILL — Drawing specimens](../../SKILL.md#drawing-specimens), [Sweeping — Candidate scales](../../references/sweeping.md#candidate-scales), [Controls — Choosing in chat](../../references/controls.md#choosing-in-chat), [The engine](../../references/controls.md#the-engine)
 
 ## 실행 예제와 지침 사이의 차이
 

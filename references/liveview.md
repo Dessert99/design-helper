@@ -142,7 +142,7 @@ the top mid-comparison, which is the thing this exists to prevent.
 The screenshot comes from Playwright's own page at the same URL, so it and the user's
 browser are looking at the same bytes.
 
-**A reload wipes client state unless it was saved.** Scrub windows and context toggles
+**For optional interactive sheets, a reload wipes unsaved client state.** Scrub windows and context toggles
 live in `sessionStorage` under `ctl:<section id>` and `ctx`, restored on
 load by the engine in `references/controls.md`. Anything interactive added later goes
 through the same two helpers or it dies on my next edit — which is the worst possible

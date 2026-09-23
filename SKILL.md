@@ -53,26 +53,44 @@ If the user explicitly asks to compare or record only, defer application as requ
 
 ## An order with no axis in it
 
-> "버튼 좀 다듬자"
+**Clarification scales with uncertainty, not a fixed questionnaire.** A precise request
+can go straight to specimens. A vague request needs successive questions until its
+purpose and comparison scope are clear enough to draw useful alternatives.
 
-Not a work unit yet. **Ask until it is one.** One question at a time, narrowing what
-they already want — what's wrong with the one on screen, which part of it, what it
-should do instead. Keep going until an axis is concrete enough to draw; don't settle
-for the first half answer and start drawing.
+First inspect the request, earlier answers, the target UI, and relevant project code.
+Read existing tokens, component variants, usage sites, and states yourself. Do not ask
+the user for facts available there, or reconfirm decisions already made.
 
-Two things this is not:
+Ask **one consequential question at a time**. Choose the unresolved issue whose answer
+would most change the specimens or application scope; use the answer to decide whether
+another question is needed. Relevant issues may include:
 
-- **Not a menu.** `크기 → 여백 → 모서리 → 색` is a curriculum, and handing one over is
-  leading. This skill holds no default list — that is deliberate, don't reinvent one.
-- **Not a guess.** Never pick an axis yourself to get things moving.
+- the problem to solve and what a successful change should accomplish;
+- one instance versus a reusable component or system-wide rule;
+- refinement within existing tokens versus exploration of a new direction;
+- real content, viewport, and interaction states that constrain the choice;
+- the priority when goals conflict, such as density versus readability.
 
-**Unless there is nothing on screen at all.** A target that doesn't exist yet offers no
-dissatisfaction to narrow, so the questions above have nothing to pull on. That one case
-opens with a coordinate sweep — `references/sweeping.md`. What it yields is an anchor,
-not a decision, and the blank slate is over after it.
+These are possible uncertainties, not a required sequence or a menu of design axes.
+Ask about only what matters to this request. See `references/clarification.md` for
+examples and the stopping rule. Candidate count comes after purpose, and only needs a
+question if it materially affects the requested breadth.
 
-Ask in the real vocabulary — radius, tracking, easing, elevation, specificity. This is
-not a skill for someone who needs those explained.
+Stop asking once the target, intended outcome, comparison axis (or authorized direction
+exploration), and constraints that materially change the alternatives are understood.
+Do not seek a fully specified design before drawing: visual values are chosen from
+specimens, not verbal descriptions. A specific axis does not require a second approval.
+
+If the user says `알아서 해줘` or asks to see something first, use project conventions
+and narrow, reversible assumptions, state the material ones briefly, and draw. Resolve
+only indispensable missing information; do not treat delegation as system-wide scope.
+While an answer is pending, inspect code and prepare reusable context, but do not invent
+an answer to a required question and build dependent alternatives from it.
+
+For a blank slate, there is no existing dissatisfaction to diagnose, but purpose and
+usage can still be unclear. Clarify those when needed, then open with a coordinate
+sweep — `references/sweeping.md`. Do not force the user to name CSS axes before they
+have anything to see. Its result is an anchor, not a settled property decision.
 
 ## Drawing specimens
 
@@ -87,11 +105,26 @@ not a skill for someone who needs those explained.
   the specimen, not in chat — `references/sweeping.md`. Cost is a property of the
   option and has to be visible while choosing:
   `토큰 그대로` · `--radius-md 고침 (23곳)` · `새 토큰`
-- 5–7 specimens per ladder. Two axes → a matrix, not a row.
-- **The ladder is a window, and the user moves it** — in the browser, with no turn of
-  mine in between. Controls move **the ordered axis's window and the context it is
-  judged in, nothing else.** A second axis never appears on a sheet →
-  `references/controls.md`
+- **No fixed candidate count or grid size.** Honor the user's requested count. Otherwise
+  choose the smallest set that makes the relevant differences clear, considering the
+  question, distinct alternatives, specimen size, and available screen space. Do not
+  pad the sheet with near-duplicates or generate every combination automatically.
+- If the breadth is unclear and the count materially changes the work, ask once before
+  drawing: `시안은 몇 개 정도 보고 싶으세요? 제가 차이가 뚜렷한 것만 추려도 됩니다.`
+  This is optional scope clarification, not a required approval step. Use an existing
+  preference; if the user leaves it to you, choose without asking again. No fixed
+  minimum, maximum, or default count. Expand through later comparison requests.
+- Use a matrix only when comparing two directions together helps answer the request;
+  choose its dimensions for the useful distinctions, not a preset 3×3 template.
+- **Fixed specimens by default.** Render lettered candidates with fixed values. No
+  range sliders, window/spacing controls, snap toggles, or keyboard nudging by default,
+  including the opening matrix. Further exploration normally happens through chat.
+- **Controls need a concrete purpose.** Add a slider only when the user requests direct
+  adjustment, or a continuous property needs scrubbing to judge a transition that fixed
+  specimens cannot show adequately. A numeric value or matrix alone is not a reason.
+  Use only the necessary control, labeled with the actual property and current value;
+  never copy generic `창` / `간격` controls onto every sheet. Verify its behavior before
+  presenting it; otherwise use fixed specimens. Optional details → `references/controls.md`
 - Ladders, backgrounds, repetition, sizes, wireframes → `references/sweeping.md`
 - Anything that moves → `references/motion.md`
 - **Never recommend one value on a ladder.** Point at perceptual boundaries instead:

@@ -1,9 +1,11 @@
 # Drawing specimens
 
-## Default ladders
+## Candidate scales
 
-Reach for these so "5가지 버전" is immediate and doesn't drift between sessions.
-Trim or shift the window to the target; never widen past 7.
+These are reference values to sample, not a required number of specimens. Prefer the
+project's scale and the user's requested count. Otherwise show only the distinct
+alternatives useful to this question; omit redundant steps and expand when requested.
+If the desired breadth is unclear, follow the one-time count question in `SKILL.md`.
 
 | property | ladder |
 |---|---|
@@ -21,21 +23,20 @@ Trim or shift the window to the target; never widen past 7.
 When the project has a scale, **use its steps, not these.** The point of a ladder in a
 tokenized project is to find which existing step fits, not to invent a new one.
 
-Two axes → a matrix. Rows are one axis, columns the other, both labeled on the edges.
-On a blank slate that matrix is the opener — see below.
+When comparing two directions together is useful, a matrix can put one on rows and
+the other on columns, both labeled. Choose useful dimensions; do not automatically
+expand every possible combination. For a blank-slate opener, see below.
 
-## The ladder is a window
+## Fixed candidates first
 
-Each row above is a **scale**, not a ladder. The ladder is 5–7 consecutive steps of it,
-and the user moves that window themselves — `references/controls.md`. The row goes into
-`scale`; `center`, `n` and `spread` decide only what is on screen first.
+Each row above is a scale. Choose useful, distinct steps around the current project value,
+or the middle when none exists, and render them as fixed, lettered specimens.
+No slider or keyboard nudging is needed. `C에서 조금 더 크게` means append a refined
+ladder in chat, preserving earlier specimens and continuing their letters.
 
-Open the window around what the code does today when there is a value there, and around
-the middle of the scale when there isn't. Getting it slightly wrong is cheap now — one
-drag, and no turn of mine in between.
-
-A rung the user adds by nudging (↑/↓ on a specimen) is **appended with the next letter**
-and marked `추가`. It never replaces the specimen it came from.
+Only add direct range adjustment when it meets the optional-controls criteria in
+`references/controls.md`. The engine's `scale`, `center`, `n`, and `spread` fields are
+implementation details for that mode, not controls every sheet must expose.
 
 ## Captions — the sheet explains itself
 
@@ -60,9 +61,9 @@ Under the ladder, where the perceptual steps break:
 경계 — B·C 는 이 크기에서 구분이 안 됩니다. E 부터 떠 보이기 시작합니다.
 ```
 
-**Write lines 2 and 3 as functions of the value, never per letter** — letters move when
-the window moves, values don't. The boundary line below is the exception and is written
-per letter, so it goes stale on a scrub by design.
+**For optional interactive sheets**, write lines 2 and 3 as functions of the value,
+never per letter. The boundary line is written per letter, so a changed window makes
+it stale. Fixed sheets keep stable captions and letters.
 
 Then chat is a pointer, not the explanation — two or three lines at most. A paragraph
 per specimen in chat means the sheet was written wrong.
@@ -84,10 +85,9 @@ drawn in multiples here.
 **Real content.** Placeholder boxes hide the problem — a card with lorem ipsum and a
 card with a real headline, avatar and timestamp are different design problems.
 
-Background, repetition and size are toggles on the sheet, **on at load, together**. The
-toggle adds a context — the project's dark surface — or isolates one for a moment,
-usually to make a wide ladder fit. Never open a sheet already narrowed because the row
-looked tidier that way. Real content is not a toggle: there is no version of this where
+Show background, repetition and size contexts together by default. Context buttons are
+optional when isolating a condition materially helps comparison; they do not require
+range sliders. Never open a sheet already narrowed just because it looks tidier. Real content is not a toggle: there is no version of this where
 lorem ipsum is the right specimen. `references/controls.md`.
 
 ### When context is a constraint, not a variable
@@ -111,24 +111,28 @@ actually leaves alive before laying anything out.
 
 > "버튼 만들어야 하는데 아직 아무것도 없어"
 
-Nothing on screen, no axis, and the narrowing questions in `SKILL.md` have nothing to
-narrow — they work by pulling on a dissatisfaction and there isn't one yet. Asking
-`어떤 느낌을 원하세요?` hands the work back to the user; picking an axis myself is the
-guess that section rules out. The loop has no input, so it needs a different opener.
+There is no existing dissatisfaction to diagnose. First clarify purpose and use when
+unknown, following `references/clarification.md`; inspect available content and project
+conventions yourself. Once enough is known, show starting points instead of asking the
+user to specify a look or CSS axis verbally.
 
-**Lay a 3×3 over two perceptual directions and let them point.** Still a ruler, just
-with coarser marks.
+**Show enough labeled coordinates to reveal useful directions and let them point.**
+Choose the count for the target and the user's desired breadth, following `SKILL.md`.
+There is no mandatory 3×3 or nine-cell opener. Use a matrix only when the relationship
+between two directions helps; otherwise show a small set of labeled anchor specimens.
+These are starting points, not isolated property decisions.
 
 - **Label both edges with what moves and which way** — `무게 — 가벼움 → 무거움`,
-  `모서리 — 각짐 → 둥글`. Nine finished looks with no labelled edges is a preset
+  `모서리 — 각짐 → 둥글`. A matrix of finished looks with no labelled edges is a preset
   gallery. Labelled edges are what make `더 오른쪽` mean something, and that is the
   entire difference between the two
 - **Name the properties a direction bundles, in the caption** — `무게 = 테두리 굵기 +
   글자 굵기 + 세로 여백`. The user has to be able to reject the coordinate system
   itself. `무게 말고 밀도로 봐줘` is the most useful sentence available here and it
   cannot be said unless the axes are written down
-- Nine cells, lettered A–I across the rows; the user names a starting point in chat
-- `더 오른쪽` is a scrub, not a redraw — `references/controls.md`
+- Letter the displayed specimens from A; the user names a starting point in chat
+- `더 오른쪽` in chat requests additional fixed candidates in that direction. A matrix
+  does not automatically need sliders — `references/controls.md`
 
 ### A cell is an anchor, not a decision
 
@@ -147,8 +151,8 @@ not come back.
 
 ### A look exists, but the user wants a different direction
 
-Same grid, anchored differently: what the code does today goes in the **centre cell** and
-the other eight spread around it. `references/stylesystems.md` calls this hunting a
+Anchor the exploration in what the code does today and show useful alternatives
+around it, with no fixed grid size or candidate count. `references/stylesystems.md` calls this hunting a
 different direction — the current value is the one fact on hand, so it belongs in the
 middle rather than thrown away.
 

@@ -1,7 +1,31 @@
 # Controls
 
-The sheet lets the user scrub a ladder and switch context in the browser.
-Selection and refinement requests happen in chat, using the specimen letters.
+## Optional controls — not the default sheet
+
+Start with fixed, lettered specimens and chat-based selection/refinement. A static
+ladder or matrix needs no engine, sliders, snap checkbox, or keyboard nudging.
+Render its figures directly; keep the auto-reloader from `references/liveview.md`.
+Do not load this engine merely because the comparison has numeric values.
+
+Add a slider only when the user asks to drag/adjust directly, or when scrubbing a
+continuous property is needed to judge a transition that fixed candidates cannot
+adequately show. State that purpose briefly on the sheet. Ordinary requests such as
+`5가지로 보여줘`, `출발점을 고르자`, or `A에서 더 보고 싶어` use fixed specimens.
+For discrete layouts such as one/two/three columns, show fixed candidates, not a slider.
+
+Include only controls needed for that task. Do not copy the full control set below.
+Use property-specific Korean labels and a live value with units (e.g. `블러 12px`);
+`배치 창`, `카드 면 창`, and generic `간격` obscure what is changing. Context buttons
+and motion replay are separate tools; their presence does not justify range sliders.
+
+Before presenting any added slider, exercise its minimum, middle, and maximum and
+check actual component styles/layout, caption values, valid bounds/steps, and reload
+restoration. In a snapped ladder keep `(n - 1) * spread <= scale.length - 1` so endpoints
+do not collapse into repeated candidates. The reference engine is a starting point,
+not a verified implementation for every scale. If interaction cannot be verified,
+omit the slider and provide fixed candidates; do not ship a nonfunctional control.
+
+Selection and refinement requests still happen in chat, using the specimen letters.
 
 **What controls may move — the whole guardrail:**
 
@@ -13,6 +37,9 @@ measurement dies with it. The one exception is the blank-slate matrix — two ax
 construction, `references/sweeping.md`.
 
 ## Config — what I write per section
+
+The counts and scale lengths below are examples, not defaults. Set `n` to the useful
+candidate count chosen for this request; do not copy five merely because it is shown.
 
 One object, `L`, keyed by section id, in a `<script>` **before** the engine. Section
 ids stay short and selector-safe: `u1`, `u2`, `m1`.
@@ -83,7 +110,10 @@ its chip:
 
 and draws a dashed outline.
 
-## Markup
+## Optional markup
+
+The following is a structural example for an interactive sheet, not a default template.
+Choose only the needed controls and replace generic labels with the property and live value.
 
 ```html
 <div class="ctx">
@@ -126,9 +156,10 @@ counts them to land the reload in the right place.
 **Never let a comparison scroll sideways** — two specimens that can't be on screen
 together are compared from memory, which is the one thing this tool exists to avoid.
 
-When it doesn't fit, take the width out of the **context, never out of the rungs**:
-one background instead of two, `1개` instead of `6개`, the small size only. Dropping to
-three rungs to make room is the wrong trade — the neighbours are the measurement.
+When it does not fit, reconsider both the useful candidate count and context layout.
+Remove redundant candidates or isolate context while preserving the distinctions the
+user needs to judge. If the user specified a count, preserve it and adapt the layout
+or split into clearly labeled groups. Do not force a fixed count into horizontal overflow.
 
 ## The boundary goes stale, the captions don't
 
@@ -150,7 +181,9 @@ from a fresh tab or the initial config. If unavailable, ask for the displayed va
 
 ## The engine
 
-Paste as-is, after the `L` block, before the reloader.
+Only for a justified interactive sheet: adapt this example to the selected controls,
+place it after the `L` block and before the reloader, and verify it as described above.
+For a fixed sheet, omit it entirely.
 
 ```html
 <script>

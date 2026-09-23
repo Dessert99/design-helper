@@ -120,8 +120,9 @@ whatever files the change lands in.
 
 ## Feeding the controls
 
-Detection doesn't only decide what to draw with; it fills in the config the sheet's
-controls run on — `references/controls.md`. Four fields, per fork:
+Only when optional interactive controls are justified, use detection to fill their
+config — `references/controls.md`. Fixed sheets use the same project values directly
+and need no control engine. Four fields for the interactive mode, per fork:
 
 | fork | `scale` | `inSystem` | `token` · `uses` |
 |---|---|---|---|
