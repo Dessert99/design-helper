@@ -172,6 +172,11 @@ already decided on should have**. They work well together.
 - Difference: it doesn't draw candidates to compare; the agent sets the taste. design-helper draws candidates and recommends one, and you pick.
 - Use it when: you want a polished first design from a blank page in one go. design-helper won't come up with a direction for you.
 
+**[playground](https://github.com/anthropics/claude-plugins-official/tree/aecd4c852f10b466245f18383fa6aad8c0b10d57/plugins/playground)** (Anthropic, official plugin)
+- What it does: builds a single HTML file with controls on one side and a live preview on the other, and you copy the result out as a prompt to paste back into Claude. Besides design, it has templates for data, code structure, and document review.
+- Difference: one preview carries sliders for several properties, so you see one state at a time. design-helper fixes candidates that change one property and puts them side by side, then applies your pick to the code and checks it instead of handing back a prompt.
+- Use it when: you want to get a feel for a combination by playing with it, with no single right answer, or you need an explorer for something that isn't design.
+
 **[impeccable](https://github.com/pbakaus/impeccable/tree/9d715cc4f5564a990ca8345abfdd5df6dc9b41c8)** (pbakaus)
 - What it does: a design vocabulary, anti-pattern rules, and commands like `audit` · `polish` · `typeset` · `layout`. In live mode you pick an element in the running app, flip through variants in the browser, and the one you accept is written to source. It reads your CSS tokens and computed styles, and variants can have tuning sliders.
 - Difference: the closest match. Its variants rebuild the whole element, so several properties change at once, and you see them one at a time. design-helper puts a ladder that changes one property on one screen, side by side, and labels each specimen with its token impact.

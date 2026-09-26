@@ -160,6 +160,11 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 - 차이: 후보를 그려 비교하는 단계가 없고 에이전트가 취향을 정합니다. design-helper는 후보를 그리고 하나를 추천하지만, 고르는 건 사용자입니다.
 - 이럴 때 frontend-design: 빈 화면에서 그럴듯한 첫 디자인을 한 번에 얻고 싶을 때. design-helper는 방향을 지어내지 않습니다.
 
+**[playground](https://github.com/anthropics/claude-plugins-official/tree/aecd4c852f10b466245f18383fa6aad8c0b10d57/plugins/playground)** (Anthropic 공식 플러그인)
+- 하는 일: 한쪽에 컨트롤, 다른 쪽에 실시간 미리보기가 있는 HTML 파일 하나를 만들고, 조절한 결과를 프롬프트로 복사해 Claude에 다시 붙여 넣게 합니다. 디자인 템플릿 말고도 데이터, 코드 구조, 문서 리뷰 템플릿이 있습니다.
+- 차이: 미리보기 하나에 여러 속성의 슬라이더를 달아 한 번에 한 상태만 봅니다. design-helper는 속성 하나만 바꾼 후보를 고정해서 나란히 놓고, 고른 값을 프롬프트로 넘기지 않고 직접 코드에 반영한 뒤 확인합니다.
+- 이럴 때 playground: 정답이 하나로 모이지 않는 조합을 직접 만져 보며 감을 잡고 싶을 때, 디자인이 아닌 것을 탐색하는 도구가 필요할 때.
+
 **[impeccable](https://github.com/pbakaus/impeccable/tree/9d715cc4f5564a990ca8345abfdd5df6dc9b41c8)** (pbakaus)
 - 하는 일: 디자인 용어집, 안티패턴 검출 규칙, `audit` · `polish` · `typeset` · `layout` 같은 명령을 줍니다. live 모드에서는 실행 중인 앱에서 요소를 골라 여러 변형을 브라우저에서 넘겨 보고, 마음에 든 변형을 소스에 씁니다. 기존 CSS 토큰과 계산된 스타일을 읽고, 변형마다 조절 슬라이더를 붙일 수도 있습니다.
 - 차이: 가장 비슷한 스킬입니다. impeccable은 요소를 통째로 다시 만들어서 여러 속성이 한꺼번에 바뀌고, 변형을 하나씩 넘겨 봅니다. design-helper는 속성 하나만 바꾼 사다리를 한 화면에 나란히 놓고, 표본마다 토큰에 미치는 영향을 적습니다.
