@@ -11,13 +11,13 @@
 
 `stylesystems.md`의 **Draw in the system, or on a blank slate**는 기존 디자인에서 다른 방향을 찾을 때 현재 값을 가운데 둔 좌표 탐색을 지시한다. `sweeping.md`의 **A look exists, but the user wants a different direction**도 같은 방법을 설명한다.
 
-반면 `SKILL.md`의 **An order with no axis in it**은 기존 대상이 없을 때 좌표 탐색 예외를 열고, `controls.md`도 두 축 컨트롤의 예외를 백지 매트릭스로 한정한다. 따라서 기존 디자인이 있는 경우 좌표 탐색을 시작하는 정확한 조건을 먼저 일치시켜야 한다. 대표 예시 03은 대상이 없는 경우로 한정했다.
+반면 `SKILL.md`의 **An order with no axis in it**은 기존 대상이 없을 때 좌표 탐색 예외를 열고, `controls.md`도 두 축 컨트롤의 예외를 백지 매트릭스로 한정한다. 그래서 기존 디자인이 있을 때 좌표 탐색을 언제 시작하는지 지침끼리 먼저 맞춰야 한다. 대표 예시 03은 대상이 없는 경우로 한정했다.
 
 근거: [Style systems](../../skills/design-helper/references/stylesystems.md#draw-in-the-system-or-on-a-blank-slate), [Sweeping](../../skills/design-helper/references/sweeping.md#a-look-exists-but-the-user-wants-a-different-direction), [SKILL](../../skills/design-helper/SKILL.md#an-order-with-no-axis-in-it), [Controls](../../skills/design-helper/references/controls.md#controls)
 
 ### 두 속성의 조합을 함께 비교하고 확정하기
 
-`SKILL.md`와 `sweeping.md`에는 두 축을 행과 열로 분리해 매트릭스로 비교하라는 설명이 있다. 테두리 두께별로 행을 나누고 밝기별로 열을 나누는 비교가 이에 해당한다.
+`SKILL.md`와 `sweeping.md`에는 두 축을 행과 열로 분리해 매트릭스로 비교하라는 설명이 있다. 테두리 두께로 행을, 밝기로 열을 나누는 비교가 그 예다.
 
 그러나 단일 축 원칙과 컨트롤의 백지 예외 제한이 함께 존재한다. 좌표 탐색은 채팅으로 출발점을 받으며, 단일 축 선택과 달리 개별 속성 확정으로 취급하지 않는다.
 
@@ -58,7 +58,7 @@
 
 `SKILL.md`는 computed style과 스크린샷 확인을 작업 단위당 한 번으로 적고, `liveview.md`는 수정할 때마다 검증하도록 적는다. `controls.md`는 창을 옮긴 뒤 다음 턴에 경계를 다시 보도록 한다. 정확한 재검증 주기를 일치시킬 필요가 있다.
 
-또한 같은 URL을 읽는 Playwright 탭과 사용자 탭은 같은 HTML을 받더라도 `sessionStorage`의 창·맥락 상태가 다를 수 있다. 별도 탭의 스크린샷만 보고 사용자가 조작한 현재 상태까지 확인했다고 단정할 수 없다.
+같은 URL을 읽는 Playwright 탭과 사용자 탭은 같은 HTML을 받더라도 `sessionStorage`의 창·맥락 상태가 다를 수 있다. 그래서 다른 탭의 스크린샷만으로 사용자가 조작한 지금 상태까지 확인했다고 할 수는 없다.
 
 근거: [SKILL — Verify](../../skills/design-helper/SKILL.md#verify), [Live view — After every edit](../../skills/design-helper/references/liveview.md#after-every-edit), [Controls — The boundary goes stale](../../skills/design-helper/references/controls.md#the-boundary-goes-stale-the-captions-dont)
 
