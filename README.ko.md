@@ -1,5 +1,8 @@
 # design-helper
 
+[![last commit](https://img.shields.io/github/last-commit/Dessert99/design-helper)](https://github.com/Dessert99/design-helper/commits/main)
+[![release](https://img.shields.io/github/v/release/Dessert99/design-helper)](https://github.com/Dessert99/design-helper/releases)
+
 [English](README.md) | [한국어](README.ko.md)
 
 > CSS 값·레이아웃·모션을 글이 아니라 눈으로 정하는 Claude Code 스킬
