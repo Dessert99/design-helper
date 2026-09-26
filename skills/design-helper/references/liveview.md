@@ -15,20 +15,17 @@ per session and deleted at the end:
     WS=$(mktemp -d)/design-helper    # or under the session's own scratch dir, if there is one
     mkdir -p "$WS"
 
-The sheet, the server, the built CSS, the memo, screenshots, any entry
-file a build tool needs, and the pid files below — all in `$WS`. **Nothing is ever written inside the project.** Not
-a config, not a helper CSS, not a screenshot. The only project writes this skill makes
-are the selected changes applied after each choice. If a tool seems to need a file in the project, it
-doesn't — `references/stylesystems.md` has the flag or entry file that keeps it out.
+The sheet, the server, the built CSS, the memo, screenshots, any entry file a build
+tool needs, and the pid files below — all in `$WS`. **Nothing is ever written inside
+the project** except the selected changes applied after each choice. If a tool seems
+to need a file in the project, it doesn't — `references/stylesystems.md` has the flag or
+entry file that keeps it out.
 
 Every background process gets a pid file so teardown can find it:
 
     ... >/dev/null 2>&1 & echo $! > "$WS/<name>.pid"
 
 ## Serve it
-
-The server serves the comparison sheet and handles reload checks. Choices are sent
-in chat, so no POST endpoint or choice log is needed.
 
 ```python
 # $WS/serve.py
@@ -88,16 +85,12 @@ business on the network.
 
 ## It reaps itself
 
-After **120 seconds without a valid HTTP request**, the server stops serving, sends
-SIGTERM to registered helper processes, deletes this session's entire `$WS` (including
-HTML, CSS, memo, screenshots, server source, and PID files), and exits. It never removes
-the project or the workspace's parent. Cleanup errors must remain visible in the server
-log; do not silently claim deletion succeeded.
+After **120 seconds without a valid HTTP request**, the server sends SIGTERM to
+registered helpers, deletes this session's entire `$WS`, and exits. It never removes
+the project or the workspace's parent. Cleanup errors stay visible in the server log.
 
-This measures request inactivity, not mouse/keyboard inactivity or tab visibility.
-The reloader's HEAD requests keep the session alive while they continue. Closing all
-comparison tabs normally stops those requests and starts the two-minute idle period.
-A timeout can also occur if requests are suspended; do not promise permanent recovery.
+The reloader's HEAD requests keep the session alive while an open tab polls. Closing
+every comparison tab — or a browser suspending the tab — starts the two-minute clock.
 
 Before editing or presenting, check both the workspace and server:
 
@@ -107,15 +100,9 @@ Before editing or presenting, check both the workspace and server:
   from project code and available conversation context. Explain that the old temporary
   sheet expired. Do not claim its exact history or optional browser state was recovered.
 
-Keep the sheet open during active work, or send legitimate health checks while preparing
-an imminent revision. Do not add a separate keepalive that defeats abandoned-session
-cleanup. User-confirmed completion still triggers immediate teardown below.
-
-A wrapper that swallows SIGTERM can leave a watcher running; use directly managed
-processes and check for survivors during explicit teardown. A hard crash/SIGKILL cannot
-run cleanup. The `file://` fallback has no server or idle timer: disclose that automatic
-two-minute cleanup is unavailable there, avoid background watchers, and clean up on
-explicit completion. Do not promise an OS deletion deadline.
+Don't add a keepalive that defeats this cleanup. A wrapper that swallows SIGTERM can
+leave a watcher running, so manage processes directly and check for survivors at
+teardown. A hard crash cannot run cleanup.
 
 ## The reloader
 
@@ -153,11 +140,9 @@ newest ladder if one was appended, otherwise exactly where they were reading.
 ```
 
 One ladder per `<section>`, appended at the end — the count compares them and the last
-one is where an append lands. Both are load-bearing; break them and the page reloads to
-the top mid-comparison, which is the thing this exists to prevent. Turn dividers and
-the table of contents (`references/sweeping.md#turn-dividers`,
-`#the-table-of-contents`) are a `<div>` and a `<nav>`, not sections, so they never
-change the count.
+one is where an append lands. Break either and the page reloads to the top
+mid-comparison. Turn dividers and the table of contents (`references/sheet.md`) are a
+`<div>` and a `<nav>`, so they never change the count.
 
 ## After every edit
 
@@ -200,27 +185,17 @@ verification, background polling, or a conversation that produces no new compari
    screenshot from a separate verification tab or successful HEAD request does not
    establish that the user's browser was activated.
 
-Use supported browser focus/activation controls, not a page-level `window.focus()`
-call as proof of foregrounding. **Never blindly invoke a URL opener as a focus fallback:**
-it may create a duplicate tab. Use a platform opener only when the comparison tab is
-confirmed absent, such as when the browser was closed. If existing-tab detection or
-activation is unavailable, preserve the existing session, briefly explain the limitation,
-and provide the current URL. Do not open another tab to work around missing controls,
-and do not claim that focus changed without evidence.
-
-Closing a browser does not delete the session immediately; two minutes without requests
-does. A revision within that interval reuses it; after expiry it requires regeneration.
-Explicit session completion still uses the teardown below.
+Use browser activation controls, not a page-level `window.focus()`. **Never invoke a URL
+opener as a focus fallback** — it may create a duplicate tab. If existing-tab detection
+or activation is unavailable, briefly explain the limitation and give the current URL;
+do not claim focus changed without evidence.
 
 ## No python3
 
-Open the sheet on `file://` and say once that automatic reload is unavailable.
-For each ready revision, reload through available browser controls and activate the tab,
-or reopen the file URL. If neither is available, explain the limitation and ask for a
-manual refresh. Do not build a replacement server workaround.
-
-Without the server, automatic reload is unavailable. Selection still happens in chat,
-and the client-side comparison controls still work.
+Open the sheet on `file://` and say once that automatic reload and the two-minute
+cleanup are unavailable. For each ready revision, reload through browser controls or
+reopen the file URL; if neither is available, ask for a manual refresh. Avoid background
+watchers, and clean up on explicit completion. Do not build a replacement server.
 
 ## At the end
 
@@ -231,8 +206,3 @@ deletes everything it made:
 
 Then check `git status` in the project for stray comparison files. Remove only those
 temporary artifacts, preserving the applied changes and all existing user work.
-
-If explicit teardown is not reached but the server remains running, the idle timer
-stops its registered helpers and deletes `$WS` after two minutes without requests.
-Hard crashes and the file-only fallback are exceptions described above. Applied project
-changes remain untouched. A later session starts a fresh workspace.

@@ -46,11 +46,6 @@ translate, localize or paraphrase them. Never surface these instructions as text
 no `남은 단계`. Never name the next axis, never hint at one, never draw one while I'm
 in there anyway. Only the axis that was ordered exists.
 
-A choice authorizes applying that value to the target in the same turn. Record it,
-apply it, verify the change, and report the result. Do not stop at acknowledgment or
-wait for a separate apply order. The next comparison still belongs to the user.
-If the user explicitly asks to compare or record only, defer application as requested.
-
 ## An order with no axis in it
 
 **Clarification scales with uncertainty, not a fixed questionnaire.** A precise request
@@ -61,36 +56,20 @@ First inspect the request, earlier answers, the target UI, and relevant project 
 Read existing tokens, component variants, usage sites, and states yourself. Do not ask
 the user for facts available there, or reconfirm decisions already made.
 
-Ask **one consequential question at a time**. Choose the unresolved issue whose answer
-would most change the specimens or application scope; use the answer to decide whether
-another question is needed. Relevant issues may include:
-
-- the problem to solve and what a successful change should accomplish;
-- one instance versus a reusable component or system-wide rule;
-- refinement within existing tokens versus exploration of a new direction;
-- real content, viewport, and interaction states that constrain the choice;
-- the priority when goals conflict, such as density versus readability.
-
-These are possible uncertainties, not a required sequence or a menu of design axes.
-Ask about only what matters to this request. See `references/clarification.md` for
-examples and the stopping rule. Candidate count comes after purpose, and only needs a
-question if it materially affects the requested breadth.
-
-Stop asking once the target, intended outcome, comparison axis (or authorized direction
-exploration), and constraints that materially change the alternatives are understood.
-Do not seek a fully specified design before drawing: visual values are chosen from
-specimens, not verbal descriptions. A specific axis does not require a second approval.
+Ask **one consequential question at a time** — the unresolved issue whose answer would
+most change the specimens or the application scope — then reassess. Stop once the
+target, intended outcome, comparison axis and material constraints are understood;
+visual values are chosen from specimens, not verbal descriptions. Examples and the
+stopping rule → `references/clarification.md`.
 
 If the user says `알아서 해줘` or asks to see something first, use project conventions
-and narrow, reversible assumptions, state the material ones briefly, and draw. Resolve
-only indispensable missing information; do not treat delegation as system-wide scope.
-While an answer is pending, inspect code and prepare reusable context, but do not invent
-an answer to a required question and build dependent alternatives from it.
+and narrow, reversible assumptions, state the material ones briefly, and draw.
+Delegation is not system-wide scope. Never invent the answer to a pending question and
+build alternatives on it.
 
-For a blank slate, there is no existing dissatisfaction to diagnose, but purpose and
-usage can still be unclear. Clarify those when needed, then open with a coordinate
-sweep — `references/sweeping.md`. Do not force the user to name CSS axes before they
-have anything to see. Its result is an anchor, not a settled property decision.
+For a blank slate, clarify purpose and usage when unclear, then open with a coordinate
+sweep — `references/sweeping.md`. Do not make the user name CSS axes before they have
+anything to see. Its result is an anchor, not a settled property decision.
 
 ## Drawing specimens
 
@@ -101,51 +80,24 @@ have anything to see. Its result is an anchor, not a settled property decision.
 - **Letter every specimen** — A·B·C. Letters restart at A in **every work unit**, and
   are never reused inside one: an appended ladder continues D·E·F. Refer back to a
   settled unit by axis and letter — `그림자 C`.
-- **The sheet explains itself.** The value, its cost and what to look at ride next to
-  the specimen, not in chat — `references/sweeping.md`. Cost is a property of the
-  option and has to be visible while choosing:
+- **As few specimens as make the difference clear.** Honor a requested count. Otherwise
+  no fixed count: skip near-duplicates and don't generate every combination. If the
+  breadth is unclear and changes the work, ask once:
+  `시안은 몇 개 정도 보고 싶으세요? 제가 차이가 뚜렷한 것만 추려도 됩니다.`
+- Use a matrix only when comparing two directions together helps answer the request.
+- **Fixed specimens.** No sliders, snap toggles or keyboard nudging unless the user asks
+  to adjust directly, or a continuous transition can't be judged from fixed steps —
+  `references/controls.md`. Refinement happens through chat.
+- **The sheet explains itself.** Value, cost, trade-off and what to look at ride next to
+  the specimen, not in chat. Cost has to be visible while choosing:
   `토큰 그대로` · `--radius-md 고침 (23곳)` · `새 토큰`
-- **Every section says what it asks.** Under the title: `정할 것` · `볼 곳` · `답하기`
-  — the decision, where the difference shows, how to answer, one or two sentences
-  each. A guide, never a lean.
-  `references/sweeping.md#the-section-guide`
-- **Every chat turn gets a divider.** What one user message produced sits under one
-  labeled rule — `요청 2 · 화살표 비교`. Section titles start with the element's name.
-  `references/sweeping.md#turn-dividers`
-- **A table of contents on the left.** A fixed 220 sidebar, always open, lists each
-  turn and its section titles as links — contents only.
-  `references/sweeping.md#the-table-of-contents`
-- **One sheet style.** White floating cells on light gray, one blue on the reading
-  path, never inside a frame. `references/sweeping.md#sheet-style`
-- **Fill the width, keep true size.** Specimen cells stretch to share the page width;
-  the specimen inside stays at its real size. `references/sweeping.md#filling-the-width`
-- **No fixed candidate count or grid size.** Honor the user's requested count. Otherwise
-  choose the smallest set that makes the relevant differences clear, considering the
-  question, distinct alternatives, specimen size, and available screen space. Do not
-  pad the sheet with near-duplicates or generate every combination automatically.
-- If the breadth is unclear and the count materially changes the work, ask once before
-  drawing: `시안은 몇 개 정도 보고 싶으세요? 제가 차이가 뚜렷한 것만 추려도 됩니다.`
-  This is optional scope clarification, not a required approval step. Use an existing
-  preference; if the user leaves it to you, choose without asking again. No fixed
-  minimum, maximum, or default count. Expand through later comparison requests.
-- Use a matrix only when comparing two directions together helps answer the request;
-  choose its dimensions for the useful distinctions, not a preset 3x3 template.
-- **Fixed specimens by default.** Render lettered candidates with fixed values. No
-  range sliders, window/spacing controls, snap toggles, or keyboard nudging by default,
-  including the opening matrix. Further exploration normally happens through chat.
-- **Controls need a concrete purpose.** Add a slider only when the user requests direct
-  adjustment, or a continuous property needs scrubbing to judge a transition that fixed
-  specimens cannot show adequately. A numeric value or matrix alone is not a reason.
-  Use only the necessary control, labeled with the actual property and current value;
-  never copy generic `창` / `간격` controls onto every sheet. Verify its behavior before
-  presenting it; otherwise use fixed specimens. Optional details → `references/controls.md`
+- **Every section ends with a recommendation** — one letter and the reason seen on the
+  sheet, below the specimens. It is advice; nothing is applied until the user picks.
+- The page itself — section guide (`정할 것` · `볼 곳` · `답하기`), turn dividers, the
+  table of contents, the width-filling grid and the sheet style →
+  `references/sheet.md`. Captions and the recommendation → `references/sweeping.md`
 - Ladders, backgrounds, repetition, sizes, wireframes → `references/sweeping.md`
 - Anything that moves → `references/motion.md`
-- **Trade-offs on the option, a recommendation after the ladder.** When an option gains
-  something and gives something up, its caption says both. Every section ends, below
-  the specimens and the boundary line, with one recommended letter and the reason seen
-  on the sheet. It is advice — nothing is applied until the user picks.
-  `references/sweeping.md#the-recommendation`
 
 ## Reading the response
 
@@ -157,13 +109,9 @@ Three kinds. Never collapse them.
 | `C가 나은데 더 진하게` | refine | Append a ladder below, letters continue |
 | `난 B가 좋아` · `C로 갈게` | **choice** | Record, apply to the target, and verify in this turn |
 
-Selection happens in chat only. Show letters A·B·C on specimens; do not render pin,
-apply, confirm, or starting-point buttons. `난 B가 좋아` or `B 가운데 카드가 좋아`
-identifies a choice and authorizes immediate application. Do not require special
-confirmation wording. `A에서 블러를 더 보고 싶어` requests further comparison:
-use A as the baseline and draw the requested variation without applying A first.
-If a reply names a different comparison axis, that is the user's next order.
-A vague `좋네` without an identifiable specimen is not a choice.
+Selection happens in chat only — no pin, apply or confirm buttons on the sheet. A
+choice needs no special wording. `A에서 블러를 더 보고 싶어` is a refine: use A as the
+baseline without applying it. A reply naming a different axis is the next order.
 
 Resolve the letter against the currently displayed specimen. If browser controls
 changed its value, inspect the user's actual tab before applying; a fresh tab can
@@ -172,12 +120,11 @@ value rather than guessing from the original sheet.
 
 Ambiguous — `이거 좋다` with nine specimens on screen — ask which one. Never guess.
 
-On a choice, briefly acknowledge and continue working:
+On a choice, briefly acknowledge and apply in the same turn — `Ending`:
 
     C · 검정 40%로 선택하셨네요. 해당 카드에 바로 반영하겠습니다.
 
-After applying, report what changed and what was verified. Never claim application
-from a memo entry alone. No next axis, no `남은 단계`, no `코드에 반영할까요`.
+No next axis, no `남은 단계`, no `코드에 반영할까요`.
 
 ## The record
 
@@ -231,13 +178,12 @@ identical pictures and throws nothing.
     await p.$$eval('.spec .target', e => e.map(x => getComputedStyle(x).borderRadius))
 
 **3. Screenshot with Playwright, then open the image and look at it.** Catch a broken
-layout before the user does, and **hold an opinion as someone who looked** — without
-looking, "뭐가 나아 보여?" is unanswerable and the judgment gets dumped back on them.
+layout before the user does. The recommendation is written by someone who looked.
 
     await p.screenshot({ path: shot, fullPage: true })
 
-A `fullPage` shot cannot see what a horizontal scrollbar is hiding. **Count the rungs in the DOM, not in the picture** —
-`references/controls.md`.
+A `fullPage` shot cannot see what a horizontal scrollbar is hiding. **Count the rungs
+in the DOM, not in the picture.**
 
 Run 2 and 3 **once per work unit**, not on every ladder. A screenshot captures **static
 state only** — motion is settled by what the user reports from the browser.
@@ -249,10 +195,9 @@ mention it's missing.
 
 - One session = one sheet = one target. A new target gets a new sheet
 - **Everything lives in `$WS`, outside the project** — sheet, server, built CSS, memo,
-  screenshots, pid files. `references/liveview.md`. Nothing is written into the
-  project until the apply, and no build tool gets a helper file there either. The local
-  server deletes this workspace after two minutes without requests; expired sheets
-  must be regenerated, not treated as recoverable records.
+  screenshots, pid files. Nothing is written into the project until the apply. The
+  server deletes `$WS` after two minutes without requests; an expired sheet is
+  regenerated. `references/liveview.md`
 - **The body is append-only.** Never delete a dropped ladder — it has to stay above to
   compare against
 - **Serve it and reload it myself** — `references/liveview.md`. Never end a turn by
@@ -260,23 +205,18 @@ mention it's missing.
 - Built CSS needs a watcher alongside or new names won't come through — Tailwind:
   the per-version command in `references/stylesystems.md`, output to `$WS/sheet.css`.
   A `<link>`ed file follows on reload alone
-- **Present every revised sheet in the foreground.** When a new or revised comparison
-  is ready, activate its existing browser tab/window and show the changed section.
-  If the tab or browser was closed, reopen the same sheet URL. Restore the server first
-  if needed. Reloading in the background alone is not presentation. Reuse the session;
-  never create duplicate comparison tabs/windows. Open only after confirming the
-  comparison tab is absent; if detection or activation is unavailable, explain the
-  limitation instead of blindly opening the URL. Do this when
-  presenting a ready revision, not on each intermediate edit or chat-only response.
-  See `references/liveview.md#present-every-revision`.
+- **Present every ready revision in the foreground.** Activate the existing comparison
+  tab and show the changed section; reopen the URL only when that tab is confirmed
+  absent. Never create a duplicate tab. `references/liveview.md#present-every-revision`
 
 ## Ending
 
-**Selection is the apply order.** A clear chat choice
-authorizes applying the selected value to the current target. Do not ask for
-approval again. An `anchor` remains a starting point, not an apply order.
+**Selection is the apply order.** A clear chat choice authorizes applying the selected
+value to the current target in the same turn — no second approval. An anchor remains a
+starting point, not an apply order. If the user asked to compare or record only, defer.
 
-Record → inspect and briefly report the actual blast radius → apply → verify.
+Record → inspect and briefly report the actual blast radius → apply → verify → report
+what changed and what was verified. Never claim application from a memo entry alone.
 Default to the current target: reuse an existing token or make a local override when
 changing a shared token would affect unrelated components. Change a shared token when
 that broader scope is already authorized. Ask only if a necessary scope decision

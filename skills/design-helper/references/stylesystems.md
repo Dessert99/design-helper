@@ -120,9 +120,7 @@ whatever files the change lands in.
 
 ## Feeding the controls
 
-Only when optional interactive controls are justified, use detection to fill their
-config — `references/controls.md`. Fixed sheets use the same project values directly
-and need no control engine. Four fields for the interactive mode, per fork:
+Only for an interactive sheet — `references/controls.md`. Four fields, per fork:
 
 | fork | `scale` | `inSystem` | `token` · `uses` |
 |---|---|---|---|
@@ -145,7 +143,4 @@ While choosing, one line per specimen:
 ```
 
 Before applying, the real tally: which files, which lines, which tokens, and what else
-moves with them. Apply within the authorized target: reuse a token or override locally
-by default. Change a shared token only when its wider scope is already authorized.
-Ask about scope only when a necessary decision cannot be inferred; do not make this
-a routine approval gate after selection.
+moves with them. Scope defaults are in `SKILL.md` — `Ending`.

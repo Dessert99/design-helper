@@ -188,7 +188,8 @@ UI 를 만들거나 고치는 중에 평소처럼 말하면 됩니다. 이런 �
 - [`SKILL.md`](skills/design-helper/SKILL.md) — 스킬 본체. 작업 단위, 표본 그리는 규칙, 응답 읽기, 검증, 종료
 - [`references/`](skills/design-helper/references/) — 스킬이 필요할 때 읽는 세부 지침
   - [`clarification.md`](skills/design-helper/references/clarification.md) — 모호한 요청에서 질문하는 법
-  - [`sweeping.md`](skills/design-helper/references/sweeping.md) — 후보 스케일, 배경·크기 맥락, 빈 화면에서 시작하기, 와이어프레임
+  - [`sweeping.md`](skills/design-helper/references/sweeping.md) — 후보 스케일, 캡션과 추천, 배경·크기 맥락, 빈 화면에서 시작하기, 와이어프레임
+  - [`sheet.md`](skills/design-helper/references/sheet.md) — 시트 페이지: 섹션 안내, 요청 구분선, 목차, 배치와 스타일
   - [`stylesystems.md`](skills/design-helper/references/stylesystems.md) — 스타일 체계 감지와 체계별 그리는 법
   - [`controls.md`](skills/design-helper/references/controls.md) — 선택적 슬라이더와 시트 엔진
   - [`motion.md`](skills/design-helper/references/motion.md) — 애니메이션 비교

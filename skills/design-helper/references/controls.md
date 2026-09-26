@@ -2,21 +2,13 @@
 
 ## Optional controls — not the default sheet
 
-Start with fixed, lettered specimens and chat-based selection/refinement. A static
-ladder or matrix needs no engine, sliders, snap checkbox, or keyboard nudging.
-Render its figures directly; keep the auto-reloader from `references/liveview.md`.
-Do not load this engine merely because the comparison has numeric values.
+A fixed ladder or matrix needs none of this; render its specimens directly. Add a
+slider only when the user asks to adjust directly, or when a continuous transition
+can't be judged from fixed steps, and say that purpose on the sheet. Numeric values,
+a matrix, or discrete layouts (one/two/three columns) are not reasons.
 
-Add a slider only when the user asks to drag/adjust directly, or when scrubbing a
-continuous property is needed to judge a transition that fixed candidates cannot
-adequately show. State that purpose briefly on the sheet. Ordinary requests such as
-`5가지로 보여줘`, `출발점을 고르자`, or `A에서 더 보고 싶어` use fixed specimens.
-For discrete layouts such as one/two/three columns, show fixed candidates, not a slider.
-
-Include only controls needed for that task. Do not copy the full control set below.
-Use property-specific Korean labels and a live value with units (e.g. `블러 12px`);
-`배치 창`, `카드 면 창`, and generic `간격` obscure what is changing. Context buttons
-and motion replay are separate tools; their presence does not justify range sliders.
+Include only the controls the task needs. Label each with the property and a live
+value with units (`블러 12px`), never a generic `창` or `간격`.
 
 Before presenting any added slider, exercise its minimum, middle, and maximum and
 check actual component styles/layout, caption values, valid bounds/steps, and reload
@@ -38,10 +30,7 @@ construction, `references/sweeping.md`.
 
 ## Config — what I write per section
 
-The counts and scale lengths below are examples, not defaults. Set `n` to the useful
-candidate count chosen for this request; do not copy five merely because it is shown.
-
-One object, `L`, keyed by section id, in a `<script>` **before** the engine. Section
+The counts below are examples. One object, `L`, keyed by section id, in a `<script>` **before** the engine. Section
 ids stay short and selector-safe: `u1`, `u2`, `m1`.
 
 ```js
@@ -127,7 +116,7 @@ Choose only the needed controls and replace generic labels with the property and
 </div>
 
 <section id="u3" data-kind="ladder" data-axis="그림자 블러">
-  <h2>그림자 블러</h2>
+  <h2>그림자 블러 — ...</h2>
   <div class="scrub">
     <label>창 <input type="range" data-scrub="center:0"></label>
     <label>간격 <input type="range" data-scrub="spread:0" min="1" max="3"></label>
@@ -148,8 +137,9 @@ sizes, the repetition) lives inside it and CSS shows or hides them. The engine s
 per rung. `data-scrub="center:0"` is `<what>:<axis index>`; a ladder has one axis, the
 matrix has two.
 
-One `<section>` per ladder, appended at the end, still holds — `references/liveview.md`
-counts them to land the reload in the right place.
+One `<section>` per ladder, appended at the end — `references/liveview.md` counts them.
+The section guide, captions and recommendation follow `references/sheet.md` and
+`references/sweeping.md` as on a fixed sheet.
 
 ## A ladder that doesn't fit isn't a ladder
 
@@ -170,10 +160,6 @@ The engine dims a boundary whose window moved and appends `— 창을 옮겼습�
 the line. Never leave a dimmed boundary standing while reporting as if it held.
 
 ## Choosing in chat
-
-Label every specimen with a letter and its value. No pin, apply, confirm, or anchor
-buttons. The user says `난 B가 좋아` to apply or `A에서 블러를 더 보고 싶어` to
-compare further. Follow `SKILL.md` for interpretation and application.
 
 When the user scrubs, letters refer to the current window. Read the actual user tab
 and its `.spec` data attributes before resolving a letter; do not infer its value
@@ -216,12 +202,13 @@ For a fixed sheet, omit it entirely.
   const cap = (cf, letter, vals, extra) => {
     const txt = vals.map((x, k) => x + (cf.axes[k].unit || '')).join(' · ');
     const inSys = cf.inSystem === 'all' || vals.every(x => (cf.inSystem || []).includes(x));
-    const c = document.createElement('figcaption');
+    const c = document.createElement('div');
+    c.className = 'cap';
     c.innerHTML =
-      `<b>${letter}</b> <span class="val">${txt}</span>` +
+      `<div class="n"><span class="badge">${letter}</span><span class="val">${txt}</span>` +
       (extra ? ' <span class="add">추가</span>' : '') +
-      (cf.token ? ` <span class="cost${inSys ? '' : ' off'}">${inSys ? '토큰 그대로'
-        : `${cf.token} 고침 (${cf.uses}곳) · 또는 새 토큰`}</span>` : '') +
+      (cf.token ? `<span class="cost${inSys ? '' : ' off'}">${inSys ? '토큰 그대로'
+        : `${cf.token} 고침 (${cf.uses}곳) · 또는 새 토큰`}</span>` : '') + `</div>` +
       `<p class="resolved">${cf.resolve ? cf.resolve(...vals) : ''}</p>` +
       `<p class="eye">${cf.eye ? cf.eye(...vals) : ''}</p>`;
     return c;
@@ -241,7 +228,7 @@ For a fixed sheet, omit it entirely.
     const combos = cols.length === 1 ? cols[0].map(v => [v])
                  : cols[0].flatMap(r => cols[1].map(c => [r, c]));
     const list = [...combos, ...st.extra];
-    box.style.setProperty('--cols', cols.length === 1 ? cols[0].length : cols[1].length);
+    if (cols.length > 1) { box.dataset.matrix = ''; box.style.setProperty('--cols', cols[1].length); }
     box.textContent = '';
     list.forEach((vals, i) => {
       const fig = document.createElement('figure');
@@ -249,7 +236,7 @@ For a fixed sheet, omit it entirely.
       fig.dataset.letter = LET[i] || '?';
       fig.dataset.vals = JSON.stringify(vals);
       const body = document.createElement('div');
-      body.className = 'body';
+      body.className = 'frame';
       body.append(tpl.content.cloneNode(true));
       fig.append(body, cap(cf, LET[i], vals, i >= combos.length));
       cf.draw(body, ...vals);
@@ -299,30 +286,25 @@ For a fixed sheet, omit it entirely.
 
 ## The style
 
+Only what the controls add. Everything else — page, frames, captions, badge, cost —
+is the sheet style in `references/sheet.md`.
+
 ```css
-:root { color-scheme: dark }
-body { margin:0; padding:24px; background:#111; color:#ddd;
-       font:14px/1.6 system-ui, -apple-system, sans-serif }
-.val, .cost, .add { font-family: ui-monospace, SFMono-Regular, monospace }
-
-.ctx { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:32px }
-.ctx button { background:#222; color:#ccc; border:1px solid #3a3a3a;
-        border-radius:4px; padding:3px 8px; font-size:12px; cursor:pointer }
-.ctx button[aria-pressed="true"] { background:#2f3a44; color:#eee; border-color:#4a5a66 }
-
-section { margin:48px 0; overflow-x:auto }
-.scrub { display:flex; gap:16px; align-items:center; color:#999; margin:8px 0 16px }
-.ladder { display:grid; grid-template-columns:repeat(var(--cols,1), minmax(0,1fr)); gap:24px }
+.ctx { display:flex; gap:6px; flex-wrap:wrap; margin:0 0 24px }
+.ctx button, .add { font:inherit; font-size:12px; padding:3px 10px; border-radius:99px;
+        border:1px solid var(--line); background:var(--surface); color:var(--sub) }
+.ctx button { cursor:pointer }
+.ctx button[aria-pressed="true"] { background:var(--accent-tint); color:var(--accent);
+        border-color:transparent }
+.scrub { display:flex; gap:16px; align-items:center; color:var(--sub); margin:8px 0 16px }
+.ladder { display:grid; grid-template-columns:repeat(auto-fill, minmax(380px, 1fr)); gap:36px 28px }
+.ladder[data-matrix] { grid-template-columns:repeat(var(--cols), minmax(0, 1fr)) }
 .spec { margin:0 }
-.spec:focus-visible { outline:1px solid #555; outline-offset:8px }
-figcaption { margin-top:12px; color:#999 }
-figcaption b { color:#eee; margin-right:6px }
-.cost { color:#6a9c6a }
-.cost.off { color:#d9a441 }
-.spec:has(.cost.off) .body { outline:1px dashed #d9a441; outline-offset:6px }
-.add { color:#888; border:1px solid #444; padding:0 4px; border-radius:3px }
-.resolved, .eye { margin:4px 0 0 }
-.edge { color:#aaa; margin-top:16px }
+.spec:focus-visible { outline:2px solid var(--accent); outline-offset:6px; border-radius:var(--radius) }
+.val { font-variant-numeric:tabular-nums }
+.cost.off { background:#fdf3e1; color:#8a5a00 }
+.spec:has(.cost.off) .frame { outline:1px dashed #d9a441; outline-offset:4px }
+.edge { color:var(--sub); margin:18px 0 0 }
 .edge.stale { opacity:.45 }
 .edge.stale::after { content:' — 창을 옮겼습니다. 경계는 다시 봐야 합니다' }
 

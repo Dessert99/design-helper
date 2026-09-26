@@ -2,7 +2,6 @@
 
 Ask more when the decision is less defined, not merely when the message is short.
 Questions clarify intent and constraints; specimens resolve visual preferences.
-Never replace a visual comparison with a prose menu of radius, color, or layout values.
 
 ## Decide what needs a question
 
@@ -23,8 +22,7 @@ Useful questions, only when their answers are missing:
 - Conditions: `이 목록은 긴 제목이나 항목이 많은 경우도 고려해야 하나요?`
 - Tradeoff: `이번에는 한눈에 보이는 정보량과 읽기 편함 중 어느 쪽이 우선인가요?`
 
-Do not ask about scope again at apply time if already resolved. If scope was not
-material to comparison, the target-local application default in `SKILL.md` still holds.
+Do not ask about scope again at apply time if already resolved.
 
 ## Examples
 
@@ -41,7 +39,7 @@ Inspect it, then ask what is difficult today. If the answer is `글이 많아 �
 check existing content and search/navigation behavior. Ask what identifying information
 people use to find a post only if it is still unknown and changes the comparison.
 Clarify density versus readability only if that tradeoff remains relevant. Draw once
-the answers establish a useful comparison; do not automatically ask all five questions.
+the answers establish a useful comparison.
 
 **Blank slate:** `카드를 새로 만들고 싶어.`
 If the task and content are unknown, ask what the card is for. Once purpose and essential

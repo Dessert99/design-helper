@@ -200,7 +200,8 @@ throughout the instructions (`토큰 그대로`, `끝났어`, and so on) need to
 - [`SKILL.md`](skills/design-helper/SKILL.md) — the skill itself: the work unit, drawing rules, reading replies, verification, ending
 - [`references/`](skills/design-helper/references/) — detailed instructions the skill reads when needed
   - [`clarification.md`](skills/design-helper/references/clarification.md) — asking questions about a vague request
-  - [`sweeping.md`](skills/design-helper/references/sweeping.md) — candidate scales, background and size context, starting from a blank slate, wireframes
+  - [`sweeping.md`](skills/design-helper/references/sweeping.md) — candidate scales, captions and the recommendation, background and size context, starting from a blank slate, wireframes
+  - [`sheet.md`](skills/design-helper/references/sheet.md) — the sheet page: section guide, turn dividers, table of contents, layout and style
   - [`stylesystems.md`](skills/design-helper/references/stylesystems.md) — detecting the style system and drawing in each one
   - [`controls.md`](skills/design-helper/references/controls.md) — optional sliders and the sheet engine
   - [`motion.md`](skills/design-helper/references/motion.md) — comparing animation
