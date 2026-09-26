@@ -205,6 +205,7 @@ throughout the instructions (`토큰 그대로`, `끝났어`, and so on) need to
   - [`motion.md`](skills/design-helper/references/motion.md) — comparing animation
   - [`liveview.md`](skills/design-helper/references/liveview.md) — the temporary workspace, local server, browser tab handling, cleanup
 - [`docs/flows.ko.md`](docs/flows.ko.md) — usage flows by situation (Korean)
+- [`scripts/bump-version.sh`](scripts/bump-version.sh) — sets the version in every plugin manifest, then commits and tags the release
 
 ## License
 

@@ -194,6 +194,7 @@ UI 를 만들거나 고치는 중에 평소처럼 말하면 됩니다. 이런 �
   - [`motion.md`](skills/design-helper/references/motion.md) — 애니메이션 비교
   - [`liveview.md`](skills/design-helper/references/liveview.md) — 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
 - [`docs/flows.ko.md`](docs/flows.ko.md) — 상황별 사용 흐름 (한국어)
+- [`scripts/bump-version.sh`](scripts/bump-version.sh) — 모든 플러그인 매니페스트의 버전을 바꾸고 커밋·태그까지 만드는 스크립트
 
 ## 라이선스
 
