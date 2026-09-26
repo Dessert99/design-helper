@@ -78,7 +78,7 @@ Once per session, in the background:
     python3 "$WS/serve.py" 8765 >"$WS/server.log" 2>&1 &
     echo $! > "$WS/server.pid"
 
-Port busy → walk up (8766, 8767…). Never kill whatever is already there. Then open the
+Port busy → walk up (8766, 8767...). Never kill whatever is already there. Then open the
 URL, not the path:
 
     open http://localhost:8765/sheet.html

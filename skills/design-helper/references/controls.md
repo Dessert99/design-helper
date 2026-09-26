@@ -134,9 +134,9 @@ Choose only the needed controls and replace generic labels with the property and
     <label><input type="checkbox" data-scrub="snap"> 스케일에 맞춤</label>
   </div>
   <template>
-    <div class="on-white rep">…the real component, marked `target`, repeated…</div>
-    <div class="on-gray rep">…</div>
-    <div class="on-dark rep">…only when the project has a dark surface…</div>
+    <div class="on-white rep">...the real component, marked `target`, repeated...</div>
+    <div class="on-gray rep">...</div>
+    <div class="on-dark rep">...only when the project has a dark surface...</div>
   </template>
   <div class="ladder"></div>
   <p class="edge">경계 — B·C 는 이 크기에서 구분이 안 됩니다.</p>

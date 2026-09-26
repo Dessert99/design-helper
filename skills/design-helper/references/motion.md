@@ -21,7 +21,7 @@ The `void el.offsetWidth` reflow is what makes the restart take — without it t
 removal and re-add collapse into nothing.
 
 `.spec` is also what the engine in `references/controls.md` stamps, so the two meet here.
-Put `run` on the figure and key the CSS off it — `.spec.run .thing { animation: … }` —
+Put `run` on the figure and key the CSS off it — `.spec.run .thing { animation: ... }` —
 and remember that **any scrub re-stamps the ladder and clears `run`.** Duration and
 easing scrub like any other axis; the replay button just has to be pressed again after.
 

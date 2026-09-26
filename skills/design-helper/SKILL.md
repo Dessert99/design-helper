@@ -115,7 +115,7 @@ have anything to see. Its result is an anchor, not a settled property decision.
   preference; if the user leaves it to you, choose without asking again. No fixed
   minimum, maximum, or default count. Expand through later comparison requests.
 - Use a matrix only when comparing two directions together helps answer the request;
-  choose its dimensions for the useful distinctions, not a preset 3×3 template.
+  choose its dimensions for the useful distinctions, not a preset 3x3 template.
 - **Fixed specimens by default.** Render lettered candidates with fixed values. No
   range sliders, window/spacing controls, snap toggles, or keyboard nudging by default,
   including the opening matrix. Further exploration normally happens through chat.

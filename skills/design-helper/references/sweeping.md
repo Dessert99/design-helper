@@ -46,7 +46,7 @@ next to it.
 Three lines per specimen:
 
 ```
-A   ×1.8                                        토큰 그대로
+A   x1.8                                        토큰 그대로
     윗변 100% · 그림자 100%
     가장 세게 번집니다. B 와 그림자가 같아 한 쌍으로 붙습니다.
 ```
@@ -118,7 +118,7 @@ user to specify a look or CSS axis verbally.
 
 **Show enough labeled coordinates to reveal useful directions and let them point.**
 Choose the count for the target and the user's desired breadth, following `SKILL.md`.
-There is no mandatory 3×3 or nine-cell opener. Use a matrix only when the relationship
+There is no mandatory 3x3 or nine-cell opener. Use a matrix only when the relationship
 between two directions helps; otherwise show a small set of labeled anchor specimens.
 These are starting points, not isolated property decisions.
 
