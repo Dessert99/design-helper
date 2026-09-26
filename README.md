@@ -37,6 +37,8 @@ you   Show me the card's shadow blur in 5 versions
       → labels each specimen with its value and cost:
         토큰 그대로 · --shadow-md 고침 (23곳) · 새 토큰
         (token as-is · edits --shadow-md in 23 places · new token)
+      → below the cards: where the differences stop showing, and which one it
+        recommends and why
 
 you   C is better, but a bit darker
 
@@ -57,6 +59,10 @@ and everything else is held fixed, so any difference you see is that property. E
 value you pick becomes the base for the next comparison.
 
 - **You never copy a value.** Say a letter in chat and the skill writes the code change.
+- **The sheet explains itself.** Each section opens with what to decide, where to look
+  and how to answer; each specimen carries its value, cost and any real trade-off. A
+  fixed table of contents on the left lists every request, so earlier comparisons stay
+  one click away.
 - **You never refresh.** When the sheet changes, the skill reloads its tab and brings it to the front.
   If the agent has no browser controls, it tells you so and gives you the sheet URL.
 - **Your project stays clean.** The sheet, server, notes and screenshots all live in a
@@ -69,10 +75,10 @@ value you pick becomes the base for the next comparison.
 
 ## What it doesn't do
 
-- **It doesn't invent a design.** It's a ruler that lays out a range; the taste is yours.
-  It does say which option it would pick and why, below the specimens once you've
-  looked, and what each option gives up when there's a real trade-off. The pick is
-  still yours.
+- **It doesn't invent a design.** It doesn't make up a finished look; it lays out a range
+  of values to compare. It does say which option it would pick and why, below the
+  specimens once you've looked, and what each option gives up when there's a real
+  trade-off. The pick is still yours.
 - **It doesn't plan the work for you.** No "let's look at color next", no list of remaining
   steps. What to look at next is always your call.
 - **It can't verify behavior.** Focus traps, keyboard handling and screen readers aren't
@@ -163,7 +169,7 @@ take**. So it sits beside them more than against them.
 
 **[frontend-design](https://github.com/anthropics/skills/tree/33375500bcea98d610eb30ce10ac4e59b89c390d/skills/frontend-design)** (Anthropic, official)
 - What it does: gives the agent a design lead's perspective and pushes it toward bold, intentional aesthetics instead of generic AI styling.
-- Difference: there's no step that draws candidates to compare; the agent decides the taste. design-helper decides no taste and has you pick by eye.
+- Difference: there's no step that draws candidates to compare; the agent decides the taste. design-helper draws the candidates and recommends one, but you pick by eye.
 - Reach for it when: you want a finished-looking first design from a blank page in one go. design-helper won't invent a direction.
 
 **[impeccable](https://github.com/pbakaus/impeccable/tree/9d715cc4f5564a990ca8345abfdd5df6dc9b41c8)** (pbakaus)
@@ -183,7 +189,7 @@ take**. So it sits beside them more than against them.
 
 **How design-helper works differently**: single-property ladders compared side by side, an impact label on every specimen, trade-offs and a recommendation shown after the specimens, a choice carried through to application and verification, and working files kept outside the project.
 
-**Where design-helper falls short**: it doesn't suggest a design direction, has no automatic anti-pattern detection, compares on a separate sheet rather than the live app, and replies only in Korean by default.
+**Where design-helper falls short**: it doesn't propose a finished design direction, has no automatic anti-pattern detection, compares on a separate sheet rather than the live app, and replies only in Korean by default.
 
 ## Language
 

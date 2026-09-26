@@ -23,7 +23,7 @@
 
 비교용 두 축 매트릭스와 출발점용 매트릭스를 어떻게 구분하고, 무엇을 확정으로 기록할지 정해지기 전에는 두 축 확정의 정상 흐름으로 설명하지 않는다.
 
-근거: [SKILL — Drawing specimens](../../skills/design-helper/SKILL.md#drawing-specimens), [Sweeping — Candidate scales](../../skills/design-helper/references/sweeping.md#candidate-scales), [Controls — Choosing in chat](../../skills/design-helper/references/controls.md#choosing-in-chat), [The engine](../../skills/design-helper/references/controls.md#the-engine)
+근거: [SKILL — Drawing specimens](../../skills/design-helper/SKILL.md#drawing-specimens), [Sweeping — Candidate scales](../../skills/design-helper/references/sweeping.md#candidate-scales), [SKILL — Reading the response](../../skills/design-helper/SKILL.md#reading-the-response), [Controls — The engine](../../skills/design-helper/references/controls.md#the-engine)
 
 ## 실행 예제와 지침 사이의 차이
 
@@ -45,7 +45,9 @@
 
 ### 맥락과 표본 배치
 
-지침은 기본 배경·크기·반복을 함께 열고 가로 스크롤 없이 후보를 비교하도록 한다. 엔진은 맥락 선택을 `sessionStorage`에서 복원하므로, 새 section에서도 이전의 좁힌 맥락이 이어질 수 있다. 스타일 예제의 section에는 `overflow-x:auto`가 있어 가로 넘침을 자체적으로 금지하지 않는다. 요구되는 배치는 별도 확인이 필요하다.
+지침은 기본 배경·크기·반복을 함께 열도록 한다. 엔진은 맥락 선택을 `sessionStorage`에서 복원하므로, 새 section에서도 이전의 좁힌 맥락이 이어질 수 있다.
+
+한 축 사다리는 폭을 채우는 격자라 칸이 넘치면 다음 줄로 내려간다. 두 축 매트릭스는 열 수를 고정하고 칸을 줄여 맞추므로, 표본이 칸보다 크면 잘릴 수 있다. 이 경우는 별도 확인이 필요하다.
 
 근거: [Sweeping — Context](../../skills/design-helper/references/sweeping.md#context), [Controls — A ladder that doesn't fit](../../skills/design-helper/references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder), [The engine](../../skills/design-helper/references/controls.md#the-engine), [The style](../../skills/design-helper/references/controls.md#the-style)
 

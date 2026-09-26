@@ -35,7 +35,7 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 - 표본이 모두 같아 보이면 잘못된 이름, 래퍼에 붙은 클래스, 다른 CSS에 의한 덮어쓰기를 확인한다.
 - 화면에서 실제로 깨진 부분은 비교를 방해하므로 알린다. 관찰하지 않은 색 차이나 수치를 근거처럼 만들지 않는다.
 - 그 외의 발견은 한 줄로 한 번만 알린다. 주문받지 않은 새 축을 그리거나 작업을 확장하지 않는다.
-- 비교가 가로로 넘치면 지침은 후보 수를 줄이기보다 배경·반복·크기 맥락을 분리하도록 한다. 기본 CSS만으로 가로 넘침이 방지되는 것은 아니다.
+- 비교가 한 화면에 들어가지 않으면 지침은 후보 수와 맥락 배치를 함께 다시 보도록 한다. 겹치는 후보를 빼거나 맥락을 분리하되, 사용자가 개수를 정했으면 그 수를 지키고 묶음을 나눈다. 가로 스크롤로 넘기지 않는다.
 
 근거: [SKILL — Verify](../../skills/design-helper/SKILL.md#verify), [Findings](../../skills/design-helper/SKILL.md#findings), [Controls — A ladder that doesn't fit](../../skills/design-helper/references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
 
@@ -51,15 +51,15 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 자동 새로고침만으로 화면이 앞으로 왔다고 간주하지 않는다. 탭 확인이나 활성화 도구가 없으면 중복 가능성이 있는 URL 열기로 우회하지 않고 한계와 현재 URL을 알린다. 운영체제 URL 열기는 비교 탭이 없음을 확인한 경우에만 사용한다. 화면 전환을 확인할 수 없으면 확인했다고 보고하지 않는다. 자세한 절차는 [수정 시안 제시](../../skills/design-helper/references/liveview.md#present-every-revision)를 따른다.
 
-근거: [Live view — The workspace](../../skills/design-helper/references/liveview.md#the-workspace), [Serve it](../../skills/design-helper/references/liveview.md#serve-it), [The reloader](../../skills/design-helper/references/liveview.md#the-reloader), [After every edit](../../skills/design-helper/references/liveview.md#after-every-edit)
+근거: [Live view — The workspace](../../skills/design-helper/references/liveview.md#the-workspace), [Present every revision](../../skills/design-helper/references/liveview.md#present-every-revision), [Serve it](../../skills/design-helper/references/liveview.md#serve-it), [The reloader](../../skills/design-helper/references/liveview.md#the-reloader), [After every edit](../../skills/design-helper/references/liveview.md#after-every-edit)
 
 ## 도구나 기록이 동작하지 않을 때
 
-`python3`가 없으면 지침은 `file://`로 시트를 열고 수동 새로고침임을 한 번 알리도록 한다. 이 경우 자동 새로고침은 사용할 수 없으며, 선택은 평소처럼 채팅으로 받는다. 서버의 자동 정리도 없으므로 워처를 백그라운드로 두지 않고 수정 때마다 빌드한다.
+`python3`가 없으면 지침은 `file://`로 시트를 열고, 자동 새로고침과 2분 자동 정리가 없다는 것을 한 번 알리도록 한다. 수정할 때마다 브라우저 제어로 다시 불러오거나 파일 URL을 다시 열고, 둘 다 안 되면 수동 새로고침을 부탁한다. 선택은 평소처럼 채팅으로 받는다. 워처를 백그라운드로 두지 않고, 완료 시 직접 정리한다.
 
 선택은 채팅으로 받는다. 사용자가 조작한 창의 문자가 어떤 값을 가리키는지는 실제 사용자 탭에서 확인한다. 별도 탭의 초기값을 선택값으로 추측하지 않는다.
 
-## 일시 중단## 일시 중단과 종료
+## 일시 중단과 종료
 
 > 사용자: 오늘은 여기까지.
 
@@ -69,6 +69,6 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 아무 말 없이 탭이나 세션이 끝난 경우에는 서버의 idle 감시가 작동한다. 구현은 탭의 존재 자체가 아니라 **마지막 요청 이후 경과 시간**을 본다. 요청이 약 2분 이상 없으면 서버를 닫고 등록된 보조 프로세스에 종료 신호를 보낸 뒤 해당 세션의 임시 폴더 전체를 삭제한다. 시안·메모·스크린샷도 삭제되므로 이후에는 새로 생성해야 한다. 프로젝트 코드와 상위 폴더는 삭제하지 않는다. 따라서 새로고침 요청이 계속 들어오면 사용자가 자리를 비워도 종료되지 않는다.
 
-SIGTERM을 전달하지 않는 래퍼를 통해 시작한 워처는 남을 수 있다. 서버 강제 종료나 충돌로 정리 코드가 실행되지 못한 경우, 파일 삭제까지 보장하지 않는다. `file://` 대안에는 서버 타이머가 없으므로 2분 자동 삭제를 지원하지 않음을 알리고 완료 시 직접 정리한다.
+SIGTERM을 전달하지 않는 래퍼를 통해 시작한 워처는 남을 수 있다. 서버 강제 종료나 충돌로 정리 코드가 실행되지 못한 경우, 파일 삭제까지 보장하지 않는다.
 
 근거: [SKILL — Ending](../../skills/design-helper/SKILL.md#ending), [Live view — It reaps itself](../../skills/design-helper/references/liveview.md#it-reaps-itself), [At the end](../../skills/design-helper/references/liveview.md#at-the-end)

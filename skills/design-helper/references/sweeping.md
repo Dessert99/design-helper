@@ -100,8 +100,9 @@ drawn in multiples here.
 **Real content.** Placeholder boxes hide the problem — a card with lorem ipsum and a
 card with a real headline, avatar and timestamp are different design problems.
 
-Show background, repetition and size contexts together. Never open a sheet already
-narrowed because it looks tidier. Real content is not a toggle: there is no version of
+Show background, repetition and size contexts together. Context buttons may isolate one
+condition when that materially helps; they bring no sliders with them. Never open a
+sheet already narrowed because it looks tidier. Real content is not a toggle: there is no version of
 this where lorem ipsum is the right specimen.
 
 ### When context is a constraint, not a variable
