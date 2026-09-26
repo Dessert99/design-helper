@@ -70,8 +70,9 @@ value you pick becomes the base for the next comparison.
 ## What it doesn't do
 
 - **It doesn't invent a design.** It's a ruler that lays out a range; the taste is yours.
-  It won't recommend one value on a ladder either. It points out visible boundaries —
-  "B and C look the same at this size" — and recommends only when you ask outright.
+  It does say which option it would pick and why, below the specimens once you've
+  looked, and what each option gives up when there's a real trade-off. The pick is
+  still yours.
 - **It doesn't plan the work for you.** No "let's look at color next", no list of remaining
   steps. What to look at next is always your call.
 - **It can't verify behavior.** Focus traps, keyboard handling and screen readers aren't
@@ -180,7 +181,7 @@ take**. So it sits beside them more than against them.
 - Difference: the output is images (PNG), not code; applying it is left to other skills. It needs an image-generation tool. design-helper draws in CSS with no generation tool.
 - Reach for it when: you can't yet say what you want and need to diverge widely.
 
-**How design-helper works differently**: single-property ladders compared side by side, an impact label on every specimen, no recommendation on a ladder, a choice carried through to application and verification, and working files kept outside the project.
+**How design-helper works differently**: single-property ladders compared side by side, an impact label on every specimen, trade-offs and a recommendation shown after the specimens, a choice carried through to application and verification, and working files kept outside the project.
 
 **Where design-helper falls short**: it doesn't suggest a design direction, has no automatic anti-pattern detection, compares on a separate sheet rather than the live app, and replies only in Korean by default.
 

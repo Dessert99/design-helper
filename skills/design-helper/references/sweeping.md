@@ -54,12 +54,42 @@ A   x1.8                                        토큰 그대로
 1. letter · the value being moved · its cost
 2. what that value resolves to, when the value alone doesn't show it
 3. one line on what it does to the eye
+4. **only if there is a real trade-off** — what this option gains and what it gives up,
+   against the others on the sheet:
+
+```
+B   안쪽을 줄이고 간격도 조금 줄임                     layout.css 변수 + phone-md 1곳
+    360 미만: 아이콘 18 · 글자 11 · 칸 사이 8 · 양끝 12
+    칸이 38 로 넓어져 "타임라인"이 칸 안에 딱 맞습니다.
+    얻는 것 — 320 에서도 글자가 잘리지 않습니다. / 잃는 것 — 320 에서만 칸 사이가 피그마보다 4 좁습니다.
+```
+
+Leave line 4 out when nothing is given up — a pure step on a ladder usually has none.
+Name concrete costs (a width that breaks, a token that moves, a state that stops
+reading), never vague ones like `덜 깔끔함`.
 
 Under the ladder, where the perceptual steps break:
 
 ```
 경계 — B·C 는 이 크기에서 구분이 안 됩니다. E 부터 떠 보이기 시작합니다.
 ```
+
+### The recommendation
+
+After the boundary line, every section ends with one recommended letter and why:
+
+```
+추천 — B. 320 에서 A 는 "타임라인"이 칸을 넘치고, B 는 칸 사이 4 를 내주는 대신
+       모든 폭에서 글자가 칸 안에 들어갑니다. 360 이상은 둘이 같아 차이가 320 에만 있습니다.
+```
+
+- **Below the specimens, never above them.** The user looks first, then reads it.
+  The guide and captions stay neutral.
+- **The reason comes from the sheet** — the real content, widths, states and costs
+  drawn there, and the trade-offs in the captions. Point at what is visible.
+- When only taste separates the options, still name one, and say plainly that the
+  reason is taste rather than inventing a functional one.
+- It is advice, not a choice. Nothing is applied until the user picks in chat.
 
 ### The section guide
 
@@ -89,7 +119,8 @@ Plain sentences, not fragments — the user reads this cold. Keep each label to 
 sentences; anything longer belongs in the specimen captions.
 
 This is a reading guide, not a recommendation. It never ranks the options or leans
-toward one. It sits above the specimens; the boundary line stays below them.
+toward one. It sits above the specimens; the boundary line and the recommendation stay
+below them.
 
 ### Turn dividers
 
@@ -198,7 +229,7 @@ belongs to the sheet, not to the specimens.
 - **Cells float.** Specimen frames and the guide box are white with a faint two-layer
   shadow and radius 14, so a specimen reads first without a line around every cell.
 - **One accent, on the reading path only.** Blue marks the letter badge, the guide
-  labels and the current table-of-contents item. It never goes
+  labels, the recommendation label and the current table-of-contents item. It never goes
   inside a frame or next to a specimen's surface, where it would bias a color judgment.
 - **Neutral behind specimens.** The frame stays white. When the ordered axis is itself
   surface or background, the specimen's context rules (`#context`) override the frame.
@@ -236,6 +267,11 @@ section h2 { font-size:20px; letter-spacing:-.01em; margin:22px 0 6px }
         border-radius:99px; background:var(--page); color:#52525b }
 .cap p { margin:2px 0 0 } .cap .resolved { color:var(--muted) }
 .bound { color:var(--sub); margin:18px 0 0 }
+.gain { color:var(--sub) } .gain b { color:var(--ink); font-weight:600 }
+.pick { display:flex; gap:12px; max-width:820px; margin:14px 0 0; padding:12px 16px;
+        background:var(--surface); border:1px solid rgba(0,0,0,.04);
+        border-radius:var(--radius); box-shadow:var(--float) }
+.pick > b { color:var(--accent); white-space:nowrap }
 ```
 
 ```html
@@ -245,8 +281,12 @@ section h2 { font-size:20px; letter-spacing:-.01em; margin:22px 0 6px }
     <div class="n"><span class="badge">A</span>두께 얇음 · 모서리 각짐<span class="cost">새 변수</span></div>
     <p class="resolved">높이 52 · 안쪽 여백 0 · 모서리 14</p>
     <p>면이 적어 콘텐츠가 더 보입니다.</p>
+    <p class="gain"><b>얻는 것</b> — ... / <b>잃는 것</b> — ...</p>  <!-- only with a real trade-off -->
   </div>
 </div>
+...
+<p class="bound">경계 — ...</p>
+<div class="pick"><b>추천 — B</b><span>이유 ...</span></div>
 ```
 
 **For optional interactive sheets**, write lines 2 and 3 as functions of the value,

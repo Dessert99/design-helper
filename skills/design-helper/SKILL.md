@@ -141,9 +141,11 @@ have anything to see. Its result is an anchor, not a settled property decision.
   presenting it; otherwise use fixed specimens. Optional details → `references/controls.md`
 - Ladders, backgrounds, repetition, sizes, wireframes → `references/sweeping.md`
 - Anything that moves → `references/motion.md`
-- **Never recommend one value on a ladder.** Point at perceptual boundaries instead:
-  `B와 C는 이 크기에서 구분이 안 됩니다` · `E부터 떠 보이기 시작합니다`. Recommend one
-  only when asked outright — `너 추천대로`.
+- **Trade-offs on the option, a recommendation after the ladder.** When an option gains
+  something and gives something up, its caption says both. Every section ends, below
+  the specimens and the boundary line, with one recommended letter and the reason seen
+  on the sheet. It is advice — nothing is applied until the user picks.
+  `references/sweeping.md#the-recommendation`
 
 ## Reading the response
 
