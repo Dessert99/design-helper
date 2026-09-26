@@ -148,7 +148,7 @@ sizes, the repetition) lives inside it and CSS shows or hides them. The engine s
 per rung. `data-scrub="center:0"` is `<what>:<axis index>`; a ladder has one axis, the
 matrix has two.
 
-`id="latest"` and one `<section>` per ladder still hold — `references/liveview.md`
+One `<section>` per ladder, appended at the end, still holds — `references/liveview.md`
 counts them to land the reload in the right place.
 
 ## A ladder that doesn't fit isn't a ladder

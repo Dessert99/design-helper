@@ -105,6 +105,20 @@ have anything to see. Its result is an anchor, not a settled property decision.
   the specimen, not in chat — `references/sweeping.md`. Cost is a property of the
   option and has to be visible while choosing:
   `토큰 그대로` · `--radius-md 고침 (23곳)` · `새 토큰`
+- **Every section says what it asks.** Under the title: `정할 것` · `볼 곳` · `답하기`
+  — the decision, where the difference shows, how to answer, one or two sentences
+  each. A guide, never a lean.
+  `references/sweeping.md#the-section-guide`
+- **Every chat turn gets a divider.** What one user message produced sits under one
+  labeled rule — `요청 2 · 화살표 비교`. Section titles start with the element's name.
+  `references/sweeping.md#turn-dividers`
+- **A table of contents on the left.** A fixed 220 sidebar, always open, lists each
+  turn and its section titles as links — contents only.
+  `references/sweeping.md#the-table-of-contents`
+- **One sheet style.** White floating cells on light gray, one blue on the reading
+  path, never inside a frame. `references/sweeping.md#sheet-style`
+- **Fill the width, keep true size.** Specimen cells stretch to share the page width;
+  the specimen inside stays at its real size. `references/sweeping.md#filling-the-width`
 - **No fixed candidate count or grid size.** Honor the user's requested count. Otherwise
   choose the smallest set that makes the relevant differences clear, considering the
   question, distinct alternatives, specimen size, and available screen space. Do not
@@ -163,13 +177,10 @@ On a choice, briefly acknowledge and continue working:
 After applying, report what changed and what was verified. Never claim application
 from a memo entry alone. No next axis, no `남은 단계`, no `코드에 반영할까요`.
 
-## The record — never on screen
+## The record
 
 Keep it in `$WS/memo.md`, beside the sheet: axis → chosen value → what it resolves
 to. It exists for one reason — so the next ladder can be drawn on top of it.
-
-**None of it is rendered.** No pinned table, no sticky panel, no 확정값 line in a
-section header, no floating anything. The sheet shows specimens. The memo is mine.
 
 An anchor from a blank-slate matrix is recorded as `출발점:`, never `확정:` — every
 property it bundles is still open.

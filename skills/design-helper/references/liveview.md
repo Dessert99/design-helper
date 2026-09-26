@@ -134,7 +134,7 @@ newest ladder if one was appended, otherwise exactly where they were reading.
   let touched = false;
   const place = () => {
     if (touched) return;
-    if (n > prev) document.getElementById('latest')?.scrollIntoView();
+    if (n > prev) document.querySelectorAll('section')[n - 1]?.scrollIntoView();
     else scrollTo(0, y);
   };
   addEventListener('load', place);
@@ -152,9 +152,12 @@ newest ladder if one was appended, otherwise exactly where they were reading.
 </script>
 ```
 
-One ladder per `<section>`, and `id="latest"` moves to the newest one on every append —
-that's what the count compares. Both are load-bearing; drop them and the page reloads to
-the top mid-comparison, which is the thing this exists to prevent.
+One ladder per `<section>`, appended at the end — the count compares them and the last
+one is where an append lands. Both are load-bearing; break them and the page reloads to
+the top mid-comparison, which is the thing this exists to prevent. Turn dividers and
+the table of contents (`references/sweeping.md#turn-dividers`,
+`#the-table-of-contents`) are a `<div>` and a `<nav>`, not sections, so they never
+change the count.
 
 ## After every edit
 
