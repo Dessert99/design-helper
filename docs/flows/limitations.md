@@ -13,7 +13,7 @@
 
 반면 `SKILL.md`의 **An order with no axis in it**은 기존 대상이 없을 때 좌표 탐색 예외를 열고, `controls.md`도 두 축 컨트롤의 예외를 백지 매트릭스로 한정한다. 따라서 기존 디자인이 있는 경우 좌표 탐색을 시작하는 정확한 조건을 먼저 일치시켜야 한다. 대표 예시 03은 대상이 없는 경우로 한정했다.
 
-근거: [Style systems](../../references/stylesystems.md#draw-in-the-system-or-on-a-blank-slate), [Sweeping](../../references/sweeping.md#a-look-exists-but-the-user-wants-a-different-direction), [SKILL](../../SKILL.md#an-order-with-no-axis-in-it), [Controls](../../references/controls.md#controls)
+근거: [Style systems](../../skills/design-helper/references/stylesystems.md#draw-in-the-system-or-on-a-blank-slate), [Sweeping](../../skills/design-helper/references/sweeping.md#a-look-exists-but-the-user-wants-a-different-direction), [SKILL](../../skills/design-helper/SKILL.md#an-order-with-no-axis-in-it), [Controls](../../skills/design-helper/references/controls.md#controls)
 
 ### 두 속성의 조합을 함께 비교하고 확정하기
 
@@ -23,7 +23,7 @@
 
 비교용 두 축 매트릭스와 출발점용 매트릭스를 어떻게 구분하고, 무엇을 확정으로 기록할지 정해지기 전에는 두 축 확정의 정상 흐름으로 설명하지 않는다.
 
-근거: [SKILL — Drawing specimens](../../SKILL.md#drawing-specimens), [Sweeping — Candidate scales](../../references/sweeping.md#candidate-scales), [Controls — Choosing in chat](../../references/controls.md#choosing-in-chat), [The engine](../../references/controls.md#the-engine)
+근거: [SKILL — Drawing specimens](../../skills/design-helper/SKILL.md#drawing-specimens), [Sweeping — Candidate scales](../../skills/design-helper/references/sweeping.md#candidate-scales), [Controls — Choosing in chat](../../skills/design-helper/references/controls.md#choosing-in-chat), [The engine](../../skills/design-helper/references/controls.md#the-engine)
 
 ## 실행 예제와 지침 사이의 차이
 
@@ -34,20 +34,20 @@
 
 현재 엔진의 `build()`는 section마다 `LET[i]`를 사용하므로 새 section은 다시 A부터 시작한다. section 안에서 화살표 키로 추가한 값은 뒤에 붙지만, 새 사다리를 section으로 추가할 때의 문자 시작 위치 설정은 없다.
 
-근거: [SKILL — Drawing specimens](../../SKILL.md#drawing-specimens), [Controls — The engine](../../references/controls.md#the-engine)
+근거: [SKILL — Drawing specimens](../../skills/design-helper/SKILL.md#drawing-specimens), [Controls — The engine](../../skills/design-helper/references/controls.md#the-engine)
 
 <a id="느린재생"></a>
 ### 느린 재생
 
 모션 지침은 `0.25x`를 요구하지만 CSS 예제는 모든 animation/transition duration을 `4s !important`로 덮어쓴다. 이는 각 원래 시간을 네 배로 늘리는 동작이 아니며 duration 후보의 차이를 없앤다. 대표 예시 10은 실제 속도에서 선택하는 흐름으로 제한했다.
 
-근거: [Motion — Three devices](../../references/motion.md#three-devices)
+근거: [Motion — Three devices](../../skills/design-helper/references/motion.md#three-devices)
 
 ### 맥락과 표본 배치
 
 지침은 기본 배경·크기·반복을 함께 열고 가로 스크롤 없이 후보를 비교하도록 한다. 엔진은 맥락 선택을 `sessionStorage`에서 복원하므로, 새 section에서도 이전의 좁힌 맥락이 이어질 수 있다. 스타일 예제의 section에는 `overflow-x:auto`가 있어 가로 넘침을 자체적으로 금지하지 않는다. 요구되는 배치는 별도 확인이 필요하다.
 
-근거: [Sweeping — Context](../../references/sweeping.md#context), [Controls — A ladder that doesn't fit](../../references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder), [The engine](../../references/controls.md#the-engine), [The style](../../references/controls.md#the-style)
+근거: [Sweeping — Context](../../skills/design-helper/references/sweeping.md#context), [Controls — A ladder that doesn't fit](../../skills/design-helper/references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder), [The engine](../../skills/design-helper/references/controls.md#the-engine), [The style](../../skills/design-helper/references/controls.md#the-style)
 
 ## 해석을 맞춰야 하는 운영 규칙
 
@@ -58,7 +58,7 @@
 
 또한 같은 URL을 읽는 Playwright 탭과 사용자 탭은 같은 HTML을 받더라도 `sessionStorage`의 창·맥락 상태가 다를 수 있다. 별도 탭의 스크린샷만 보고 사용자가 조작한 현재 상태까지 확인했다고 단정할 수 없다.
 
-근거: [SKILL — Verify](../../SKILL.md#verify), [Live view — After every edit](../../references/liveview.md#after-every-edit), [Controls — The boundary goes stale](../../references/controls.md#the-boundary-goes-stale-the-captions-dont)
+근거: [SKILL — Verify](../../skills/design-helper/SKILL.md#verify), [Live view — After every edit](../../skills/design-helper/references/liveview.md#after-every-edit), [Controls — The boundary goes stale](../../skills/design-helper/references/controls.md#the-boundary-goes-stale-the-captions-dont)
 
 <a id="일시중단"></a>
 ### 일시 중단과 다음 세션의 복원
@@ -67,4 +67,4 @@
 
 요청이 2분 동안 없으면 서버가 임시 폴더까지 삭제한다. 그 전의 서버 복구와 만료 후의 시안 재생성을 구분한다. 삭제된 메모나 시안 이력의 정확한 복원은 보장하지 않으며, 이후에는 프로젝트 코드와 남아 있는 대화를 바탕으로 다시 만든다.
 
-근거: [Live view — It reaps itself](../../references/liveview.md#it-reaps-itself), [At the end](../../references/liveview.md#at-the-end)
+근거: [Live view — It reaps itself](../../skills/design-helper/references/liveview.md#it-reaps-itself), [At the end](../../skills/design-helper/references/liveview.md#at-the-end)

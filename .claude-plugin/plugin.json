@@ -1,0 +1,13 @@
+{
+  "name": "design-helper",
+  "description": "Settle CSS values, layout and motion by eye: draws every candidate side by side in the browser, you pick one, and it applies the choice to your code.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Dessert99",
+    "url": "https://github.com/Dessert99"
+  },
+  "homepage": "https://github.com/Dessert99/design-helper",
+  "repository": "https://github.com/Dessert99/design-helper",
+  "license": "MIT",
+  "keywords": ["design", "css", "ui", "layout", "motion", "comparison", "frontend"]
+}

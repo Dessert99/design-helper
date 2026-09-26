@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "design-helper",
+  "description": "design-helper, a skill for settling CSS values, layout and motion by eye",
+  "owner": {
+    "name": "Dessert99",
+    "url": "https://github.com/Dessert99"
+  },
+  "plugins": [
+    {
+      "name": "design-helper",
+      "description": "Settle CSS values, layout and motion by eye: draws every candidate side by side in the browser, you pick one, and it applies the choice to your code.",
+      "version": "0.2.0",
+      "source": "./",
+      "author": {
+        "name": "Dessert99",
+        "url": "https://github.com/Dessert99"
+      },
+      "category": "design"
+    }
+  ]
+}

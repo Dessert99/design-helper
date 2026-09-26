@@ -82,15 +82,36 @@ design-helper 는 이 질문을 말로 하지 않습니다. 후보를 전부 그
 
 ## 설치
 
-아무 데나 clone 한 뒤, 쓰는 에이전트의 스킬 디렉토리에 심링크를 겁니다. 심링크는
-복사본이 아니라 원본을 가리키는 포인터라서, clone 을 고치면 바로 반영되고 따로
-동기화할 사본이 생기지 않습니다.
+### 플러그인으로 (권장)
+
+이 저장소 자체가 두 에이전트 모두의 플러그인 마켓플레이스입니다.
 
 ```sh
-git clone https://github.com/Dessert99/design-helper.git ~/skills/design-helper
+# Claude Code — 세션 안에서
+/plugin marketplace add Dessert99/design-helper
+/plugin install design-helper@design-helper
 
-ln -sfn ~/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
-ln -sfn ~/skills/design-helper ~/.codex/skills/design-helper    # Codex
+# Codex — 셸에서
+codex plugin marketplace add Dessert99/design-helper
+codex plugin add design-helper@design-helper
+```
+
+설치한 뒤 세션을 새로 시작해야 스킬이 잡힙니다. 업데이트는 마켓플레이스를 새로 받은
+뒤(Claude Code 는 `/plugin marketplace update design-helper`, Codex 는
+`codex plugin marketplace upgrade`) 다시 설치하면 됩니다.
+
+### clone 해서
+
+스킬을 직접 고치고 싶을 때 — 예를 들어 [언어를 바꿀 때](#언어-설정) — 이 방법을 씁니다.
+아무 데나 clone 한 뒤, 스킬 폴더를 쓰는 에이전트의 스킬 디렉토리에 심링크로 겁니다.
+심링크는 복사본이 아니라 원본을 가리키는 포인터라서, clone 을 고치면 바로 반영되고
+따로 동기화할 사본이 생기지 않습니다.
+
+```sh
+git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
+
+ln -sfn ~/src/design-helper/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
+ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper    # Codex
 ```
 
 두 에이전트가 읽는 방식은 같습니다. `SKILL.md` 의 `description` 은 세션이 시작할 때
@@ -158,19 +179,20 @@ UI 를 만들거나 고치는 중에 평소처럼 말하면 됩니다. 이런 �
 지시문은 영어로 쓰여 있지만, 채팅 답변과 비교 시트에 표시되는 문자열은 전부 한국어입니다.
 코드·클래스 이름·파일 이름·커밋 메시지는 영어로 둡니다.
 
-다른 언어로 바꾸려면 `SKILL.md` 의 `## Language` 섹션을 고치면 됩니다. 지시문 곳곳에
+다른 언어로 바꾸려면 [clone 해서](#clone-해서) 설치한 뒤 `skills/design-helper/SKILL.md` 의
+`## Language` 섹션을 고치면 됩니다. (플러그인 설치본은 업데이트할 때마다 덮어써집니다.) 지시문 곳곳에
 인용된 한국어 고정 문구(`토큰 그대로`, `끝났어` 등)도 함께 바꿔야 합니다.
 
 ## 문서
 
-- [`SKILL.md`](SKILL.md) — 스킬 본체. 작업 단위, 표본 그리는 규칙, 응답 읽기, 검증, 종료
-- [`references/`](references/) — 스킬이 필요할 때 읽는 세부 지침
-  - [`clarification.md`](references/clarification.md) — 모호한 요청에서 질문하는 법
-  - [`sweeping.md`](references/sweeping.md) — 후보 스케일, 배경·크기 맥락, 빈 화면에서 시작하기, 와이어프레임
-  - [`stylesystems.md`](references/stylesystems.md) — 스타일 체계 감지와 체계별 그리는 법
-  - [`controls.md`](references/controls.md) — 선택적 슬라이더와 시트 엔진
-  - [`motion.md`](references/motion.md) — 애니메이션 비교
-  - [`liveview.md`](references/liveview.md) — 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
+- [`SKILL.md`](skills/design-helper/SKILL.md) — 스킬 본체. 작업 단위, 표본 그리는 규칙, 응답 읽기, 검증, 종료
+- [`references/`](skills/design-helper/references/) — 스킬이 필요할 때 읽는 세부 지침
+  - [`clarification.md`](skills/design-helper/references/clarification.md) — 모호한 요청에서 질문하는 법
+  - [`sweeping.md`](skills/design-helper/references/sweeping.md) — 후보 스케일, 배경·크기 맥락, 빈 화면에서 시작하기, 와이어프레임
+  - [`stylesystems.md`](skills/design-helper/references/stylesystems.md) — 스타일 체계 감지와 체계별 그리는 법
+  - [`controls.md`](skills/design-helper/references/controls.md) — 선택적 슬라이더와 시트 엔진
+  - [`motion.md`](skills/design-helper/references/motion.md) — 애니메이션 비교
+  - [`liveview.md`](skills/design-helper/references/liveview.md) — 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
 - [`docs/flows.ko.md`](docs/flows.ko.md) — 상황별 사용 흐름 (한국어)
 
 ## 라이선스

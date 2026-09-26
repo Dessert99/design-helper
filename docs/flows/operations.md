@@ -21,7 +21,7 @@ Tailwind 클래스는 표본의 래퍼가 아닌 실제 `.target` 노드들에 �
 
 지침은 프로젝트 안에 비교용 config나 helper CSS를 만들지 않도록 한다. 기존 체계 안에서 볼지 새로운 방향을 탐색할지 불명확하면 측정 조건을 확인한다. 다만 기존 디자인의 방향 재탐색은 [지침 간 범위 차이](limitations.md#방향재탐색)가 있다.
 
-근거: [Style systems — Detect first](../../references/stylesystems.md#detect-first), [The five forks](../../references/stylesystems.md#the-five-forks), [Feeding the controls](../../references/stylesystems.md#feeding-the-controls), [Controls — The utility fork](../../references/controls.md#the-utility-fork)
+근거: [Style systems — Detect first](../../skills/design-helper/references/stylesystems.md#detect-first), [The five forks](../../skills/design-helper/references/stylesystems.md#the-five-forks), [Feeding the controls](../../skills/design-helper/references/stylesystems.md#feeding-the-controls), [Controls — The utility fork](../../skills/design-helper/references/controls.md#the-utility-fork)
 
 <a id="검증과발견"></a>
 ## 검증과 발견
@@ -37,7 +37,7 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 - 그 외의 발견은 한 줄로 한 번만 알린다. 주문받지 않은 새 축을 그리거나 작업을 확장하지 않는다.
 - 비교가 가로로 넘치면 지침은 후보 수를 줄이기보다 배경·반복·크기 맥락을 분리하도록 한다. 기본 CSS만으로 가로 넘침이 방지되는 것은 아니다.
 
-근거: [SKILL — Verify](../../SKILL.md#verify), [Findings](../../SKILL.md#findings), [Controls — A ladder that doesn't fit](../../references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
+근거: [SKILL — Verify](../../skills/design-helper/SKILL.md#verify), [Findings](../../skills/design-helper/SKILL.md#findings), [Controls — A ladder that doesn't fit](../../skills/design-helper/references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
 
 ## 서버와 새로고침
 
@@ -49,9 +49,9 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 수정 시안을 제시할 때마다 비교 탭을 선택하고 브라우저 창을 앞으로 가져온다. 탭이나 브라우저가 닫혔다면 같은 세션의 시트 URL을 다시 연다. 서버만 종료되었으면 기존 작업 폴더에서 복구한다. 요청 없이 2분이 지나 폴더까지 삭제되었으면 코드와 대화 내용을 바탕으로 새 시안을 만든 뒤 연다. 기존 비교 탭이 있으면 반드시 재사용하고, 탭이 없음을 확인한 경우에만 새로 연다. 새 비교뿐 아니라 기존 구역 수정도 해당 구역으로 이동해 보여준다. 중간 파일 저장이나 대화만 하는 턴에는 포커스를 빼앗지 않는다.
 
-자동 새로고침만으로 화면이 앞으로 왔다고 간주하지 않는다. 탭 확인이나 활성화 도구가 없으면 중복 가능성이 있는 URL 열기로 우회하지 않고 한계와 현재 URL을 알린다. 운영체제 URL 열기는 비교 탭이 없음을 확인한 경우에만 사용한다. 화면 전환을 확인할 수 없으면 확인했다고 보고하지 않는다. 자세한 절차는 [수정 시안 제시](../../references/liveview.md#present-every-revision)를 따른다.
+자동 새로고침만으로 화면이 앞으로 왔다고 간주하지 않는다. 탭 확인이나 활성화 도구가 없으면 중복 가능성이 있는 URL 열기로 우회하지 않고 한계와 현재 URL을 알린다. 운영체제 URL 열기는 비교 탭이 없음을 확인한 경우에만 사용한다. 화면 전환을 확인할 수 없으면 확인했다고 보고하지 않는다. 자세한 절차는 [수정 시안 제시](../../skills/design-helper/references/liveview.md#present-every-revision)를 따른다.
 
-근거: [Live view — The workspace](../../references/liveview.md#the-workspace), [Serve it](../../references/liveview.md#serve-it), [The reloader](../../references/liveview.md#the-reloader), [After every edit](../../references/liveview.md#after-every-edit)
+근거: [Live view — The workspace](../../skills/design-helper/references/liveview.md#the-workspace), [Serve it](../../skills/design-helper/references/liveview.md#serve-it), [The reloader](../../skills/design-helper/references/liveview.md#the-reloader), [After every edit](../../skills/design-helper/references/liveview.md#after-every-edit)
 
 ## 도구나 기록이 동작하지 않을 때
 
@@ -71,4 +71,4 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 SIGTERM을 전달하지 않는 래퍼를 통해 시작한 워처는 남을 수 있다. 서버 강제 종료나 충돌로 정리 코드가 실행되지 못한 경우, 파일 삭제까지 보장하지 않는다. `file://` 대안에는 서버 타이머가 없으므로 2분 자동 삭제를 지원하지 않음을 알리고 완료 시 직접 정리한다.
 
-근거: [SKILL — Ending](../../SKILL.md#ending), [Live view — It reaps itself](../../references/liveview.md#it-reaps-itself), [At the end](../../references/liveview.md#at-the-end)
+근거: [SKILL — Ending](../../skills/design-helper/SKILL.md#ending), [Live view — It reaps itself](../../skills/design-helper/references/liveview.md#it-reaps-itself), [At the end](../../skills/design-helper/references/liveview.md#at-the-end)

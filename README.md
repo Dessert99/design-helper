@@ -91,15 +91,36 @@ value you pick becomes the base for the next comparison.
 
 ## Install
 
-Clone it anywhere, then symlink that clone into the skills directory of whichever
+### As a plugin (recommended)
+
+The repository is its own plugin marketplace for both agents.
+
+```sh
+# Claude Code — inside a session
+/plugin marketplace add Dessert99/design-helper
+/plugin install design-helper@design-helper
+
+# Codex — from the shell
+codex plugin marketplace add Dessert99/design-helper
+codex plugin add design-helper@design-helper
+```
+
+Start a new session afterwards so the skill is picked up. To update, refresh the
+marketplace (`/plugin marketplace update design-helper` in Claude Code,
+`codex plugin marketplace upgrade` in Codex) and reinstall.
+
+### From a clone
+
+Use this if you want to edit the skill — for example to [change its language](#language).
+Clone it anywhere, then symlink the skill folder into the skills directory of whichever
 agent you use. A symlink is a pointer, not a copy — edits to the clone take effect
 immediately, and there is no second copy to keep in sync.
 
 ```sh
-git clone https://github.com/Dessert99/design-helper.git ~/skills/design-helper
+git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
-ln -sfn ~/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
-ln -sfn ~/skills/design-helper ~/.codex/skills/design-helper    # Codex
+ln -sfn ~/src/design-helper/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
+ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper    # Codex
 ```
 
 Both agents load it the same way. The `description` in `SKILL.md` is read at session
@@ -169,19 +190,20 @@ The instructions are written in English, but chat replies and every string rende
 on the comparison sheet are Korean. Code, class names, file names and commit messages
 stay English.
 
-To switch, edit the `## Language` section in `SKILL.md`. The fixed Korean labels quoted
+To switch, install [from a clone](#from-a-clone) and edit the `## Language` section in
+`skills/design-helper/SKILL.md`. (A plugin install is overwritten on every update.) The fixed Korean labels quoted
 throughout the instructions (`토큰 그대로`, `끝났어`, and so on) need to change with it.
 
 ## Docs
 
-- [`SKILL.md`](SKILL.md) — the skill itself: the work unit, drawing rules, reading replies, verification, ending
-- [`references/`](references/) — detailed instructions the skill reads when needed
-  - [`clarification.md`](references/clarification.md) — asking questions about a vague request
-  - [`sweeping.md`](references/sweeping.md) — candidate scales, background and size context, starting from a blank slate, wireframes
-  - [`stylesystems.md`](references/stylesystems.md) — detecting the style system and drawing in each one
-  - [`controls.md`](references/controls.md) — optional sliders and the sheet engine
-  - [`motion.md`](references/motion.md) — comparing animation
-  - [`liveview.md`](references/liveview.md) — the temporary workspace, local server, browser tab handling, cleanup
+- [`SKILL.md`](skills/design-helper/SKILL.md) — the skill itself: the work unit, drawing rules, reading replies, verification, ending
+- [`references/`](skills/design-helper/references/) — detailed instructions the skill reads when needed
+  - [`clarification.md`](skills/design-helper/references/clarification.md) — asking questions about a vague request
+  - [`sweeping.md`](skills/design-helper/references/sweeping.md) — candidate scales, background and size context, starting from a blank slate, wireframes
+  - [`stylesystems.md`](skills/design-helper/references/stylesystems.md) — detecting the style system and drawing in each one
+  - [`controls.md`](skills/design-helper/references/controls.md) — optional sliders and the sheet engine
+  - [`motion.md`](skills/design-helper/references/motion.md) — comparing animation
+  - [`liveview.md`](skills/design-helper/references/liveview.md) — the temporary workspace, local server, browser tab handling, cleanup
 - [`docs/flows.ko.md`](docs/flows.ko.md) — usage flows by situation (Korean)
 
 ## License
