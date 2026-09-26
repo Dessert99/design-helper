@@ -50,7 +50,7 @@ const L = {
     kind: 'ladder',
     axes: [{ scale: [2,4,8,12,16,24], n: 5, center: 3, spread: 1, step: 1, unit: 'px' }],
     inSystem: [4,8,12,16],
-    token: '--shadow-blur-md', uses: 23,
+    token: `--shadow-blur-md`, uses: 23,
     resolve: v => `검정 12% · 번짐 ${v}px`,
     eye: v => v >= 20 ? '여기서부터 떠 보입니다' : '',
     draw: (el, v) => el.style.setProperty('--blur', v + 'px'),
