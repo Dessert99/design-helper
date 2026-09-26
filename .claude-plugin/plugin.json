@@ -1,7 +1,7 @@
 {
   "name": "design-helper",
   "description": "Settle CSS values, layout and motion by eye: draws every candidate side by side in the browser, you pick one, and it applies the choice to your code.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "Dessert99",
     "url": "https://github.com/Dessert99"
