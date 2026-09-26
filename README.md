@@ -58,3 +58,5 @@ untouched.
 <!-- SKILL.md + references/{sweeping,controls,stylesystems,motion,liveview}.md -->
 
 ## License
+
+[MIT](LICENSE)

@@ -62,3 +62,5 @@ ln -sfn ~/skills/design-helper ~/.codex/skills/design-helper    # Codex
 <!-- SKILL.md + references/{sweeping,controls,stylesystems,motion,liveview}.md -->
 
 ## 라이선스
+
+[MIT](LICENSE)
