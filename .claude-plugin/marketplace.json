@@ -10,7 +10,7 @@
     {
       "name": "design-helper",
       "description": "Settle CSS values, layout and motion by eye: draws every candidate side by side in the browser, you pick one, and it applies the choice to your code.",
-      "version": "0.2.2",
+      "version": "0.3.0",
       "source": "./",
       "author": {
         "name": "Dessert99",
