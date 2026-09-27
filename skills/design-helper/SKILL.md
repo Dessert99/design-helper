@@ -196,8 +196,8 @@ mention it's missing.
 - One session = one sheet = one target. A new target gets a new sheet
 - **Everything lives in `$WS`, outside the project** — sheet, server, built CSS, memo,
   screenshots, pid files. Nothing is written into the project until the apply. The
-  server deletes `$WS` after two minutes without requests; an expired sheet is
-  regenerated. `references/liveview.md`
+  server deletes `$WS` after two minutes without requests; after that, a fresh sheet
+  holds only the new request — the old ladders are not rebuilt. `references/liveview.md`
 - **The body is append-only.** Never delete a dropped ladder — it has to stay above to
   compare against
 - **Serve it and reload it myself** — `references/liveview.md`. Never end a turn by
