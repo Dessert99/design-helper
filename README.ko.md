@@ -7,7 +7,11 @@
 
 > CSS 값, 레이아웃, 모션을 눈으로 보고 정하게 해 주는 Claude Code 스킬
 
-<!-- 표본 시트 스크린샷 자리 -->
+![비교 시트: 카드 그림자 blur 5가지, A–E](assets/launch-before.png)
+
+*"C 로 갈게" 한마디에 코드 한 줄이 바뀝니다.*
+
+![C 를 고른 뒤: blur 12px 이 적용된 카드와 tokens.css 변경](assets/launch-after.png)
 
 ## 왜 만들었나
 
