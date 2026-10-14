@@ -4,6 +4,19 @@
 
 대표 상황에 공통으로 필요한 준비·검증·복구 절차다. 지침과 코드가 다른 부분은 [미정 사항과 구현 차이](limitations.md)에 정리했다.
 
+## 일을 맡는 쪽
+
+메인 에이전트는 `SKILL.md`만 읽고, 실제 작업은 서브에이전트(일꾼)에게 맡긴다. 일꾼은 `worker.md`와 레퍼런스를 읽고 코드 확인, 시트 작성, 서버, 검증, 코드 반영, 정리를 모두 맡는다. 메인은 사용자의 말을 그대로 일꾼에게 전하고, 일꾼의 마지막 답을 그대로 보여 준다. 같은 비교가 이어지는 동안에는 같은 일꾼을 계속 쓴다.
+
+- Claude Code 플러그인: 플러그인 에이전트 `design-helper:worker`
+- Claude Code 심링크 설치: 일반 서브에이전트에게 `worker.md` 경로를 주어 읽힌다
+- Codex: `spawn_agent`로 일반 서브에이전트를 띄운다. 이어서 보낼 때는 `send_input` 또는 `followup_task`를 쓴다
+- 서브에이전트를 쓸 수 없으면 메인이 `worker.md`를 직접 따른다
+
+일꾼이 사라졌으면(세션 재시작 등) 새 일꾼을 띄우고, 확정된 값과 마지막 문자를 넘겨 문자가 이어지게 한다.
+
+근거: [SKILL](../../skills/design-helper/SKILL.md), [worker: Talking through the main agent](../../skills/design-helper/worker.md#talking-through-the-main-agent)
+
 ## 스타일 체계에 맞춰 그리기
 
 프로젝트의 실제 스타일 체계를 먼저 탐지한다. 기존 대상을 고칠 때는 그 체계의 값을 쓰고, 사용자에게 `프로젝트 유틸리티`, `프로젝트 CSS 변수`, `임의값 탐색안` 중 무엇으로 그렸는지 알린다.
@@ -21,23 +34,23 @@ Tailwind 클래스는 표본의 래퍼가 아닌 실제 `.target` 노드들에 �
 
 지침은 프로젝트 안에 비교용 config나 helper CSS를 만들지 않도록 한다. 기존 체계 안에서 볼지 새 방향을 찾을지 모르겠으면 먼저 묻는다. 다만 기존 디자인의 방향 재탐색은 [지침 간 범위 차이](limitations.md#방향재탐색)가 있다.
 
-근거: [Style systems — Detect first](../../skills/design-helper/references/stylesystems.md#detect-first), [The five forks](../../skills/design-helper/references/stylesystems.md#the-five-forks), [Feeding the controls](../../skills/design-helper/references/stylesystems.md#feeding-the-controls), [Controls — The utility fork](../../skills/design-helper/references/controls.md#the-utility-fork)
+근거: [Style systems — Detect first](../../skills/design-helper/references/stylesystems.md#detect-first), [The five forks](../../skills/design-helper/references/stylesystems.md#the-five-forks)
 
 <a id="검증과발견"></a>
 ## 검증과 발견
 
 표본을 추가할 때 참조한 토큰·변수·유틸리티 이름이 실제로 존재하는지 확인한다. 직접 쓴 값만 쓰는 백지 탐색에는 이름 확인을 생략한다.
 
-Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최종 적용한 스타일 값(computed style)을 후보별로 읽고, 스크린샷을 열어 배치를 살핀다. 스크린샷만으로 미세한 값 차이를 보장하지 않는다. DOM의 표본 수와 화면에 함께 보이는지도 확인한다. 도구가 없을 때는 지침상 이 두 단계를 조용히 생략하며, 완료했다고 보고하지 않는다.
+Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최종 적용한 스타일 값(computed style)을 후보별로 읽고, 스크린샷을 열어 배치를 살핀다. 스크린샷만으로 미세한 값 차이를 보장하지 않는다. DOM의 표본 수와 화면에 함께 보이는지도 확인한다. 도구가 없을 때는 지침상 이 두 단계를 조용히 생략하며, 완료했다고 보고하지 않는다. 대신 사용자 화면 전체를 찍는 방식(`screencapture` 등)은 다른 창까지 찍히므로 쓰지 않는다.
 
-검증 빈도는 `SKILL.md`와 `liveview.md`의 표현이 다르므로 [미정 사항](limitations.md#검증빈도)에 기록했다. 모션의 시간에 따른 변화는 정지 스크린샷으로 검증할 수 없다.
+검증 빈도는 `worker.md`와 `liveview.md`의 표현이 다르므로 [미정 사항](limitations.md#검증빈도)에 기록했다. 모션의 시간에 따른 변화는 정지 스크린샷으로 검증할 수 없다.
 
 - 표본이 모두 같아 보이면 잘못된 이름, 래퍼에 붙은 클래스, 다른 CSS에 의한 덮어쓰기를 확인한다.
 - 화면에서 실제로 깨진 부분은 비교를 방해하므로 알린다. 관찰하지 않은 색 차이나 수치를 근거처럼 만들지 않는다.
 - 그 외의 발견은 한 줄로 한 번만 알린다. 주문받지 않은 새 축을 그리거나 작업을 확장하지 않는다.
 - 비교가 한 화면에 들어가지 않으면 지침은 후보 수와 맥락 배치를 함께 다시 보도록 한다. 겹치는 후보를 빼거나 맥락을 분리하되, 사용자가 개수를 정했으면 그 수를 지키고 묶음을 나눈다. 가로 스크롤로 넘기지 않는다.
 
-근거: [SKILL — Verify](../../skills/design-helper/SKILL.md#verify), [Findings](../../skills/design-helper/SKILL.md#findings), [Controls — A ladder that doesn't fit](../../skills/design-helper/references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
+근거: [worker: Verify](../../skills/design-helper/worker.md#verify), [Findings](../../skills/design-helper/worker.md#findings), [Sweeping: A ladder that doesn't fit](../../skills/design-helper/references/sweeping.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
 
 ## 서버와 새로고침
 
@@ -71,4 +84,4 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 SIGTERM을 넘겨주지 않는 래퍼로 띄운 워처는 남을 수 있다. 서버 강제 종료나 충돌로 정리 코드가 실행되지 못한 경우, 파일 삭제까지 보장하지 않는다.
 
-근거: [SKILL — Ending](../../skills/design-helper/SKILL.md#ending), [Live view — It reaps itself](../../skills/design-helper/references/liveview.md#it-reaps-itself), [At the end](../../skills/design-helper/references/liveview.md#at-the-end)
+근거: [worker: Ending](../../skills/design-helper/worker.md#ending), [Live view — It reaps itself](../../skills/design-helper/references/liveview.md#it-reaps-itself), [At the end](../../skills/design-helper/references/liveview.md#at-the-end)

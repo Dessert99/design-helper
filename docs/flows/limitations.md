@@ -11,30 +11,21 @@
 
 `stylesystems.md`의 **Draw in the system, or on a blank slate**는 기존 디자인에서 다른 방향을 찾을 때 현재 값을 가운데 둔 좌표 탐색을 지시한다. `sweeping.md`의 **A look exists, but the user wants a different direction**도 같은 방법을 설명한다.
 
-반면 `SKILL.md`의 **An order with no axis in it**은 기존 대상이 없을 때 좌표 탐색 예외를 열고, `controls.md`도 두 축 컨트롤의 예외를 백지 매트릭스로 한정한다. 그래서 기존 디자인이 있을 때 좌표 탐색을 언제 시작하는지 지침끼리 먼저 맞춰야 한다. 대표 예시 03은 대상이 없는 경우로 한정했다.
+반면 `worker.md`의 **An order with no axis in it**은 기존 대상이 없을 때 좌표 탐색 예외를 열고, `controls.md`도 두 축 컨트롤의 예외를 백지 매트릭스로 한정한다. 그래서 기존 디자인이 있을 때 좌표 탐색을 언제 시작하는지 지침끼리 먼저 맞춰야 한다. 대표 예시 03은 대상이 없는 경우로 한정했다.
 
-근거: [Style systems](../../skills/design-helper/references/stylesystems.md#draw-in-the-system-or-on-a-blank-slate), [Sweeping](../../skills/design-helper/references/sweeping.md#a-look-exists-but-the-user-wants-a-different-direction), [SKILL](../../skills/design-helper/SKILL.md#an-order-with-no-axis-in-it), [Controls](../../skills/design-helper/references/controls.md#controls)
+근거: [Style systems](../../skills/design-helper/references/stylesystems.md#draw-in-the-system-or-on-a-blank-slate), [Sweeping](../../skills/design-helper/references/sweeping.md#a-look-exists-but-the-user-wants-a-different-direction), [worker](../../skills/design-helper/worker.md#an-order-with-no-axis-in-it), [Controls](../../skills/design-helper/references/controls.md#optional-controls-not-the-default-sheet)
 
 ### 두 속성의 조합을 함께 비교하고 확정하기
 
-`SKILL.md`와 `sweeping.md`에는 두 축을 행과 열로 분리해 매트릭스로 비교하라는 설명이 있다. 테두리 두께로 행을, 밝기로 열을 나누는 비교가 그 예다.
+`worker.md`와 `sweeping.md`에는 두 축을 행과 열로 분리해 매트릭스로 비교하라는 설명이 있다. 테두리 두께로 행을, 밝기로 열을 나누는 비교가 그 예다.
 
 그러나 단일 축 원칙과 컨트롤의 백지 예외 제한이 함께 존재한다. 좌표 탐색은 채팅으로 출발점을 받으며, 단일 축 선택과 달리 개별 속성 확정으로 취급하지 않는다.
 
 비교용 두 축 매트릭스와 출발점용 매트릭스를 어떻게 구분하고, 무엇을 확정으로 기록할지 정해지기 전에는 두 축 확정의 정상 흐름으로 설명하지 않는다.
 
-근거: [SKILL — Drawing specimens](../../skills/design-helper/SKILL.md#drawing-specimens), [Sweeping — Candidate scales](../../skills/design-helper/references/sweeping.md#candidate-scales), [SKILL — Reading the response](../../skills/design-helper/SKILL.md#reading-the-response), [Controls — The engine](../../skills/design-helper/references/controls.md#the-engine)
+근거: [worker: Drawing specimens](../../skills/design-helper/worker.md#drawing-specimens), [Sweeping — Candidate scales](../../skills/design-helper/references/sweeping.md#candidate-scales), [worker: Reading the response](../../skills/design-helper/worker.md#reading-the-response)
 
 ## 실행 예제와 지침 사이의 차이
-
-<a id="추가표본문자"></a>
-### 같은 작업 단위에 추가한 표본의 문자
-
-지침은 같은 작업 단위 안에서 문자를 재사용하지 않도록 한다. A–E 다음에 추가하는 표본은 F부터 이어져야 한다.
-
-현재 엔진의 `build()`는 section마다 `LET[i]`를 사용하므로 새 section은 다시 A부터 시작한다. section 안에서 화살표 키로 추가한 값은 뒤에 붙지만, 새 사다리를 section으로 추가할 때의 문자 시작 위치 설정은 없다.
-
-근거: [SKILL — Drawing specimens](../../skills/design-helper/SKILL.md#drawing-specimens), [Controls — The engine](../../skills/design-helper/references/controls.md#the-engine)
 
 <a id="느린재생"></a>
 ### 느린 재생
@@ -45,22 +36,20 @@
 
 ### 맥락과 표본 배치
 
-지침은 기본 배경·크기·반복을 함께 열도록 한다. 엔진은 맥락 선택을 `sessionStorage`에서 복원하므로, 새 section에서도 이전의 좁힌 맥락이 이어질 수 있다.
-
 한 축 사다리는 폭을 채우는 격자라 칸이 넘치면 다음 줄로 내려간다. 두 축 매트릭스는 열 수를 고정하고 칸을 줄여 맞추므로, 표본이 칸보다 크면 잘릴 수 있다. 이 경우는 별도 확인이 필요하다.
 
-근거: [Sweeping — Context](../../skills/design-helper/references/sweeping.md#context), [Controls — A ladder that doesn't fit](../../skills/design-helper/references/controls.md#a-ladder-that-doesnt-fit-isnt-a-ladder), [The engine](../../skills/design-helper/references/controls.md#the-engine), [The style](../../skills/design-helper/references/controls.md#the-style)
+근거: [Sweeping — Context](../../skills/design-helper/references/sweeping.md#context), [Sweeping: A ladder that doesn't fit](../../skills/design-helper/references/sweeping.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
 
 ## 해석을 맞춰야 하는 운영 규칙
 
 <a id="검증빈도"></a>
 ### 검증 빈도와 브라우저 상태
 
-`SKILL.md`는 computed style과 스크린샷 확인을 작업 단위당 한 번으로 적고, `liveview.md`는 수정할 때마다 검증하도록 적는다. `controls.md`는 창을 옮긴 뒤 다음 턴에 경계를 다시 보도록 한다. 정확한 재검증 주기를 일치시킬 필요가 있다.
+`worker.md`는 computed style과 스크린샷 확인을 작업 단위당 한 번으로 적고, `liveview.md`는 수정할 때마다 검증하도록 적는다. `controls.md`는 창을 옮긴 뒤 다음 턴에 경계를 다시 보도록 한다. 정확한 재검증 주기를 일치시킬 필요가 있다.
 
 같은 URL을 읽는 Playwright 탭과 사용자 탭은 같은 HTML을 받더라도 `sessionStorage`의 창·맥락 상태가 다를 수 있다. 그래서 다른 탭의 스크린샷만으로 사용자가 조작한 지금 상태까지 확인했다고 할 수는 없다.
 
-근거: [SKILL — Verify](../../skills/design-helper/SKILL.md#verify), [Live view — After every edit](../../skills/design-helper/references/liveview.md#after-every-edit), [Controls — The boundary goes stale](../../skills/design-helper/references/controls.md#the-boundary-goes-stale-the-captions-dont)
+근거: [worker: Verify](../../skills/design-helper/worker.md#verify), [Live view — After every edit](../../skills/design-helper/references/liveview.md#after-every-edit), [Controls: Choosing in chat](../../skills/design-helper/references/controls.md#choosing-in-chat)
 
 <a id="일시중단"></a>
 ### 일시 중단과 다음 세션의 복원

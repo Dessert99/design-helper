@@ -61,6 +61,10 @@ design-helper는 이걸 말로 묻지 않고 후보를 전부 그려서 브라�
   적습니다. 왼쪽 목차에 요청이 쌓여서 앞의 비교로 바로 돌아갈 수 있습니다.
 - **새로고침하지 않아도 됩니다.** 시트가 바뀌면 스킬이 탭을 다시 불러와 앞으로 띄웁니다.
   에이전트가 브라우저를 다룰 수 없으면 그렇다고 말하고 시트 주소를 알려 줍니다.
+- **대화가 무거워지지 않습니다.** 코드 읽기, 시트 그리기, 확인, 고른 값 반영은
+  서브에이전트가 하고, 메인 대화는 말만 전합니다. 그래서 비교를 오래 해도 다른 작업을
+  밀어내지 않습니다. 테스트에서는 네 번 주고받는 동안 메인이 약 5천 토큰만 늘었습니다.
+  서브에이전트를 쓸 수 없는 환경에서는 메인이 직접 합니다.
 - **프로젝트에 흔적을 남기지 않습니다.** 시트, 서버, 메모, 스크린샷은 모두 프로젝트 밖 임시
   폴더에 둡니다. 프로젝트에 남는 건 고른 값을 반영한 코드뿐입니다.
 - **프로젝트의 스타일 체계로 그립니다.** Tailwind와 CSS 변수는 실제 클래스와 토큰으로
@@ -121,9 +125,12 @@ ln -sfn ~/src/design-helper/skills/design-helper ~/.claude/skills/design-helper 
 ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper    # Codex
 ```
 
-두 에이전트 모두 `SKILL.md`의 `description`은 세션을 시작할 때 읽고, 본문과
-`references/`는 스킬이 실행될 때 읽습니다. 그래서 본문을 고치면 바로 적용되고,
-`description`을 고쳤을 때만 세션을 새로 열면 됩니다.
+두 에이전트 모두 `SKILL.md`의 `description`은 세션을 시작할 때 읽고, 나머지
+(`SKILL.md`, `worker.md`, `references/`)는 스킬이 실행될 때 읽습니다. 그래서 본문을 고치면
+바로 적용되고, `description`을 고쳤을 때만 세션을 새로 열면 됩니다.
+
+심링크로 설치하면 플러그인 에이전트가 없으므로, Claude Code는 대신 일반 서브에이전트에게
+`worker.md`를 읽혀 일을 맡깁니다. 동작은 같습니다.
 
 지우려면 심링크만 지우면 됩니다(`rm ~/.claude/skills/design-helper`). clone은 그대로
 남습니다.
@@ -193,20 +200,22 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 지시문은 영어지만 채팅 답변과 비교 시트의 글자는 모두 한국어입니다. 코드, 클래스 이름,
 파일 이름, 커밋 메시지는 영어로 씁니다.
 
-다른 언어로 바꾸려면 [clone 해서 설치](#clone-해서-설치)한 뒤 `skills/design-helper/SKILL.md`의
+다른 언어로 바꾸려면 [clone 해서 설치](#clone-해서-설치)한 뒤 `skills/design-helper/worker.md`의
 `## Language` 섹션을 고치면 됩니다. 플러그인으로 설치한 파일은 업데이트할 때마다 덮어써지니
 고쳐도 남지 않습니다. 지시문 곳곳에 따옴표로 들어간 한국어 문구(`토큰 그대로`, `끝났어` 등)도
 같이 바꿔야 합니다.
 
 ## 문서
 
-- [`SKILL.md`](skills/design-helper/SKILL.md): 스킬 본체. 작업 단위, 표본 그리는 규칙, 대답 해석, 확인, 마무리
-- [`references/`](skills/design-helper/references/): 스킬이 필요할 때 읽는 세부 지침
+- [`SKILL.md`](skills/design-helper/SKILL.md): 메인 에이전트가 읽는 지침. 일을 서브에이전트에게 맡기고 사용자와 서브에이전트 사이에서 말을 전해, 메인 대화가 가볍게 유지됩니다. 서브에이전트를 쓸 수 없으면 메인이 직접 합니다
+- [`worker.md`](skills/design-helper/worker.md): 서브에이전트가 따르는 전체 지침. 작업 단위, 표본 그리는 규칙, 대답 해석, 확인, 마무리
+- [`agents/worker.md`](agents/worker.md): `worker.md`를 실행하는 Claude Code 플러그인 에이전트. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
+- [`references/`](skills/design-helper/references/): 필요할 때 읽는 세부 지침
   - [`clarification.md`](skills/design-helper/references/clarification.md): 요청이 모호할 때 묻는 법
   - [`sweeping.md`](skills/design-helper/references/sweeping.md): 후보 값, 캡션과 추천, 배경·크기 조건, 빈 화면에서 시작하기, 와이어프레임
   - [`sheet.md`](skills/design-helper/references/sheet.md): 시트 페이지의 섹션 안내, 요청 구분선, 목차, 배치, 스타일
   - [`stylesystems.md`](skills/design-helper/references/stylesystems.md): 스타일 체계를 알아내고 체계별로 그리는 법
-  - [`controls.md`](skills/design-helper/references/controls.md): 필요할 때만 쓰는 슬라이더와 그 엔진
+  - [`controls.md`](skills/design-helper/references/controls.md): 필요할 때만 쓰는 슬라이더와 지켜야 할 규칙
   - [`motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교
   - [`liveview.md`](skills/design-helper/references/liveview.md): 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
 - [`docs/flows.ko.md`](docs/flows.ko.md): 상황별 사용 흐름
