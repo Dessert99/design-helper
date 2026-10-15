@@ -126,7 +126,7 @@ ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper  
 ```
 
 두 에이전트 모두 `SKILL.md`의 `description`은 세션을 시작할 때 읽고, 나머지
-(`SKILL.md`, `worker.md`, `references/`)는 스킬이 실행될 때 읽습니다. 그래서 본문을 고치면
+(`SKILL.md`, `worker.md`, `references/`, `assets/`)는 스킬이 실행될 때 읽습니다. 그래서 본문을 고치면
 바로 적용되고, `description`을 고쳤을 때만 세션을 새로 열면 됩니다.
 
 심링크로 설치하면 플러그인 에이전트가 없으므로, Claude Code는 대신 일반 서브에이전트에게
@@ -218,6 +218,10 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
   - [`controls.md`](skills/design-helper/references/controls.md): 필요할 때만 쓰는 슬라이더와 지켜야 할 규칙
   - [`motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교
   - [`liveview.md`](skills/design-helper/references/liveview.md): 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
+- [`assets/`](skills/design-helper/assets/): 일꾼이 매번 새로 쓰지 않고 복사해서 쓰는 고정 파일
+  - [`sheet.html`](skills/design-helper/assets/sheet.html): 스타일, 목차, 자동 새로고침이 들어 있는 빈 비교 페이지
+  - [`serve.py`](skills/design-helper/assets/serve.py): 2분 동안 요청이 없으면 스스로 정리하는 로컬 서버
+  - [`check.cjs`](skills/design-helper/assets/check.cjs): Playwright로 계산된 스타일을 읽고 스크린샷을 한 번에 찍는 스크립트
 - [`docs/flows.ko.md`](docs/flows.ko.md): 상황별 사용 흐름
 - [`scripts/bump-version.sh`](scripts/bump-version.sh): 플러그인 매니페스트의 버전을 한 번에 바꾸고 커밋과 태그까지 만드는 스크립트
 
