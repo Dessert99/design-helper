@@ -236,7 +236,8 @@ and so on) need to change too.
 - [`references/`](skills/design-helper/references/): detailed instructions read when needed
   - [`clarification.md`](skills/design-helper/references/clarification.md): asking about a vague request
   - [`sweeping.md`](skills/design-helper/references/sweeping.md): candidate values, captions and the recommendation, background and size, starting from a blank slate, wireframes
-  - [`sheet.md`](skills/design-helper/references/sheet.md): the sheet page's section guide, request dividers, table of contents, layout and style
+  - [`writing.md`](skills/design-helper/references/writing.md): how every Korean sentence the user reads is written: short sentences, no symbol shorthand, attached particles, the caption layout
+  - [`sheet.md`](skills/design-helper/references/sheet.md): the sheet page's request dividers, table of contents, layout and style
   - [`stylesystems.md`](skills/design-helper/references/stylesystems.md): detecting the style system and drawing in each one
   - [`controls.md`](skills/design-helper/references/controls.md): optional sliders: when to add one and the rules it has to follow
   - [`motion.md`](skills/design-helper/references/motion.md): comparing animation

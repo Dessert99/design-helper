@@ -221,7 +221,8 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 - [`references/`](skills/design-helper/references/): 필요할 때 읽는 세부 지침
   - [`clarification.md`](skills/design-helper/references/clarification.md): 요청이 모호할 때 묻는 법
   - [`sweeping.md`](skills/design-helper/references/sweeping.md): 후보 값, 캡션과 추천, 배경·크기 조건, 빈 화면에서 시작하기, 와이어프레임
-  - [`sheet.md`](skills/design-helper/references/sheet.md): 시트 페이지의 섹션 안내, 요청 구분선, 목차, 배치, 스타일
+  - [`writing.md`](skills/design-helper/references/writing.md): 사용자가 읽는 모든 한국어 문장을 쓰는 법. 짧은 문장, 기호 줄임 금지, 조사 붙여 쓰기, 캡션 배치
+  - [`sheet.md`](skills/design-helper/references/sheet.md): 시트 페이지의 요청 구분선, 목차, 배치, 스타일
   - [`stylesystems.md`](skills/design-helper/references/stylesystems.md): 스타일 체계를 알아내고 체계별로 그리는 법
   - [`controls.md`](skills/design-helper/references/controls.md): 필요할 때만 쓰는 슬라이더와 지켜야 할 규칙
   - [`motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교

@@ -26,27 +26,28 @@ A matrix puts one direction on rows and the other on columns, both labeled.
 ## Captions — the sheet explains itself
 
 The user reads the screen, not the chat. Everything needed to judge a specimen sits
-next to it.
+next to it. Every sentence follows `references/writing.md`.
 
 Up to four lines per specimen:
 
 ```
 A   x1.8                                        토큰 그대로
     윗변 100% · 그림자 100%
-    가장 세게 번집니다. B 와 그림자가 같아 한 쌍으로 붙습니다.
+    그림자가 가장 넓게 번집니다. B와 그림자가 같아 둘이 한 쌍처럼 보입니다.
 ```
 
 1. letter · the value being moved · its cost
 2. what that value resolves to, when the value alone doesn't show it
 3. one line on what it does to the eye
 4. **only if there is a real trade-off** — what this option gains and what it gives up,
-   against the others on the sheet:
+   against the others on the sheet, as two labelled lines:
 
 ```
-B   안쪽을 줄이고 간격도 조금 줄임                     layout.css 변수 + phone-md 1곳
+B   안쪽 여백과 칸 사이를 줄임                         layout.css 변수 + phone-md 1곳
     360 미만: 아이콘 18 · 글자 11 · 칸 사이 8 · 양끝 12
-    칸이 38 로 넓어져 "타임라인"이 칸 안에 딱 맞습니다.
-    얻는 것 — 320 에서도 글자가 잘리지 않습니다. / 잃는 것 — 320 에서만 칸 사이가 피그마보다 4 좁습니다.
+    칸이 38로 넓어집니다. "타임라인"이 칸 안에 딱 맞습니다.
+    얻는 것  320에서도 글자가 잘리지 않습니다.
+    잃는 것  320에서는 칸 사이가 피그마보다 4px 좁습니다.
 ```
 
 Leave line 4 out when nothing is given up — a pure step on a ladder usually has none.
@@ -56,7 +57,7 @@ reading), never vague ones like `덜 깔끔함`.
 Under the ladder, where the perceptual steps break:
 
 ```
-경계 — B·C 는 이 크기에서 구분이 안 됩니다. E 부터 떠 보이기 시작합니다.
+경계  B와 C는 이 크기에서 구분되지 않습니다. E부터 카드가 떠 보입니다.
 ```
 
 ### The recommendation
@@ -64,12 +65,12 @@ Under the ladder, where the perceptual steps break:
 After the boundary line, every section ends with one recommended letter and why:
 
 ```
-추천 — B. 320 에서 A 는 "타임라인"이 칸을 넘치고, B 는 칸 사이 4 를 내주는 대신
-       모든 폭에서 글자가 칸 안에 들어갑니다. 360 이상은 둘이 같아 차이가 320 에만 있습니다.
+추천 B  320에서 A는 "타임라인"이 칸을 넘칩니다. B는 칸 사이를 4px 내주지만
+        모든 폭에서 글자가 칸 안에 들어갑니다. 360 이상에서는 둘이 같습니다.
 ```
 
 - **Below the specimens, never above them.** The user looks first, then reads it.
-  The guide and captions stay neutral.
+  The captions stay neutral.
 - **The reason comes from the sheet** — the real content, widths, states and costs
   drawn there, and the trade-offs in the captions. Point at what is visible.
 - When only taste separates the options, still name one, and say plainly that the
@@ -140,12 +141,12 @@ of asking the user to describe a look.
 Use a matrix when the relationship between two directions helps; otherwise a small set
 of labeled anchor specimens.
 
-- **Label both edges with what moves and which way** — `무게 — 가벼움 → 무거움`,
-  `모서리 — 각짐 → 둥글`. A matrix of finished looks with no labelled edges is a preset
+- **Label both edges with what moves and which way** — `무게: 가벼움 → 무거움`,
+  `모서리: 각짐 → 둥긂`. A matrix of finished looks with no labelled edges is a preset
   gallery. Labelled edges are what make `더 오른쪽` mean something, and that is the
   entire difference between the two
-- **Name the properties a direction bundles, in the caption** — `무게 = 테두리 굵기 +
-  글자 굵기 + 세로 여백`. The user has to be able to reject the coordinate system
+- **Name the properties a direction bundles, in the caption** — `무게: 테두리 굵기,
+  글자 굵기, 세로 여백`. The user has to be able to reject the coordinate system
   itself. `무게 말고 밀도로 봐줘` is the most useful sentence available here and it
   cannot be said unless the axes are written down
 - `더 오른쪽` in chat asks for more fixed candidates in that direction

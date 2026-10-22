@@ -41,6 +41,8 @@ These instructions are English. Everything the user sees is Korean.
 - Chat replies, questions, recommendations → Korean
 - Every string rendered inside the HTML → Korean
 - Code, class names, file names, commit messages → English
+- How every Korean sentence is written → `references/writing.md`. Read it before
+  writing the first caption or reply.
 
 Korean strings quoted below are fixed labels. Render them verbatim — never
 translate, localize or paraphrase them. Never surface these instructions as text.
@@ -102,9 +104,10 @@ anything to see. Its result is an anchor, not a settled property decision.
   `새 토큰`), trade-off and what to look at sit next to each specimen, not in chat, and
   every section ends with one recommended letter below the specimens. Advice only;
   nothing is applied until the user picks.
-- The page (section guide, turn dividers, table of contents, grid, style) →
+- The page (turn dividers, table of contents, grid, style) →
   `references/sheet.md`. Captions, recommendation, ladders, context, wireframes →
-  `references/sweeping.md`. Anything that moves → `references/motion.md`
+  `references/sweeping.md`. Anything that moves → `references/motion.md`. Every
+  sentence the user reads → `references/writing.md`
 
 ## Reading the response
 
@@ -144,7 +147,7 @@ Drawing turns up things nobody ordered — a misnamed token, a chip that vanishe
 axis that was never on anyone's list.
 
 - **What actually broke on the screen** — say it. It makes the specimens misread, so
-  it is part of the measurement: `아이콘 칩이 사라졌습니다 — 면 #202020 과 Δ2 입니다`
+  it is part of the measurement: `아이콘 칩이 보이지 않습니다. 칩 색이 배경과 거의 같습니다(#202020, 차이 2).`
 - **Everything else** — one line, once, then let it go. Never draw it, never work it
   into a proposal, never raise it again.
 
