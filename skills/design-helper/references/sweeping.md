@@ -38,7 +38,8 @@ A   x1.8                                        토큰 그대로
 
 1. letter · the value being moved · its cost
 2. what that value resolves to, when the value alone doesn't show it
-3. one line on what it does to the eye
+3. one line on what it does to the eye: the part that changes, then a verb for how
+   (`번짐이 넓어집니다`, `제목이 잘립니다`, `카드가 떠 보입니다`)
 4. **only if there is a real trade-off** — what this option gains and what it gives up,
    against the others on the sheet, as two labelled lines:
 
@@ -53,6 +54,49 @@ B   안쪽 여백과 칸 사이를 줄임                         layout.css 변
 Leave line 4 out when nothing is given up — a pure step on a ladder usually has none.
 Name concrete costs (a width that breaks, a token that moves, a state that stops
 reading), never vague ones like `덜 깔끔함`.
+
+### Where to look
+
+When the rungs differ in one spot only (the bottom edge of a shadow, a title cut off at
+320, the gap between two icons), mark that spot so the eye goes there first.
+
+- **A gray bracket beside the spot, never on it.** It sits in the frame padding, outside
+  the pixels being judged. No accent color: it is next to a specimen's surface.
+- **The same spot on every rung**, so the eye moves from A to E along one line.
+- **The caption names it.** Line 3 starts from the marked part: `표시한 아래 가장자리에서
+  번짐이 넓어집니다.`
+- Skip it when the whole specimen is what changes (a surface color, a layout).
+
+Markup → `references/sheet.md`.
+
+### What is not the real thing
+
+A specimen the user takes for the real component is judged as the real component. Say
+on the sheet, next to it, wherever the specimen differs from what the code will do:
+
+- markup rebuilt by hand instead of the project's own component
+- state attributes imitated by class (`data-[open]:`, `aria-expanded`)
+- a CSS curve standing in for a motion library's spring (`references/motion.md`)
+- a font, icon or image that didn't load and was substituted
+
+Each such specimen gets the chip `실물과 다름` on its title line and a labelled line
+saying what differs:
+
+```
+C   x1.4                             실물과 다름  토큰 그대로
+    다른 점  열림 상태를 클래스로 흉내 냈습니다. 실제로는 라이브러리가 붙입니다.
+```
+
+When every specimen in a section shares the same difference, say it once in the
+section's description instead of on each caption. A specimen drawn from the real
+component has no chip.
+
+### Counts the search may have missed
+
+A cost count like `23곳` comes from a search. When part of the code can't be found by
+name (class names built at runtime, styles set from JavaScript, another package or a
+CMS), the count is a floor. Write it as one: `--shadow-md 고침 (23곳 이상)`. What the
+search couldn't reach is reported before applying (`worker.md`, `Blast radius`).
 
 Under the ladder, where the perceptual steps break:
 
@@ -185,6 +229,7 @@ Both rows, always, for anything with states.
 State-attribute styling like `data-[open]:` is imitated by hand — the real library
 sets those attributes. Focus traps, keyboard nav and screen readers need the real
 implementation. Shape and transition are decidable; **correctness of behavior is not.**
+Mark these specimens on the sheet: `What is not the real thing`, above.
 Mount/unmount timing is a motion question — `references/motion.md`.
 
 ## Wireframes

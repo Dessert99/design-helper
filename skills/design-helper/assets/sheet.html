@@ -57,6 +57,15 @@ section h2 { font-size:20px; letter-spacing:-.01em; margin:22px 0 18px }
         background:var(--surface); border:1px solid rgba(0,0,0,.04);
         border-radius:var(--radius); box-shadow:var(--float) }
 .pick > b { color:var(--accent); white-space:nowrap }
+/* 실물과 다름: a specimen that differs from what the code will do. */
+.real { font-size:11.5px; font-weight:500; padding:0 7px; border-radius:99px;
+        border:1px dashed #a1a1aa; color:#52525b }
+.n > .real { margin-left:auto } .real + .cost { margin-left:8px }
+/* A gray bracket beside the spot where the rungs differ, outside the specimen's pixels. */
+.at { position:relative }
+.look { position:absolute; pointer-events:none; border:0 solid var(--muted); border-radius:1px }
+.look.x { bottom:-9px; height:0; border-bottom-width:2px }   /* set left and width */
+.look.y { left:-9px; width:0; border-left-width:2px }        /* set top and height */
 </style>
 <style>
 /* Specimen CSS goes here, after the sheet style. */

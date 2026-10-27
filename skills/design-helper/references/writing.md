@@ -61,7 +61,8 @@ B  안쪽 여백과 칸 사이를 줄임                       layout.css 변수
 
 1. Title line: letter, a short label for the option, its cost.
 2. Values line (muted), only when the value alone doesn't show the result.
-3. What it does to the eye, in one or two short sentences.
+3. What it does to the eye, in one or two short sentences. Start from the part that
+   changes and end on a verb for how it changes: `번짐이 넓어집니다`.
 4. Gain and loss, only with a real trade-off. Two lines, each with its own label.
    Never join them on one line with `/`.
 

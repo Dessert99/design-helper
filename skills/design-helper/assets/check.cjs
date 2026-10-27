@@ -99,6 +99,9 @@ async function launch() {
         sections: [...document.querySelectorAll('section')].map(s => ({
           id: s.id, specs: s.querySelectorAll('.spec').length,
           overflowX: [...s.querySelectorAll('.grid')].some(g => g.scrollWidth > g.clientWidth + 1),
+          // Frames that end inside one window from the section's top, where the reloader lands.
+          firstScreen: [...s.querySelectorAll('.spec .frame')].filter(f =>
+            f.getBoundingClientRect().bottom - s.getBoundingClientRect().top <= innerHeight).length,
         })),
         pageOverflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       };

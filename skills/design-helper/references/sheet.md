@@ -115,14 +115,20 @@ The words inside follow `references/writing.md`.
 <h2>카드 그림자 블러</h2>
 <div class="grid">
 <div class="spec">
-  <div class="frame">...specimen...</div>
+  <div class="frame">
+    <div class="at">  <!-- only with a marker -->
+      ...specimen...
+      <i class="look x" style="left:12px; width:120px"></i>
+    </div>
+  </div>
   <div class="cap">
-    <div class="n"><span class="badge">A</span>두께 얇음 · 모서리 각짐<span class="cost">새 변수</span></div>
+    <div class="n"><span class="badge">A</span>두께 얇음 · 모서리 각짐<span class="real">실물과 다름</span><span class="cost">새 변수</span></div>
     <p class="resolved">높이 52 · 안쪽 여백 0 · 모서리 14</p>
     <p>면이 적어 콘텐츠가 더 보입니다.</p>
-    <dl class="gain">  <!-- only with a real trade-off -->
+    <dl class="gain">  <!-- only with a real trade-off, or a 다른 점 line -->
       <dt>얻는 것</dt><dd>...</dd>
       <dt>잃는 것</dt><dd>...</dd>
+      <dt>다른 점</dt><dd>...</dd>
     </dl>
   </div>
 </div>
@@ -132,3 +138,30 @@ The words inside follow `references/writing.md`.
 <div class="pick"><b>추천 B</b><span>이유 ...</span></div>
 </section>
 ```
+
+- `.at` wraps the specimen only when it carries a marker. `.look.x` is a bracket under
+  the spot (set `left` and `width`), `.look.y` one beside it (set `top` and `height`),
+  both measured from the specimen's own corner. When the axis spreads past the
+  specimen (shadow, glow, outline), move the bracket past the widest rung's spread,
+  `style="bottom:-30px"`, and give the section's frames that much padding. Rules →
+  `references/sweeping.md`.
+- `.real` is the `실물과 다름` chip; its `다른 점` line joins the `gain` list.
+
+
+## The first screen is the specimens
+
+When a section appears, the reloader scrolls its top to the top of the user's window.
+What fills that window is what gets judged, so it is the specimens.
+
+- **Above the grid: the title and at most two lines of description.** What to decide,
+  where to look, a shared `실물과 다름` note. Anything longer moves into the captions or
+  under the ladder.
+- **Every frame of the section fits in that first window** when the specimens are
+  small enough to allow it. Drop context repetitions or near-duplicate rungs before
+  letting a rung fall below it. A specimen taller than the window (a whole page) shows
+  at least one full row of frames.
+- **The recommendation stays below the specimens.** Read before looking, it decides
+  for the eye.
+
+`check.cjs` reports `firstScreen` per section: how many frames end inside one window
+from the section's top. Below `specs` means a rung starts out of sight.

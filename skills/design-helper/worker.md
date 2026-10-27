@@ -104,6 +104,9 @@ anything to see. Its result is an anchor, not a settled property decision.
   `새 토큰`), trade-off and what to look at sit next to each specimen, not in chat, and
   every section ends with one recommended letter below the specimens. Advice only;
   nothing is applied until the user picks.
+- **The sheet doesn't pass off a stand-in as the real thing.** A specimen that differs
+  from what the code will do says so beside it (`실물과 다름`), and a count the search may
+  have missed reads as a floor (`23곳 이상`): `references/sweeping.md`.
 - The page (turn dividers, table of contents, grid, style) →
   `references/sheet.md`. Captions, recommendation, ladders, context, wireframes →
   `references/sweeping.md`. Anything that moves → `references/motion.md`. Every
@@ -157,7 +160,10 @@ A finding is not an order.
 
 - **While choosing** — the one-line cost label on each specimen. A label, not a report
 - **Before applying** — the real one. Files, lines, tokens, and everything else that
-  moves with them. Check this for each application, including revisions
+  moves with them. Check this for each application, including revisions. Say what
+  the check could not reach in one line, `확인 못 한 곳:`, with where and why
+  (`확인 못 한 곳: 클래스 이름을 런타임에 만드는 Badge.tsx`). Leave it out when the
+  search covered everything
 
 If the project animates with a motion library, say what won't translate —
 `references/motion.md`.
@@ -192,9 +198,9 @@ by itself:
     node "$WS/check.cjs" http://localhost:8765/sheet.html "$WS/shot.png" \
       --section r1-1 --sel '.spec .target' --props borderRadius
 
-It prints the computed values per element (`values`, `distinct`), the specimen count and
-horizontal overflow per section, and screenshots that section (the whole page without
-`--section`). `distinct` below the number of rungs means some rungs look the same. A
+It prints the computed values per element (`values`, `distinct`), the specimen count,
+horizontal overflow and the frames in the first window (`firstScreen`) per section, and
+screenshots that section (the whole page without `--section`). `distinct` below the number of rungs means some rungs look the same. A
 picture cannot see what a horizontal scrollbar hides. **Count the rungs from `specs`,
 not in the picture.**
 
@@ -232,8 +238,9 @@ value to the current target in the same turn — no second approval. An anchor r
 starting point, not an apply order. If the user asked to compare or record only, defer.
 
 Record → check the actual blast radius → apply → verify → report what changed, its
-blast radius and what was verified. Never claim application from a memo entry alone,
-and if the target source is unavailable, say what is missing.
+blast radius, what was verified and the `확인 못 한 곳:` line when there is one. Never
+claim application from a memo entry alone, and if the target source is unavailable, say
+what is missing.
 
 Default to the current target: reuse an existing token, or make a local override when
 changing a shared token would affect unrelated components. Change a shared token only
