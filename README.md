@@ -76,8 +76,8 @@ you see comes from that property. Each value you pick carries into the next comp
   can jump back to an earlier comparison.
 - **You don't refresh.** When the sheet changes, the skill reloads the tab and brings it
   to the front. If the agent can't control a browser, it says so and gives you the URL.
-- **Your conversation stays light.** A subagent reads the code, draws the sheet, checks
-  it and applies your pick. The main conversation only passes messages, so a long
+- **Your conversation stays light.** A subagent reads the code, draws the sheet and
+  checks it. The main conversation passes messages and applies your pick, so a long
   comparison doesn't crowd out the rest of your work. In a test run the main agent grew
   by about 5k tokens over four rounds. Where subagents aren't available, the main agent
   does the work itself.
