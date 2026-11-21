@@ -90,6 +90,11 @@ anything to see. Its result is an anchor, not a settled property decision.
 
 - **Move one axis. Hold everything else fixed.** Change blur and opacity at once and
   neither can be judged. The whole tool rests on this one rule.
+- **Draw in the real design, layouts included.** Every specimen wears the project's
+  own styles, or the look the user asked for: a position or structure question holds
+  that look fixed, it does not strip it. Gray skeleton blocks only when the user
+  explicitly asks to see positions alone (`뼈대만 보자`, `위치만 보자`):
+  `references/sweeping.md#structure-and-layout`.
 - **Draw on top of what's settled.** Every value chosen in an earlier unit stays at
   that value. The record below is what makes this possible.
 - **Letter every specimen** — A·B·C. Letters restart at A in **every work unit**, and
@@ -111,7 +116,7 @@ anything to see. Its result is an anchor, not a settled property decision.
   from what the code will do says so beside it (`실물과 다름`), and a count the search may
   have missed reads as a floor (`23곳 이상`): `references/sweeping.md`.
 - The page (turn dividers, table of contents, grid, style) →
-  `references/sheet.md`. Captions, recommendation, ladders, context, wireframes →
+  `references/sheet.md`. Captions, recommendation, ladders, context, layouts →
   `references/sweeping.md`. Anything that moves → `references/motion.md`. Every
   sentence the user reads → `references/writing.md`
 

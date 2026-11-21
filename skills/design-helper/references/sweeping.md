@@ -65,7 +65,7 @@ When the rungs differ in one spot only (the bottom edge of a shadow, a title cut
 - **The same spot on every rung**, so the eye moves from A to E along one line.
 - **The caption names it.** Line 3 starts from the marked part: `표시한 아래 가장자리에서
   번짐이 넓어집니다.`
-- Skip it when the whole specimen is what changes (a surface color, a layout).
+- Skip it when the whole specimen is what changes (a surface color, a whole-page layout).
 
 Markup → `references/sheet.md`.
 
@@ -232,17 +232,44 @@ implementation. Shape and transition are decidable; **correctness of behavior is
 Mark these specimens on the sheet: `What is not the real thing`, above.
 Mount/unmount timing is a motion question — `references/motion.md`.
 
-## Wireframes
+## Structure and layout
 
-When the question is structure — layout, column split, sidebar width, content order —
-strip everything else.
+When the question is structure (where a menu item goes, where filters sit, a column
+split, sidebar width, content order), the axis is position. The look is not stripped:
+it is the part held fixed, identical on every rung.
 
-**Achromatic only. No color, no type styling, no shadow, no radius.** Gray blocks on
-white. If a skin is on it, the skin gets judged instead of the structure.
+**Draw it in the real design.** The user judges a layout as it will ship. A filter row
+that looks fine as gray outlines can crowd the real header, and a menu item that reads
+well in a plain list can disappear among the real icons and group labels.
 
-- Block weight carries hierarchy: darker gray = heavier element
-- Label blocks with their role (`네비`, `사이드바`, `본문`, `카드`) — not lorem ipsum
-- Draw the real breakpoints if width is the question, not one arbitrary viewport
-- Keep a real page's worth of content. Three blocks won't show a layout failing
+- **The project's own design** when one exists: its utilities, variables, fonts, icons
+  and component markup, per `references/stylesystems.md`. Copy the real screen's markup
+  and classes; don't redraw it in generic black and white.
+- **The design the user asked for** when the new part has requirements (a Figma frame,
+  a reference screen, a description). Draw those, on top of the existing design around it.
+- **Neither exists** (a blank slate with no stated look): write plain values directly
+  and say so on the sheet (`임의값 탐색안`). Still real type, spacing and copy, not
+  gray blocks.
 
-Structure is settled first, skin afterwards — a separate order.
+Around the part that moves:
+
+- Draw the real page around it: navigation, header, neighbouring sections, real copy,
+  and a real page's worth of items. Three blocks won't show a layout failing.
+- Draw the real breakpoints if width is the question, not one arbitrary viewport.
+- Mark what moved with a `.look` bracket beside it (`Where to look`). Never a gray fill
+  or dashed box on it: that restyles the very thing being judged.
+- Markup rebuilt by hand instead of the real component gets `실물과 다름`, as anywhere.
+
+### A skeleton only on request
+
+Draw gray blocks only when the user explicitly asks to see positions alone:
+`뼈대만 보자` · `와이어프레임으로` · `위치만 보자` · `디자인 빼고`. A layout question is
+not that request, and neither is an early stage, a rough request, or a large page.
+
+- Achromatic only: no color, no type styling, no shadow, no radius. Gray blocks on white.
+- Block weight carries hierarchy: darker gray = heavier element.
+- Label blocks with their role (`네비`, `사이드바`, `본문`, `카드`), not lorem ipsum.
+- The real breakpoints and a real page's worth of blocks, as above.
+
+The request holds for that order only. The next order is drawn in the real design again
+unless the user asks for a skeleton again.

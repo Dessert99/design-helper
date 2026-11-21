@@ -16,7 +16,9 @@ run them there — the root finds nothing.
 ## Draw in the system, or on a blank slate
 
 - **Changing something that exists** → use exactly what detection found. Arbitrary
-  values make "does this fit ours?" unanswerable and the comparison worthless.
+  values make "does this fit ours?" unanswerable and the comparison worthless. This
+  holds for layout and position questions too: draw the real screen in its real styles.
+  A gray skeleton only on an explicit request (`references/sweeping.md#structure-and-layout`).
 - **New project, or hunting a different direction** → don't bind to existing values.
   They are today's answer, not the right one. Open it with the coordinate sweep in
   `references/sweeping.md` — on a new project from the middle of the scale, and when

@@ -235,7 +235,7 @@ and so on) need to change too.
 - [`agents/worker.md`](agents/worker.md): the Claude Code plugin agent that runs `worker.md`. Codex plugins can't ship agents, so Codex spawns a plain subagent instead
 - [`references/`](skills/design-helper/references/): detailed instructions read when needed
   - [`clarification.md`](skills/design-helper/references/clarification.md): asking about a vague request
-  - [`sweeping.md`](skills/design-helper/references/sweeping.md): candidate values, captions and the recommendation, background and size, starting from a blank slate, wireframes
+  - [`sweeping.md`](skills/design-helper/references/sweeping.md): candidate values, captions and the recommendation, background and size, starting from a blank slate, layouts in the real design (gray skeleton only on request)
   - [`writing.md`](skills/design-helper/references/writing.md): how every Korean sentence the user reads is written: short sentences, no symbol shorthand, attached particles, the caption layout
   - [`sheet.md`](skills/design-helper/references/sheet.md): the sheet page's request dividers, table of contents, layout and style
   - [`stylesystems.md`](skills/design-helper/references/stylesystems.md): detecting the style system and drawing in each one
