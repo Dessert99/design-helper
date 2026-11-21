@@ -43,7 +43,7 @@ These instructions are English. Everything the user sees is Korean.
 
 - Chat replies, questions, recommendations → Korean
 - Every string rendered inside the HTML → Korean
-- Code, class names, file names, commit messages → English
+- Code, class names, file names → English
 - How every Korean sentence is written → `references/writing.md`. Read it before
   writing the first caption or reply.
 
@@ -63,24 +63,11 @@ in there anyway. Only the axis that was ordered exists.
 
 ## An order with no axis in it
 
-**Clarification scales with uncertainty, not a fixed questionnaire.** A precise request
-can go straight to specimens. A vague request needs successive questions until its
-purpose and comparison scope are clear enough to draw useful alternatives.
-
-First inspect the request, earlier answers, the target UI, and relevant project code.
-Read existing tokens, component variants, usage sites, and states yourself. Do not ask
-the user for facts available there, or reconfirm decisions already made.
-
-Ask **one consequential question at a time** — the unresolved issue whose answer would
-most change the specimens or the application scope — then reassess. Stop once the
-target, intended outcome, comparison axis and material constraints are understood;
-visual values are chosen from specimens, not verbal descriptions. Examples and the
-stopping rule → `references/clarification.md`.
-
-If the user says `알아서 해줘` or asks to see something first, use project conventions
-and narrow, reversible assumptions, state the material ones briefly, and draw.
-Delegation is not system-wide scope. Never invent the answer to a pending question and
-build alternatives on it.
+A precise request goes straight to specimens. A vague one gets questions, **one at a
+time**, until the target, the intended outcome and the axis are clear; visual values
+are then chosen from specimens, not words. Read the project before asking, and never
+ask for what the code or the conversation already says. How to pick the question, when
+to stop, and what `알아서 해줘` allows → `references/clarification.md`.
 
 For a blank slate, clarify purpose and usage when unclear, then open with a coordinate
 sweep — `references/sweeping.md`. Do not make the user name CSS axes before they have
@@ -101,9 +88,8 @@ anything to see. Its result is an anchor, not a settled property decision.
   are never reused inside one: an appended ladder continues D·E·F. Refer back to a
   settled unit by axis and letter — `그림자 C`.
 - **As few specimens as make the difference clear.** Honor a requested count. Otherwise
-  no fixed count: skip near-duplicates and don't generate every combination. If the
-  breadth is unclear and changes the work, ask once:
-  `시안은 몇 개 정도 보고 싶으세요? 제가 차이가 뚜렷한 것만 추려도 됩니다.`
+  no fixed count: skip near-duplicates and don't generate every combination. Don't
+  ask how many; the user says so when they want more.
 - Use a matrix only when comparing two directions together helps answer the request.
 - **Fixed specimens.** No sliders or other controls unless the user asks to adjust
   directly, or a continuous transition can't be judged from fixed steps:
@@ -213,8 +199,9 @@ picture cannot see what a horizontal scrollbar hides. **Count the rungs from `sp
 not in the picture.**
 
 Step 1 runs before the user sees the sheet; 2 and 3 run right after it is shown
-(`references/liveview.md`, `After every edit`), and the turn's report comes after
-them. Run 2 and 3 **once per work unit**, not on every ladder. A screenshot captures
+(`references/liveview.md`, `Show, then verify`), and the turn's report comes after
+them. Run 2 and 3 **once per work unit**, on its first ladder. Run them again only
+when a later write changes the layout: a new specimen size, grid or context. A screenshot captures
 **static state only**; motion is settled by what the user reports from the browser.
 
 **No Playwright → skip silently** (`check.cjs` prints `NO_PLAYWRIGHT`). Do step 1 only.
@@ -275,7 +262,7 @@ what failed. The changed code is now the baseline: read it before drawing on top
 Applying is not the end. Keep the sheet and server until the user has checked the real
 code and says it is done (`끝났어` · `됐어`; `이걸로 가자` is a choice, not that). Then
 run the teardown in `references/liveview.md`, which also checks `git status` for stray
-comparison files.
+comparison files and hands any it finds to the main agent.
 
 **Only what was explicitly chosen goes into the handoff.** An alternative merely
 mentioned along the way is not a decision.

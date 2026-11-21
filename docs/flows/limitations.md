@@ -27,13 +27,6 @@
 
 ## 실행 예제와 지침 사이의 차이
 
-<a id="느린재생"></a>
-### 느린 재생
-
-모션 지침은 `0.25x`를 요구하지만 CSS 예제는 모든 animation/transition duration을 `4s !important`로 덮어쓴다. 이는 각 원래 시간을 네 배로 늘리는 동작이 아니며 duration 후보의 차이를 없앤다. 대표 예시 10은 실제 속도에서 선택하는 흐름으로 제한했다.
-
-근거: [Motion — Three devices](../../skills/design-helper/references/motion.md#three-devices)
-
 ### 맥락과 표본 배치
 
 한 축 사다리는 폭을 채우는 격자라 칸이 넘치면 다음 줄로 내려간다. 두 축 매트릭스는 열 수를 고정하고 칸을 줄여 맞추므로, 표본이 칸보다 크면 잘릴 수 있다. 이 경우는 별도 확인이 필요하다.
@@ -42,14 +35,12 @@
 
 ## 해석을 맞춰야 하는 운영 규칙
 
-<a id="검증빈도"></a>
-### 검증 빈도와 브라우저 상태
-
-`worker.md`는 computed style과 스크린샷 확인을 작업 단위당 한 번으로 적고, `liveview.md`는 수정할 때마다 검증하도록 적는다. `controls.md`는 창을 옮긴 뒤 다음 턴에 경계를 다시 보도록 한다. 정확한 재검증 주기를 일치시킬 필요가 있다.
+<a id="브라우저상태"></a>
+### 브라우저 상태
 
 같은 URL을 읽는 Playwright 탭과 사용자 탭은 같은 HTML을 받더라도 `sessionStorage`의 창·맥락 상태가 다를 수 있다. 그래서 다른 탭의 스크린샷만으로 사용자가 조작한 지금 상태까지 확인했다고 할 수는 없다.
 
-근거: [worker: Verify](../../skills/design-helper/worker.md#verify), [Live view — After every edit](../../skills/design-helper/references/liveview.md#after-every-edit), [Controls: Choosing in chat](../../skills/design-helper/references/controls.md#choosing-in-chat)
+근거: [Controls: Choosing in chat](../../skills/design-helper/references/controls.md#choosing-in-chat)
 
 <a id="일시중단"></a>
 ### 일시 중단과 다음 세션의 복원

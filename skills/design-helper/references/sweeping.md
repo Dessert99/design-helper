@@ -98,11 +98,15 @@ name (class names built at runtime, styles set from JavaScript, another package 
 CMS), the count is a floor. Write it as one: `--shadow-md 고침 (23곳 이상)`. What the
 search couldn't reach is reported before applying (`worker.md`, `Blast radius`).
 
-Under the ladder, where the perceptual steps break:
+Under a ladder of one continuous value (blur, spacing, radius, duration), where the
+perceptual steps break:
 
 ```
 경계  B와 C는 이 크기에서 구분되지 않습니다. E부터 카드가 떠 보입니다.
 ```
+
+Leave it out when the options are distinct choices (a position, an order, a layout):
+there is no step to break, and the captions already say how each one differs.
 
 ### The recommendation
 
@@ -136,25 +140,33 @@ the layout or split it into clearly labeled groups.
 
 ## Context
 
-A specimen judged in the wrong context is judged wrong.
+A specimen judged in the wrong context is judged wrong. Draw the contexts the ordered
+axis reacts to, not every context every time: extra copies the axis doesn't react to
+only push rungs out of the first window.
 
-**Backgrounds — at least two.** Shadow, border, opacity and blur all invert with the
-surface behind them. White and gray at minimum; dark too if the project has it.
+**Backgrounds: at least two,** when the axis reacts to the surface behind it. Shadow,
+border, opacity, blur and color all invert with it. White and gray at minimum; dark
+too if the project has it.
 
-**Repeat the element.** One button never reveals a shadow. Lay six in a list and
-"too heavy" becomes obvious. Anything that appears in multiples in the real UI gets
-drawn in multiples here.
+**Repeat the element** when it appears in multiples in the real UI. One button never
+reveals a shadow. Lay six in a list and "too heavy" becomes obvious.
 
-**Two sizes.** The same radius reads completely differently on a 32px chip and a
-400px card. Small and large, always.
+**Two sizes** when the axis reads differently with size. The same radius reads
+completely differently on a 32px chip and a 400px card. Radius, padding, border and
+type size get small and large.
 
-**Real content.** Placeholder boxes hide the problem — a card with lorem ipsum and a
-card with a real headline, avatar and timestamp are different design problems.
+**Real content, always.** Placeholder boxes hide the problem: a card with lorem ipsum
+and a card with a real headline, avatar and timestamp are different design problems.
+Real content is not a toggle; there is no version of this where lorem ipsum is the
+right specimen.
 
-Show background, repetition and size contexts together. Context buttons may isolate one
-condition when that materially helps; they bring no sliders with them. Never open a
-sheet already narrowed because it looks tidier. Real content is not a toggle: there is no version of
-this where lorem ipsum is the right specimen.
+A position, order or layout axis is judged on the real page around it
+(`Structure and layout`, below), not on extra backgrounds and sizes.
+
+Show the contexts that apply together. Never drop one the axis reacts to because the
+sheet looks tidier without it; `references/sheet.md` says how they fit the first window.
+Context buttons may isolate one condition when that materially helps; they bring no
+sliders with them.
 
 ### When context is a constraint, not a variable
 

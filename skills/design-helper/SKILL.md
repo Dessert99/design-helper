@@ -58,7 +58,9 @@ for the worker's result (Claude Code notifies you; in Codex, `wait_agent`).
 - A message that clearly has nothing to do with the comparison is yours to handle. If
   you can't tell, forward it.
 - The user says it is done (`끝났어`, `됐어`): forward it, show the worker's last
-  message, and close the worker if your tools can (`close_agent` in Codex).
+  message, and close the worker if your tools can (`close_agent` in Codex). If that
+  message ends with a `정리 지시:` block, show only what is above it, delete exactly the
+  paths it lists and nothing else, and say so in one short Korean line.
 
 ## Applying the choice
 

@@ -49,7 +49,7 @@ and reaps itself (below). Once per session, in the background:
     echo $! > "$WS/server.pid"
 
 Port busy → walk up (8766, 8767...). Never kill whatever is already there. When the
-first sheet is ready (`After every edit` below), open the URL, not the path:
+first sheet is ready (`Show, then verify` below), open the URL, not the path:
 
     open http://localhost:8765/sheet.html
 
@@ -97,58 +97,48 @@ one is where an append lands. Break either and the page reloads to the top
 mid-comparison. Turn dividers and the table of contents (`references/sheet.md`) are a
 `<div>` and a `<nav>`, so they never change the count.
 
-## After every edit
+## Show, then verify
 
-Show first, then verify. The user's tab reloads by itself on every write, so a fix made
-during verification reaches them without another step, and they are not left waiting on
-an empty screen while it runs.
+A revision is ready once its content is written, every caption and the recommendation
+included, and its names are checked. Every ready revision takes these steps: the first
+sheet, an appended ladder, and an edit inside an existing section alike.
 
-1. Check names (verification step 1 in `worker.md`). It takes a second and catches the
-   failure that shows nothing at all, so it runs before anyone sees the sheet
-2. Present it as described below: the first sheet opens, a revision comes forward.
-   Do this before step 3, with every caption and the recommendation already written
-3. Verify: computed style and screenshot with `check.cjs`, per `worker.md`. Fix what it
-   finds in the sheet; the open tab picks the fix up within a second and keeps its
-   scroll position. Fixes are not presented again
-4. Then report, saying what to look at: `맨 아래 그림자 사다리입니다`. The report comes
-   after verification, so it describes the checked sheet
-
-The screenshot comes from Playwright's own page at the same URL, so it and the user's
-browser are looking at the same bytes.
-
-Two cases verify before presenting instead: a sheet with controls
-(`references/controls.md`), and a sheet on `file://` (below), which can't reload itself.
-
-An optional interactive sheet keeps its state across these reloads as described in
-`references/controls.md`.
-
-## Present every revision
-
-Bring the user to the first sheet and to every ready revision after feedback, including
-an edit inside an existing section. A revision is ready once its content is written and
-its names are checked (`After every edit`). Do not steal focus for intermediate writes,
-fixes made during verification or a turn that produces nothing new to compare.
-
-1. Check that the session's server (and CSS watcher, if any) is up and the sheet URL
-   answers. Workspace gone → a fresh sheet as above; server stopped → restart it.
+1. **Check names** (verification step 1 in `worker.md`). It takes a second and catches
+   the failure that shows nothing at all, so it runs before anyone sees the sheet.
+2. **Make sure it is served.** The server (and CSS watcher, if any) is up and the sheet
+   URL answers. Workspace gone → a fresh sheet as above; server stopped → restart it.
    Port taken → pick a free one; never kill what is already there.
-2. With the browser or desktop controls you have, find the user's comparison tab by
-   its URL, select it and bring its window forward. **Never open a second tab for the
-   same sheet**: open the URL only after confirming no such tab exists, and if the
-   port changed, navigate the existing tab instead. Use those controls, not a
-   page-level `window.focus()`, and never a URL opener as a focus fallback.
-3. Make sure the latest content is loaded (reload if polling was suspended) and scroll
-   to the section being presented.
-4. Verify, then report. A screenshot from your own headless page or a successful HEAD request
-   does not show that the user's tab came forward. If you can't find or activate the
-   tab, say so in one line and give the URL; don't claim it came forward.
+3. **Bring it to the user.** With the browser or desktop controls you have, find the
+   user's comparison tab by its URL, select it, bring its window forward, reload it if
+   polling was suspended, and scroll to the section. **Never open a second tab for the
+   same sheet**: open the URL only after confirming no such tab exists, and if the port
+   changed, navigate the existing tab instead. Use those controls, not a page-level
+   `window.focus()`, and never a URL opener as a focus fallback.
+4. **Verify** with `check.cjs` (steps 2 and 3 in `worker.md`), on the work unit's
+   first ladder and again only when a later write changes the layout. Fix what it
+   finds in the sheet; the open tab picks the fix up within a second and keeps its
+   scroll position. Fixes are not presented again.
+5. **Report**, saying what to look at: `맨 아래 그림자 사다리입니다`. If you couldn't
+   find or activate the tab, say so in one line and give the URL. A screenshot from
+   your own headless page or a successful HEAD request does not show that the user's
+   tab came forward; don't claim it did.
+
+Showing comes before verifying: the user's tab reloads by itself, so a fix made during
+verification reaches them without another step, and they are not left on an empty
+screen while it runs. The screenshot comes from Playwright's own page at the same URL,
+so it and the user's browser are looking at the same bytes. Don't steal focus for
+fixes or for a turn that produces nothing new to compare.
+
+Two cases verify before showing instead: a sheet with controls
+(`references/controls.md`), and a sheet on `file://` (below), which can't reload itself.
+An optional interactive sheet keeps its state across reloads as `references/controls.md`
+describes.
 
 ## No python3
 
 Open the sheet on `file://` and say once that automatic reload and the two-minute
-cleanup are unavailable. Without reload, verify each revision before presenting it. For each ready revision, reload through browser controls or
-reopen the file URL; if neither is available, ask for a manual refresh. Avoid background
-watchers, and clean up on explicit completion. Do not build a replacement server.
+cleanup are unavailable. Verify each revision before showing it, then reload the tab
+through browser controls or ask for a manual refresh. Don't build a replacement server.
 
 ## At the end
 
@@ -157,5 +147,10 @@ deletes everything it made:
 
     for f in "$WS"/*.pid; do kill "$(cat "$f")" 2>/dev/null; done; rm -rf "$WS"
 
-Then check `git status` in the project for stray comparison files. Remove only those
-temporary artifacts, preserving the applied changes and all existing user work.
+Then run `git status` in the project. Nothing from this skill belongs there except the
+applied changes. If a comparison file shows up anyway, don't delete it yourself: end
+the final message with a block for the main agent, which removes exactly those paths
+and nothing else:
+
+    정리 지시:
+    - 지울 파일: src/tailwind.config.sheet.ts

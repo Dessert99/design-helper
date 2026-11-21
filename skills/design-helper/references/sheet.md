@@ -134,7 +134,7 @@ The words inside follow `references/writing.md`.
 </div>
 ...
 </div>
-<p class="bound"><b>경계</b><span>...</span></p>
+<p class="bound"><b>경계</b><span>...</span></p>  <!-- only on a continuous ladder -->
 <div class="pick"><b>추천 B</b><span>이유 ...</span></div>
 </section>
 ```
@@ -156,10 +156,11 @@ What fills that window is what gets judged, so it is the specimens.
 - **Above the grid: the title and at most two lines of description.** What to decide,
   where to look, a shared `실물과 다름` note. Anything longer moves into the captions or
   under the ladder.
-- **Every frame of the section fits in that first window** when the specimens are
-  small enough to allow it. Drop context repetitions or near-duplicate rungs before
-  letting a rung fall below it. A specimen taller than the window (a whole page) shows
-  at least one full row of frames.
+- **Every rung is in that first window**, on at least its first context. Drop
+  near-duplicate rungs before letting one fall below it. Further contexts the axis
+  reacts to follow below in the same rung order; never drop them to fit
+  (`references/sweeping.md#context`). A specimen taller than the window (a whole page)
+  shows at least one full row of frames.
 - **The recommendation stays below the specimens.** Read before looking, it decides
   for the eye.
 

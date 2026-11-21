@@ -45,7 +45,7 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 이름 확인은 사용자에게 보이기 전에 하고, computed style과 스크린샷 확인은 시트를 먼저 띄운 뒤에 한다. 확인하다 고친 내용은 열린 탭이 스스로 새로고침해 반영하며, 채팅 보고는 확인이 끝난 뒤에 한다. 슬라이더가 있는 시트와 `file://`로 연 시트는 예외로, 확인을 마친 뒤 보여 준다. 두 확인은 고정 스크립트 `check.cjs` 한 번으로 한다.
 
-검증 빈도는 `worker.md`와 `liveview.md`의 표현이 다르므로 [미정 사항](limitations.md#검증빈도)에 기록했다. 모션의 시간에 따른 변화는 정지 스크린샷으로 검증할 수 없다.
+computed style과 스크린샷 확인은 작업 단위의 첫 사다리에서 한 번 하고, 이후에는 표본 크기·격자·맥락처럼 배치가 바뀔 때만 다시 한다. 모션의 시간에 따른 변화는 정지 스크린샷으로 검증할 수 없다.
 
 - 표본이 모두 같아 보이면 잘못된 이름, 래퍼에 붙은 클래스, 다른 CSS에 의한 덮어쓰기를 확인한다.
 - 화면에서 실제로 깨진 부분은 비교를 방해하므로 알린다. 관찰하지 않은 색 차이나 수치를 근거처럼 만들지 않는다.
@@ -64,13 +64,13 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 수정 시안을 제시할 때마다 비교 탭을 선택하고 브라우저 창을 앞으로 가져온다. 탭이나 브라우저가 닫혔다면 같은 세션의 시트 URL을 다시 연다. 서버만 종료되었으면 기존 작업 폴더에서 복구한다. 요청 없이 2분이 지나 폴더까지 삭제되었으면 사용자가 페이지를 닫은 것으로 보고, 이전 시안은 복구하지 않는다. 새 페이지에는 이번 요청에서 필요한 시안만 그린다. 이번 요청이 이전 표본을 가리키면 그 표본만 함께 그린다. 알파벳과 요청 번호는 대화에서 이어 간다. 기존 비교 탭이 있으면 그 탭을 다시 쓰고, 탭이 없음을 확인한 경우에만 새로 연다. 새 비교든 기존 구역을 고친 것이든 그 구역으로 스크롤해 보여 준다. 중간 파일 저장이나 대화만 하는 턴에는 포커스를 빼앗지 않는다.
 
-자동 새로고침이 됐다고 화면이 앞으로 왔다고 보지 않는다. 탭 확인이나 활성화 도구가 없으면 중복 가능성이 있는 URL 열기로 우회하지 않고 한계와 현재 URL을 알린다. 운영체제 URL 열기는 비교 탭이 없음을 확인한 경우에만 사용한다. 화면 전환을 확인할 수 없으면 확인했다고 보고하지 않는다. 자세한 절차는 [수정 시안 제시](../../skills/design-helper/references/liveview.md#present-every-revision)를 따른다.
+자동 새로고침이 됐다고 화면이 앞으로 왔다고 보지 않는다. 탭 확인이나 활성화 도구가 없으면 중복 가능성이 있는 URL 열기로 우회하지 않고 한계와 현재 URL을 알린다. 운영체제 URL 열기는 비교 탭이 없음을 확인한 경우에만 사용한다. 화면 전환을 확인할 수 없으면 확인했다고 보고하지 않는다. 자세한 절차는 [보여 주고 검증하기](../../skills/design-helper/references/liveview.md#show-then-verify)를 따른다.
 
-근거: [Live view — The workspace](../../skills/design-helper/references/liveview.md#the-workspace), [Present every revision](../../skills/design-helper/references/liveview.md#present-every-revision), [Serve it](../../skills/design-helper/references/liveview.md#serve-it), [The reloader](../../skills/design-helper/references/liveview.md#the-reloader), [After every edit](../../skills/design-helper/references/liveview.md#after-every-edit)
+근거: [Live view: The workspace](../../skills/design-helper/references/liveview.md#the-workspace), [Serve it](../../skills/design-helper/references/liveview.md#serve-it), [The reloader](../../skills/design-helper/references/liveview.md#the-reloader), [Show, then verify](../../skills/design-helper/references/liveview.md#show-then-verify)
 
 ## 도구나 기록이 동작하지 않을 때
 
-`python3`가 없으면 지침은 `file://`로 시트를 열고, 자동 새로고침과 2분 자동 정리가 없다는 것을 한 번 알리도록 한다. 수정할 때마다 브라우저 제어로 다시 불러오거나 파일 URL을 다시 열고, 둘 다 안 되면 수동 새로고침을 부탁한다. 선택은 평소처럼 채팅으로 받는다. 워처를 백그라운드로 두지 않고, 완료 시 직접 정리한다.
+`python3`가 없으면 지침은 `file://`로 시트를 열고, 자동 새로고침과 2분 자동 정리가 없다는 것을 한 번 알리도록 한다. 수정할 때마다 브라우저 제어로 다시 불러오거나 파일 URL을 다시 열고, 둘 다 안 되면 수동 새로고침을 부탁한다. 선택은 평소처럼 채팅으로 받는다.
 
 선택은 채팅으로 받는다. 사용자가 조작한 창의 문자가 어떤 값을 가리키는지는 실제 사용자 탭에서 확인한다. 별도 탭의 초기값을 선택값으로 추측하지 않는다.
 

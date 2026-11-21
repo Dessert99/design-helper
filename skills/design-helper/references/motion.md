@@ -28,7 +28,17 @@ Put `run` on the specimen and key the CSS off it: `.spec.run .thing { animation:
 is invisible at real speed** — `ease-out` and `cubic-bezier(.22,1,.36,1)` are
 indistinguishable until slowed down.
 
-    :root.slow * { animation-duration: 4s !important; transition-duration: 4s !important; }
+Write every duration and delay in the specimens through one multiplier, so slowing
+down keeps the differences between rungs:
+
+    :root { --slow: 1 }
+    :root.slow { --slow: 4 }
+    .spec.run .thing { transition: transform calc(200ms * var(--slow)) ease-out
+                                   calc(40ms * var(--slow)); }
+
+The toggle sets `slow` on `<html>`. Never override durations with one fixed value
+(`* { transition-duration: 4s !important }`): every rung then runs the same length,
+and a duration or stagger ladder disappears.
 
 Offer 1x and 0.25x. **Decide at 1x, distinguish at 0.25x** — a curve that reads
 beautifully in slow motion can be imperceptible at speed, and shipping runs at 1x.

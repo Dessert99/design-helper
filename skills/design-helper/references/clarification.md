@@ -24,6 +24,13 @@ Useful questions, only when their answers are missing:
 
 Do not ask about scope again at apply time if already resolved.
 
+## When the user delegates
+
+If the user says `알아서 해줘` or asks to see something first, use project conventions
+and narrow, reversible assumptions, state the material ones briefly, and draw.
+Delegation is not system-wide scope. Never invent the answer to a pending question and
+build alternatives on it.
+
 ## Examples
 
 **Clear:** `이 카드의 radius만 비교해줘. 높이와 색은 유지해.`
