@@ -1,4 +1,4 @@
-import http.server, os, shutil, signal, sys, time
+import hashlib, http.server, io, os, pathlib, shutil, signal, sys, time
 D = os.path.dirname(os.path.abspath(__file__))
 IDLE = 120
 seen = time.monotonic()
@@ -18,6 +18,30 @@ class H(http.server.SimpleHTTPRequestHandler):
         # serve a stale sheet after two edits within the same second.
         self.send_header('Cache-Control', 'no-store')
         super().end_headers()
+    def send_head(self):
+        if self.path.split('?', 1)[0] != '/sheet.html':
+            return super().send_head()
+        try:
+            body = pathlib.Path(D, 'sheet.html').read_bytes()
+            digest = hashlib.sha256(body)
+            # Hash the workspace CSS too, so a watcher build that lands after the HTML still reloads.
+            for css in sorted(pathlib.Path(D).rglob('*.css')):
+                digest.update(str(css.relative_to(D)).encode())
+                digest.update(b'\0')
+                digest.update(css.read_bytes())
+        except OSError:
+            self.send_error(503, 'Service Unavailable', 'Cannot read the sheet.')
+            return None
+        revision = digest.hexdigest()
+        # GET and HEAD carry the same revision: the body embeds it, the ETag repeats it.
+        meta = f'<meta name="dh-revision" content="{revision}">'.encode()
+        body = body.replace(b'<!-- dh:revision -->', meta, 1)
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/html; charset=utf-8')
+        self.send_header('Content-Length', str(len(body)))
+        self.send_header('ETag', f'"{revision}"')
+        self.end_headers()
+        return io.BytesIO(body)
     def log_message(self, *a): pass
 
 def cleanup():
@@ -32,12 +56,16 @@ def cleanup():
     # Delete only this session workspace, never its parent or the project.
     shutil.rmtree(D)
 
-# Bind successfully before taking ownership of cleanup. A busy port must not erase D.
-server = http.server.HTTPServer(('127.0.0.1', int(sys.argv[1])), H)
-server.timeout = 1
-try:
-    while time.monotonic() - seen < IDLE:
-        server.handle_request()
-finally:
-    server.server_close()
-    cleanup()
+def main():
+    # Bind successfully before taking ownership of cleanup. A busy port must not erase D.
+    server = http.server.HTTPServer(('127.0.0.1', int(sys.argv[1])), H)
+    server.timeout = 1
+    try:
+        while time.monotonic() - seen < IDLE:
+            server.handle_request()
+    finally:
+        server.server_close()
+        cleanup()
+
+if __name__ == '__main__':
+    main()

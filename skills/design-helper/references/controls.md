@@ -45,9 +45,9 @@ the section's markup and before the reloader, and keep to these rules:
 ## Before presenting it
 
 A sheet with controls is verified before it is shown, not after (the exception in
-`references/liveview.md`, `Show, then verify`). Move every control to its minimum,
-middle and maximum, and check that the component's computed style actually changes (Verification step 2 in `worker.md`), the captions
-match, the bounds hold, and a reload restores the state. If the interaction can't be
+`references/liveview.md`, `Show, then verify`). When interaction is authorized, check
+each control at its minimum, middle and maximum: computed styles (`worker.md#verify`),
+matching captions, bounds and state restoration after reload. If the interaction can't be
 verified, drop the slider and draw fixed candidates instead; never ship a control that
 doesn't work.
 

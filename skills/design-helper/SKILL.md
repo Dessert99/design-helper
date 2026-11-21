@@ -39,9 +39,10 @@ Which agent to spawn:
   finds `worker.md` on its own.
 - **Claude Code without it** (the skill was copied or linked in): a general-purpose
   subagent. Start the message with `Read <absolute path of worker.md> and follow it.`
-- **Codex**: `spawn_agent` with `fork_context` false and no `agent_type`. Start the
-  message the same way, with the absolute path of `worker.md`. These instructions
-  are the explicit request for a subagent.
+- **Codex**: use the available `spawn_agent` schema, with isolated context
+  (`fork_turns: "none"`, or `fork_context: false` if that is the exposed field).
+  Do not pass fields the tool does not accept. Start the message with the absolute
+  path of `worker.md`. These instructions explicitly request a comparison subagent.
 
 Tell the user in one short Korean line that the comparison is being drawn, then wait
 for the worker's result (Claude Code notifies you; in Codex, `wait_agent`).
@@ -60,7 +61,8 @@ for the worker's result (Claude Code notifies you; in Codex, `wait_agent`).
 - The user says it is done (`끝났어`, `됐어`): forward it, show the worker's last
   message, and close the worker if your tools can (`close_agent` in Codex). If that
   message ends with a `정리 지시:` block, show only what is above it, delete exactly the
-  paths it lists and nothing else, and say so in one short Korean line.
+  paths it lists only when creation by this session is established. A filename or
+  untracked status alone is not evidence. Preserve uncertain files. Report cleanup briefly.
 
 ## Applying the choice
 
@@ -84,7 +86,8 @@ turn:
 
 If the worker can't be resumed (it was closed, the session restarted, or a message to it
 fails), spawn a new one. Its first message adds the settled values from the earlier
-reports and the last letter used, so the letters continue instead of restarting.
+reports, the active axis and its last letter. Continue letters only for that active
+unit; a newly ordered axis starts at A. Include any known workspace and sheet URL.
 
 ## Doing it yourself
 

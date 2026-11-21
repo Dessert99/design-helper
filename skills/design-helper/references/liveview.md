@@ -38,7 +38,7 @@ per workspace, right after creating it, and never retype them:
 - `serve.py`: the server below
 - `sheet.html`: the empty sheet, with the sheet style, the table of contents and the
   reloader already in it (`references/sheet.md`)
-- `check.cjs`: verification steps 2 and 3 of `worker.md` in one run
+- `check.cjs`: computed styles and optional screenshot in one run (`worker.md#verify`)
 
 ## Serve it
 
@@ -86,16 +86,16 @@ teardown. A hard crash cannot run cleanup.
 ## The reloader
 
 The last script in `assets/sheet.html`, at the end of `<body>`, so the DOM is parsed when
-it runs. Keep it as copied. Every second it compares the sheet's `Last-Modified` and
-length with the copy the page was loaded from, reloads when they differ, and lands
-where the user needs to be: on the newest ladder if one was appended, otherwise
-exactly where they were reading. The browser's own scroll restoration is turned off so
-it can't override that landing.
+it runs. Keep it as copied. The server embeds a content revision in the HTML and
+returns it as an ETag on HEAD. The revision covers the HTML and workspace CSS, so
+same-length edits within one second and a later CSS build both trigger a reload.
+Polling compares against the loaded revision, never a first-poll baseline. Failed
+requests keep the current page and retry; `file://` does not poll.
 
-One ladder per `<section>`, appended at the end — the count compares them and the last
-one is where an append lands. Break either and the page reloads to the top
-mid-comparison. Turn dividers and the table of contents (`references/sheet.md`) are a
-`<div>` and a `<nav>`, so they never change the count.
+Use one direct child `<section>` of `.dh-main` per ladder, appended at the end. Only
+these sections count for reload landing and the table of contents; nested sections in
+real product markup do not count. A new ladder lands at its top; otherwise the page
+restores its scroll position. Keep section IDs stable.
 
 ## Show, then verify
 
@@ -103,21 +103,22 @@ A revision is ready once its content is written, every caption and the recommend
 included, and its names are checked. Every ready revision takes these steps: the first
 sheet, an appended ladder, and an edit inside an existing section alike.
 
-1. **Check names** (verification step 1 in `worker.md`). It takes a second and catches
+1. **Check names** (`worker.md#verify`, Names). It takes a second and catches
    the failure that shows nothing at all, so it runs before anyone sees the sheet.
 2. **Make sure it is served.** The server (and CSS watcher, if any) is up and the sheet
    URL answers. Workspace gone → a fresh sheet as above; server stopped → restart it.
    Port taken → pick a free one; never kill what is already there.
+   Reuse the successful readiness check from this edit; do not probe the same server
+   again without a failure or delay.
 3. **Bring it to the user.** With the browser or desktop controls you have, find the
    user's comparison tab by its URL, select it, bring its window forward, reload it if
-   polling was suspended, and scroll to the section. **Never open a second tab for the
-   same sheet**: open the URL only after confirming no such tab exists, and if the port
+   polling was suspended and session permissions allow it, and scroll to the section.
+   **Never open a second tab for the same sheet**: open the URL only after confirming no such tab exists, and if the port
    changed, navigate the existing tab instead. Use those controls, not a page-level
    `window.focus()`, and never a URL opener as a focus fallback.
-4. **Verify** with `check.cjs` (steps 2 and 3 in `worker.md`), on the work unit's
-   first ladder and again only when a later write changes the layout. Fix what it
-   finds in the sheet; the open tab picks the fix up within a second and keeps its
-   scroll position. Fixes are not presented again.
+4. **Verify** at the frequency in `worker.md#verify`: values for changed specimens,
+   pictures for the first ladder or layout changes. Fix what it finds in the sheet;
+   the open tab picks up the fix on its next poll and keeps its scroll position. Fixes are not presented again.
 5. **Report**, saying what to look at: `맨 아래 그림자 사다리입니다`. If you couldn't
    find or activate the tab, say so in one line and give the URL. A screenshot from
    your own headless page or a successful HEAD request does not show that the user's
@@ -149,8 +150,9 @@ deletes everything it made:
 
 Then run `git status` in the project. Nothing from this skill belongs there except the
 applied changes. If a comparison file shows up anyway, don't delete it yourself: end
-the final message with a block for the main agent, which removes exactly those paths
-and nothing else:
+the final message with a block for the main agent. Include only files whose creation
+by this session is established; a name or untracked status alone is not enough. Preserve
+uncertain files. The main agent removes only the established comparison artifacts:
 
     정리 지시:
     - 지울 파일: src/tailwind.config.sheet.ts

@@ -23,37 +23,13 @@ tokenized project is to find which existing step fits, not to invent a new one.
 Pick distinct steps around the current project value, or the middle when there is none.
 A matrix puts one direction on rows and the other on columns, both labeled.
 
-## Captions — the sheet explains itself
+## Captions
 
-The user reads the screen, not the chat. Everything needed to judge a specimen sits
-next to it. Every sentence follows `references/writing.md`.
-
-Up to four lines per specimen:
-
-```
-A   x1.8                                        토큰 그대로
-    윗변 100% · 그림자 100%
-    그림자가 가장 넓게 번집니다. B와 그림자가 같아 둘이 한 쌍처럼 보입니다.
-```
-
-1. letter · the value being moved · its cost
-2. what that value resolves to, when the value alone doesn't show it
-3. one line on what it does to the eye: the part that changes, then a verb for how
-   (`번짐이 넓어집니다`, `제목이 잘립니다`, `카드가 떠 보입니다`)
-4. **only if there is a real trade-off** — what this option gains and what it gives up,
-   against the others on the sheet, as two labelled lines:
-
-```
-B   안쪽 여백과 칸 사이를 줄임                         layout.css 변수 + phone-md 1곳
-    360 미만: 아이콘 18 · 글자 11 · 칸 사이 8 · 양끝 12
-    칸이 38로 넓어집니다. "타임라인"이 칸 안에 딱 맞습니다.
-    얻는 것  320에서도 글자가 잘리지 않습니다.
-    잃는 것  320에서는 칸 사이가 피그마보다 4px 좁습니다.
-```
-
-Leave line 4 out when nothing is given up — a pure step on a ladder usually has none.
-Name concrete costs (a width that breaks, a token that moves, a state that stops
-reading), never vague ones like `덜 깔끔함`.
+Use the caption structure in `references/writing.md#the-caption`; do not duplicate its
+rules here. Label the current project value `현재값` when it is one of the rungs, so the
+user can compare a change against the baseline. Costs describe the intended apply scope:
+reusing a token is not the same as changing its shared definition. Include gain and loss
+only for a concrete trade-off, never a fabricated downside for a simple value step.
 
 ### Where to look
 
@@ -268,7 +244,7 @@ Around the part that moves:
 - Draw the real page around it: navigation, header, neighbouring sections, real copy,
   and a real page's worth of items. Three blocks won't show a layout failing.
 - Draw the real breakpoints if width is the question, not one arbitrary viewport.
-- Mark what moved with a `.look` bracket beside it (`Where to look`). Never a gray fill
+- Mark what moved with a `.dh-look` bracket beside it (`Where to look`). Never a gray fill
   or dashed box on it: that restyles the very thing being judged.
 - Markup rebuilt by hand instead of the real component gets `실물과 다름`, as anywhere.
 

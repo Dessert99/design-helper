@@ -14,9 +14,13 @@ insert only what the turn adds, just above its marker:
 |---|---|
 | `<!-- dh:head -->` | `<link>` to project stylesheets (`tokens.css`, `$WS/sheet.css`) |
 | `/* dh:style */` | specimen CSS, inside the second `<style>` |
-| `<!-- dh:toc -->` | this turn's `toc-turn` label and section links |
+| `<!-- dh:toc -->` | this turn's `dh-toc-turn` label and section links |
 | `<!-- dh:main -->` | this turn's divider and sections |
 | `<!-- dh:script -->` | control scripts, when a section has them |
+
+Patch only the changed section or insert at markers; do not reread the growing sheet
+or regenerate its fixed parts on each round. Scope specimen CSS and scripts to their
+section ID so a later ladder cannot restyle or replay earlier comparisons.
 
 Leave the markers in place: the next turn appends above them again. An in-place
 revision edits the section where it is.
@@ -39,7 +43,7 @@ message sits under one divider, so the user can tell which turn produced what:
 - **Section titles start with the element's name**, as the user calls it —
   `화살표 크기: ...`, `도크 전체: ...`. That is what separates two elements inside one turn;
   there is no separate element divider.
-- `<div class="turn">`, never a `<section>` — the reloader counts sections.
+- `<div class="dh-turn">`, never a `<section>`; the reloader counts comparison sections.
 
 
 ## The table of contents
@@ -68,11 +72,11 @@ that turn added. It gives a long sheet a way back to any earlier comparison.
 
 ```html
 <!-- above dh:toc -->
-<div class="toc-turn">요청 1 · 시트가 화면 폭을 쓰는 방식</div>
+<div class="dh-toc-turn">요청 1 · 시트가 화면 폭을 쓰는 방식</div>
 <a href="#r1-1">시트 폭</a>
 
 <!-- above dh:main -->
-<div class="turn">요청 1 · 시트가 화면 폭을 쓰는 방식</div>
+<div class="dh-turn">요청 1 · 시트가 화면 폭을 쓰는 방식</div>
 <section id="r1-1">...</section>
 ```
 
@@ -84,7 +88,7 @@ The sidebar's style and its highlighter are in the kit.
 Lay a section's specimens on a grid that shares the page width among its cells, so no
 empty band is left on the right however wide the window is:
 
-The kit's `.grid` does this with `minmax(380px, 1fr)`; `.frame` centers the specimen.
+The kit's `.dh-grid` does this with `minmax(380px, 1fr)`; `.dh-frame` centers the specimen.
 
 Only the frame stretches. The specimen inside keeps its real pixel size, centered —
 never scale or `zoom` it to fill the cell, because size is part of what is judged.
@@ -107,25 +111,30 @@ belongs to the sheet, not to the specimens.
 - **Neutral behind specimens.** The frame stays white. When the ordered axis is itself
   surface or background, the context rules in `references/sweeping.md#context` override the frame.
 
+Sheet classes and variables use the `dh-` prefix, so project `.grid`, `.badge` or
+`--radius` do not become sheet styles. Keep that prefix in generated chrome. Product
+markup may still inherit body styles; explicitly restore its real font, line height,
+color and theme at the specimen root. Prefixing is not full CSS isolation.
+
 The CSS for all of this is the kit's first `<style>`. Specimens use the markup below.
 The words inside follow `references/writing.md`.
 
 ```html
 <section id="r1-1">
 <h2>카드 그림자 블러</h2>
-<div class="grid">
+<div class="dh-grid" data-context="primary">
 <div class="spec">
-  <div class="frame">
-    <div class="at">  <!-- only with a marker -->
+  <div class="dh-frame">
+    <div class="dh-at">  <!-- only with a marker -->
       ...specimen...
-      <i class="look x" style="left:12px; width:120px"></i>
+      <i class="dh-look dh-x" style="left:12px; width:120px"></i>
     </div>
   </div>
-  <div class="cap">
-    <div class="n"><span class="badge">A</span>두께 얇음 · 모서리 각짐<span class="real">실물과 다름</span><span class="cost">새 변수</span></div>
-    <p class="resolved">높이 52 · 안쪽 여백 0 · 모서리 14</p>
+  <div class="dh-cap">
+    <div class="dh-n"><span class="dh-badge">A</span>두께 얇음 · 모서리 각짐<span class="dh-real">실물과 다름</span><span class="dh-cost">새 변수</span></div>
+    <p class="dh-resolved">높이 52 · 안쪽 여백 0 · 모서리 14</p>
     <p>면이 적어 콘텐츠가 더 보입니다.</p>
-    <dl class="gain">  <!-- only with a real trade-off, or a 다른 점 line -->
+    <dl class="dh-gain">  <!-- only with a real trade-off, or a 다른 점 line -->
       <dt>얻는 것</dt><dd>...</dd>
       <dt>잃는 것</dt><dd>...</dd>
       <dt>다른 점</dt><dd>...</dd>
@@ -134,18 +143,18 @@ The words inside follow `references/writing.md`.
 </div>
 ...
 </div>
-<p class="bound"><b>경계</b><span>...</span></p>  <!-- only on a continuous ladder -->
-<div class="pick"><b>추천 B</b><span>이유 ...</span></div>
+<p class="dh-bound"><b>경계</b><span>...</span></p>  <!-- only on a continuous ladder -->
+<div class="dh-pick"><b>추천 B</b><span>이유 ...</span></div>
 </section>
 ```
 
-- `.at` wraps the specimen only when it carries a marker. `.look.x` is a bracket under
-  the spot (set `left` and `width`), `.look.y` one beside it (set `top` and `height`),
+- `.dh-at` wraps the specimen only when it carries a marker. `.dh-look.dh-x` is a bracket under
+  the spot (set `left` and `width`), `.dh-look.dh-y` one beside it (set `top` and `height`),
   both measured from the specimen's own corner. When the axis spreads past the
   specimen (shadow, glow, outline), move the bracket past the widest rung's spread,
   `style="bottom:-30px"`, and give the section's frames that much padding. Rules →
   `references/sweeping.md`.
-- `.real` is the `실물과 다름` chip; its `다른 점` line joins the `gain` list.
+- `.dh-real` is the `실물과 다름` chip; its `다른 점` line joins the `dh-gain` list.
 
 
 ## The first screen is the specimens
@@ -164,5 +173,8 @@ What fills that window is what gets judged, so it is the specimens.
 - **The recommendation stays below the specimens.** Read before looking, it decides
   for the eye.
 
-`check.cjs` reports `firstScreen` per section: how many frames end inside one window
-from the section's top. Below `specs` means a rung starts out of sight.
+`check.cjs` reports `firstScreen` for the first `.dh-grid` in each comparison section.
+Use one frame per `.spec` in that grid. Compare with `primarySpecs`, not `specs`, which
+also includes later contexts. Check at the user's viewport; never shrink real specimens
+to satisfy a count. Requested candidate counts take priority: split into labeled groups
+when necessary, keeping a baseline visible in each group.

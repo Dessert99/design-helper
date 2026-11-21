@@ -13,14 +13,15 @@ devices that static ladders never need.
 out of phase and can't be compared. Put a single `전체 재생` button at the top of the
 row that restarts every specimen in the same frame.
 
-    document.querySelectorAll('.spec').forEach(el => {
-      el.classList.remove('run'); void el.offsetWidth; el.classList.add('run');
-    });
+    const section = document.getElementById('r1-1');
+    const specimens = section.querySelectorAll('.spec');
+    specimens.forEach(el => el.classList.remove('run'));
+    void section.offsetWidth;
+    specimens.forEach(el => el.classList.add('run'));
 
-The `void el.offsetWidth` reflow is what makes the restart take — without it the class
-removal and re-add collapse into nothing.
-
-Put `run` on the specimen and key the CSS off it: `.spec.run .thing { animation: ... }`.
+Remove all run classes, flush layout once, then add them together. Scope the trigger
+and CSS to this section; replaying one comparison must not restart earlier ladders.
+For example, `#r1-1 .spec.run .thing { animation: ... }`.
 
 **2. Replay.** It's over before it's judged. Keep the button reachable, or loop.
 
@@ -31,12 +32,12 @@ indistinguishable until slowed down.
 Write every duration and delay in the specimens through one multiplier, so slowing
 down keeps the differences between rungs:
 
-    :root { --slow: 1 }
-    :root.slow { --slow: 4 }
-    .spec.run .thing { transition: transform calc(200ms * var(--slow)) ease-out
+    #r1-1 { --slow: 1 }
+    #r1-1.slow { --slow: 4 }
+    #r1-1 .spec.run .thing { transition: transform calc(200ms * var(--slow)) ease-out
                                    calc(40ms * var(--slow)); }
 
-The toggle sets `slow` on `<html>`. Never override durations with one fixed value
+The toggle sets `slow` on this section. Never override durations with one fixed value
 (`* { transition-duration: 4s !important }`): every rung then runs the same length,
 and a duration or stagger ladder disappears.
 
@@ -60,7 +61,7 @@ Stagger only reads with enough items. Six minimum.
 
 ## What can't be settled here
 
-- **Screenshots capture static state only.** Verification step 3 can't see motion at
+- **Screenshots capture static state only.** Screenshot verification cannot see motion at
   all, so a motion unit rests entirely on what the user reports from the browser.
   Say so rather than implying it was checked.
 - **Entry and exit timing around mount/unmount will differ** — the real library sets the

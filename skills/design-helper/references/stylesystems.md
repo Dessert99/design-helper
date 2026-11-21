@@ -2,16 +2,15 @@
 
 ## Detect first
 
-Never guess. Run these three at the project root; the result forks five ways.
+Inspect the target's package and stylesheet together. In a monorepo, use the target's
+frontend root, not an unrelated root package. Batch these reads with the component:
 
-    ls tailwind.config.* 2>/dev/null
-    grep -rlm1 '@tailwind\|@import "tailwindcss"\|^\s*:root' --include='*.css' --include='*.scss' \
-      --exclude-dir={node_modules,.next,dist,build} . | head
-    grep -o 'styled-components\|@emotion/[a-z]*\|"sass"' package.json | sort -u
+    rg --files -g 'package.json' -g '*tailwind*' -g '*.css' -g '*.scss' -g '*theme*' -g '*tokens*' -g '!node_modules' -g '!dist' -g '!build'
+    rg -n 'tailwindcss|styled-components|@emotion/|sass' package.json
 
-**Quote the `--include` globs.** zsh expands them first and dies with
-`no matches found`. If the frontend lives in a subfolder (`frontend/`, `apps/web/`),
-run them there — the root finds nothing.
+Read matching imports, token definitions and theme scope. Detect Tailwind's major version
+from the installed package or lockfile, not config-file presence: v4 can keep a config.
+Reuse this result until the target or dependencies change. Only read the matching fork.
 
 ## Draw in the system, or on a blank slate
 
@@ -43,7 +42,7 @@ a watcher for the session so classes written into the sheet show on the next pol
 from the project root so `npx` finds the project's own Tailwind. Which command depends
 on the version:
 
-**v3** — `tailwind.config.*` exists, the CSS says `@tailwind base`. The CLI takes the
+**v3**: the installed major version is 3. The CLI takes the
 sheet's path as a flag, so the project config is used as is:
 
     npx tailwindcss -c tailwind.config.ts -i src/index.css \
@@ -53,7 +52,7 @@ sheet's path as a flag, so the project config is used as is:
 `-i` is the file detection found `@tailwind` in. `--content` replaces the config's list
 for this build only, so just the sheet is scanned.
 
-**v4** — no config file, the CSS says `@import "tailwindcss"`. Write an entry file in
+**v4**: the installed major version is 4. Write an entry file in
 `$WS` that pulls the project's stylesheet in by absolute path and points the scanner at
 `$WS`:
 
@@ -88,7 +87,11 @@ Changing a config value moves every use of that class. Adding a new class moves 
 
 ### CSS variables — `:root { --* }` · `tokens.css` · `theme.css`
 
-`<link>` the file and draw with `var(--x)`. Refresh alone picks up edits.
+Copy the required CSS into `$WS` and link its served relative URL, then draw with
+`var(--x)`. A filesystem path in `<link href>` is not served by this workspace server.
+Carry referenced imports, fonts and images into `$WS` with working relative paths too.
+Preserve the theme selector on the specimen root. Mark missing assets as `실물과 다름`.
+The copies do not follow project edits: copy again after a `반영 완료:` that touched them.
 
 Blast radius:
 
@@ -117,5 +120,5 @@ behind.
 
 ### Blank slate — nothing found
 
-Write the values directly. No silent-failure check needed, and blast radius is
-whatever files the change lands in.
+Write values directly. Skip name lookup only; invalid values and overrides still need
+computed-style checks. Blast radius is whatever files the change lands in.

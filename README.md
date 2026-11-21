@@ -48,9 +48,9 @@ you   Show me the card's shadow blur in 5 versions
         one it recommends, and why
       → leaves project code untouched so far
 
-you   C is better, but a bit darker
+you   Show me a little more blur around C
 
-      → adds an opacity ladder below, starting from C (F · G · H …)
+      → adds a blur ladder below, starting from C (F · G · H …)
 
 you   Go with G
 
@@ -85,6 +85,21 @@ you see comes from that property. Each value you pick carries into the next comp
   classes and tokens. The browser can't read SCSS variables or CSS-in-JS themes, so their
   values are copied into the sheet as CSS variables. With no style system, it writes
   values directly.
+
+The worker reuses loaded guidance and reads only the affected source and sheet section
+on later rounds. Captions mark the current project value when it is a candidate. Sheet
+classes and variables use a `dh-` prefix to reduce collisions with product styles.
+
+With Playwright available, every changed specimen gets a computed-style check. Screenshots
+are taken for the first ladder and layout changes; value-only revisions use `--no-shot`.
+Missing targets, invalid properties, expected-count mismatches, resource errors and clipped
+frames fail the check. First-screen counts cover the primary context at the specified
+viewport. `NO_PLAYWRIGHT` means unverified. The reloader detects HTML and CSS content changes,
+including same-length edits within one second and delayed CSS builds.
+
+A recorded choice becomes the code baseline only after the main agent reports a successful
+apply. Cleanup removes project artifacts only with evidence that this session created them.
+See [operations](docs/flows/operations.md) for details.
 
 ## What it doesn't do
 
@@ -248,6 +263,15 @@ and so on) need to change too.
   - [`check.cjs`](skills/design-helper/assets/check.cjs): reads computed styles and takes a screenshot with Playwright in one run
 - [`docs/flows.ko.md`](docs/flows.ko.md): usage flows by situation (Korean)
 - [`scripts/bump-version.sh`](scripts/bump-version.sh): sets the version in every plugin manifest, then commits and tags the release
+
+Kit regression checks run without installing a browser. They test HTTP responses,
+reload decisions and checker reports; they do not prove rendered fidelity.
+
+```sh
+python3 scripts/test-kit.py
+node scripts/test-reloader.cjs
+node scripts/test-check.cjs
+```
 
 ## License
 
