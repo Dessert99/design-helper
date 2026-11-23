@@ -17,10 +17,10 @@ Reuse this result until the target or dependencies change. Only read the matchin
 - **Changing something that exists** → use exactly what detection found. Arbitrary
   values make "does this fit ours?" unanswerable and the comparison worthless. This
   holds for layout and position questions too: draw the real screen in its real styles.
-  A gray skeleton only on an explicit request (`references/sweeping.md#structure-and-layout`).
+  A gray skeleton only on an explicit request (`skills/design-helper/references/sweeping.md#structure-and-layout`).
 - **New project, or hunting a different direction** → don't bind to existing values.
   They are today's answer, not the right one. Open it with the coordinate sweep in
-  `references/sweeping.md` — on a new project from the middle of the scale, and when
+  `skills/design-helper/references/sweeping.md` — on a new project from the middle of the scale, and when
   hunting a direction with today's value in the centre cell.
 - **Unsure → ask in one line.** "우리 것 안에서 볼까, 백지에서 볼까"
 

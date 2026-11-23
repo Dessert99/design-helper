@@ -66,7 +66,7 @@ B  안쪽 여백과 칸 사이를 줄임                       layout.css 변수
 4. Gain and loss, only with a real trade-off. Two lines, each with its own label.
    Never join them on one line with `/`.
 
-Markup → `references/sheet.md`.
+Markup → `shared/sheet.md`.
 
 ## Before and after
 

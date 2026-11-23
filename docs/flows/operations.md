@@ -6,7 +6,7 @@
 
 ## 일을 맡는 쪽
 
-메인 에이전트는 `SKILL.md`만 읽고, 실제 작업은 서브에이전트(일꾼)에게 맡긴다. 일꾼은 `worker.md`와 레퍼런스를 읽고 코드 확인, 시트 작성, 서버, 시트 검증, 정리를 맡는다. 프로젝트 코드는 고치지 않는다. 메인은 사용자의 말을 그대로 일꾼에게 전하고, 일꾼의 마지막 답을 그대로 보여 준다. 사용자가 고르면 일꾼이 `반영 지시:`로 고칠 곳과 범위를 넘기고, 메인이 직접 코드에 반영하고 확인한다. 같은 비교가 이어지는 동안에는 같은 일꾼을 계속 쓴다.
+메인 에이전트는 `SKILL.md`와 `shared/main.md`만 읽고, 실제 작업은 서브에이전트(일꾼)에게 맡긴다. 일꾼은 `shared/core.md`, 스킬의 `worker.md`, 레퍼런스를 읽고 코드 확인, 시트 작성, 서버, 시트 검증, 정리를 맡는다. 프로젝트 코드는 고치지 않는다. 메인은 사용자의 말을 그대로 일꾼에게 전하고, 일꾼의 마지막 답을 그대로 보여 준다. 사용자가 고르면 일꾼이 `반영 지시:`로 고칠 곳과 범위를 넘기고, 메인이 직접 코드에 반영하고 확인한다. 같은 비교가 이어지는 동안에는 같은 일꾼을 계속 쓴다.
 
 - Claude Code 플러그인: 플러그인 에이전트 `design-helper:worker`
 - Claude Code 심링크 설치: 일반 서브에이전트에게 `worker.md` 경로를 주어 읽힌다
@@ -17,7 +17,7 @@
 
 같은 일꾼은 이미 읽은 지침을 다시 읽지 않는다. 첫 시트에는 스타일 탐지와 시트 작성 지침을 읽는다. 질문·컨트롤·모션 지침은 해당 작업에만 읽는다. 다음 턴에는 바뀐 소스와 메모, 시트 구역만 읽는다. 선택만 받은 턴에는 시트를 다시 그리거나 촬영하지 않는다.
 
-근거: [SKILL](../../skills/design-helper/SKILL.md), [worker: Talking through the main agent](../../skills/design-helper/worker.md#talking-through-the-main-agent)
+근거: [SKILL](../../skills/design-helper/SKILL.md), [main](../../shared/main.md), [worker: Talking through the main agent](../../shared/core.md#talking-through-the-main-agent)
 
 ## 스타일 체계에 맞춰 그리기
 
@@ -40,7 +40,7 @@ Tailwind 클래스는 실제 `.target` 노드에 적용한다. 래퍼에만 붙�
 
 지침은 프로젝트 안에 비교용 config나 helper CSS를 만들지 않도록 한다. 기존 체계 안에서 볼지 새 방향을 찾을지 모르겠으면 먼저 묻는다. 다만 기존 디자인의 방향 재탐색은 [지침 간 범위 차이](limitations.md#방향재탐색)가 있다.
 
-근거: [Style systems — Detect first](../../skills/design-helper/references/stylesystems.md#detect-first), [The five forks](../../skills/design-helper/references/stylesystems.md#the-five-forks)
+근거: [Style systems — Detect first](../../shared/stylesystems.md#detect-first), [The five forks](../../shared/stylesystems.md#the-five-forks)
 
 <a id="검증과발견"></a>
 ## 검증과 발견
@@ -64,11 +64,11 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 - 그 외의 발견은 한 줄로 한 번만 알린다. 주문받지 않은 새 축을 그리거나 작업을 확장하지 않는다.
 - 비교가 한 화면에 들어가지 않으면 지침은 후보 수와 맥락 배치를 함께 다시 보도록 한다. 겹치는 후보를 빼거나 맥락을 분리하되, 사용자가 개수를 정했으면 그 수를 지키고 묶음을 나눈다. 가로 스크롤로 넘기지 않는다.
 
-근거: [worker: Verify](../../skills/design-helper/worker.md#verify), [Findings](../../skills/design-helper/worker.md#findings), [Sweeping: A ladder that doesn't fit](../../skills/design-helper/references/sweeping.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
+근거: [worker: Verify](../../shared/core.md#verify), [Findings](../../shared/core.md#findings), [Sweeping: A ladder that doesn't fit](../../skills/design-helper/references/sweeping.md#a-ladder-that-doesnt-fit-isnt-a-ladder)
 
 ## 서버와 새로고침
 
-시트·서버·빌드 CSS·메모·스크린샷·PID 파일은 모두 프로젝트 밖의 한 임시 작업 폴더에 둔다. 서버(`serve.py`), 빈 시트(`sheet.html`), 검증 스크립트(`check.cjs`)는 스킬의 `assets/`에서 복사하고, 시트에는 표식 위치에 시안만 끼워 넣는다. 대상이 달라지면 새 시트를 사용한다.
+시트·서버·빌드 CSS·메모·스크린샷·PID 파일은 모두 프로젝트 밖의 한 임시 작업 폴더에 둔다. 서버(`serve.py`), 빈 시트(`sheet.html`), 검증 스크립트(`check.cjs`)는 플러그인의 `shared/assets/`에서 복사하고, 시트에는 표식 위치에 시안만 끼워 넣는다. 대상이 달라지면 새 시트를 사용한다.
 
 서버는 `127.0.0.1`에 바인딩한다. 포트가 사용 중이면 다른 포트를 찾는다. 서버가 HTML과 작업 폴더의 CSS 내용으로 버전을 만든다. 시트는 HEAD 응답의 ETag를 처음 받은 버전과 비교한다. 같은 초에 같은 길이로 바꾼 내용도 감지한다. CSS 빌드가 늦게 끝나도 다시 불러온다. 새 비교 section이 붙으면 그 비교로 스크롤한다. 표본 내부의 section은 세지 않는다. 범위와 맥락은 같은 탭의 `sessionStorage`에서 복원한다. 다른 탭의 조작 상태는 동기화하지 않는다.
 
@@ -76,9 +76,9 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 수정 시안을 제시할 때마다 비교 탭을 선택하고 브라우저 창을 앞으로 가져온다. 탭이나 브라우저가 닫혔다면 같은 세션의 시트 URL을 다시 연다. 서버만 종료되었으면 기존 작업 폴더에서 복구한다. 요청 없이 2분이 지나 폴더까지 삭제되었으면 사용자가 페이지를 닫은 것으로 보고, 이전 시안은 복구하지 않는다. 새 페이지에는 이번 요청에서 필요한 시안만 그린다. 이번 요청이 이전 표본을 가리키면 그 표본만 함께 그린다. 알파벳과 요청 번호는 대화에서 이어 간다. 기존 비교 탭이 있으면 그 탭을 다시 쓰고, 탭이 없음을 확인한 경우에만 새로 연다. 새 비교든 기존 구역을 고친 것이든 그 구역으로 스크롤해 보여 준다. 중간 파일 저장이나 대화만 하는 턴에는 포커스를 빼앗지 않는다.
 
-자동 새로고침이 됐다고 화면이 앞으로 왔다고 보지 않는다. 탭 확인이나 활성화 도구가 없으면 중복 가능성이 있는 URL 열기로 우회하지 않고 한계와 현재 URL을 알린다. 운영체제 URL 열기는 비교 탭이 없음을 확인한 경우에만 사용한다. 화면 전환을 확인할 수 없으면 확인했다고 보고하지 않는다. 자세한 절차는 [보여 주고 검증하기](../../skills/design-helper/references/liveview.md#show-then-verify)를 따른다.
+자동 새로고침이 됐다고 화면이 앞으로 왔다고 보지 않는다. 탭 확인이나 활성화 도구가 없으면 중복 가능성이 있는 URL 열기로 우회하지 않고 한계와 현재 URL을 알린다. 운영체제 URL 열기는 비교 탭이 없음을 확인한 경우에만 사용한다. 화면 전환을 확인할 수 없으면 확인했다고 보고하지 않는다. 자세한 절차는 [보여 주고 검증하기](../../shared/liveview.md#show-then-verify)를 따른다.
 
-근거: [Live view: The workspace](../../skills/design-helper/references/liveview.md#the-workspace), [Serve it](../../skills/design-helper/references/liveview.md#serve-it), [The reloader](../../skills/design-helper/references/liveview.md#the-reloader), [Show, then verify](../../skills/design-helper/references/liveview.md#show-then-verify)
+근거: [Live view: The workspace](../../shared/liveview.md#the-workspace), [Serve it](../../shared/liveview.md#serve-it), [The reloader](../../shared/liveview.md#the-reloader), [Show, then verify](../../shared/liveview.md#show-then-verify)
 
 ## 도구나 기록이 동작하지 않을 때
 
@@ -98,4 +98,4 @@ Playwright를 사용할 수 있으면 브라우저가 실제 컴포넌트에 최
 
 SIGTERM을 넘겨주지 않는 래퍼로 띄운 워처는 남을 수 있다. 서버 강제 종료나 충돌로 정리 코드가 실행되지 못한 경우, 파일 삭제까지 보장하지 않는다.
 
-근거: [worker: Ending](../../skills/design-helper/worker.md#ending), [Live view — It reaps itself](../../skills/design-helper/references/liveview.md#it-reaps-itself), [At the end](../../skills/design-helper/references/liveview.md#at-the-end)
+근거: [worker: Ending](../../skills/design-helper/worker.md#ending), [Live view — It reaps itself](../../shared/liveview.md#it-reaps-itself), [At the end](../../shared/liveview.md#at-the-end)

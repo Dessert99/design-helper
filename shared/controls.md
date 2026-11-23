@@ -19,7 +19,7 @@ Selection and refinement requests still happen in chat, using the specimen lette
 
 **Nothing else.** A colour picker on a spacing ladder turns this into a toy and the
 measurement dies with it. The one exception is the blank-slate matrix: two axes by
-construction, `references/sweeping.md`.
+construction, `skills/design-helper/references/sweeping.md`.
 
 ## Writing one
 
@@ -27,7 +27,7 @@ There is no ready-made engine. Write the smallest script the task needs, at the 
 the section's markup and before the reloader, and keep to these rules:
 
 - **Rungs stay lettered** A, B, C in order, and every rung keeps the caption lines from
-  `references/sweeping.md`. Lines 2 and 3 (what the value resolves to, what it does to
+  `skills/design-helper/references/sweeping.md`. Lines 2 and 3 (what the value resolves to, what it does to
   the eye) are computed from the value, never written per letter, because the letter
   now points at whatever value is in that position.
 - **The cost chip follows the value.** A rung on the project's scale reads
@@ -36,7 +36,7 @@ the section's markup and before the reloader, and keep to these rules:
 - **State survives a reload.** My next edit reloads the page while the user is
   mid-comparison. Keep each section's window in `sessionStorage` under
   `ctl:<section id>` and the context under `ctx`, and restore them on load.
-- **One `<section>` per ladder**, appended at the end. `references/liveview.md` counts
+- **One `<section>` per ladder**, appended at the end. `shared/liveview.md` counts
   them.
 - **Apply a class to the component, not the wrapper.** With utilities, a class put on
   the frame never reaches the component and every rung renders the same, with no error.
@@ -45,8 +45,8 @@ the section's markup and before the reloader, and keep to these rules:
 ## Before presenting it
 
 A sheet with controls is verified before it is shown, not after (the exception in
-`references/liveview.md`, `Show, then verify`). When interaction is authorized, check
-each control at its minimum, middle and maximum: computed styles (`worker.md#verify`),
+`shared/liveview.md`, `Show, then verify`). When interaction is authorized, check
+each control at its minimum, middle and maximum: computed styles (`shared/core.md#verify`),
 matching captions, bounds and state restoration after reload. If the interaction can't be
 verified, drop the slider and draw fixed candidates instead; never ship a control that
 doesn't work.

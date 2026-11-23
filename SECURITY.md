@@ -3,7 +3,7 @@
 design-helper is a skill made of instructions. The only code it runs is what those
 instructions tell the agent to write: a small Python server bound to `127.0.0.1` that
 serves the comparison sheet from a temporary folder (see
-[`liveview.md`](skills/design-helper/references/liveview.md)). Report anything that could
+[`liveview.md`](shared/liveview.md)). Report anything that could
 make it expose files, listen beyond localhost, or leave processes or files behind.
 
 ## Supported versions

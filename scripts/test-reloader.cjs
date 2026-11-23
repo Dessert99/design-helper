@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const html = fs.readFileSync(path.join(__dirname, '../skills/design-helper/assets/sheet.html'), 'utf8');
+const html = fs.readFileSync(path.join(__dirname, '../shared/assets/sheet.html'), 'utf8');
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
 for (const script of scripts) new vm.Script(script);
 

@@ -1,11 +1,11 @@
 # The sheet page
 
 How a comparison sheet is laid out around its specimens. Captions, the boundary line
-and the recommendation → `references/sweeping.md`.
+and the recommendation → `skills/design-helper/references/sweeping.md`.
 
 ## Start from the kit
 
-`$WS/sheet.html` is copied from `assets/sheet.html` (`references/liveview.md`). It
+`$WS/sheet.html` is copied from `shared/assets/sheet.html` (`shared/liveview.md`). It
 already holds the sheet style, the table of contents with its highlighter, the grid and
 the reloader. Never rewrite the file and never retype those parts. Read it once, then
 insert only what the turn adds, just above its marker:
@@ -109,7 +109,7 @@ belongs to the sheet, not to the specimens.
   recommendation label and the current table-of-contents item. It never goes
   inside a frame or next to a specimen's surface, where it would bias a color judgment.
 - **Neutral behind specimens.** The frame stays white. When the ordered axis is itself
-  surface or background, the context rules in `references/sweeping.md#context` override the frame.
+  surface or background, the context rules in `skills/design-helper/references/sweeping.md#context` override the frame.
 
 Sheet classes and variables use the `dh-` prefix, so project `.grid`, `.badge` or
 `--radius` do not become sheet styles. Keep that prefix in generated chrome. Product
@@ -117,7 +117,7 @@ markup may still inherit body styles; explicitly restore its real font, line hei
 color and theme at the specimen root. Prefixing is not full CSS isolation.
 
 The CSS for all of this is the kit's first `<style>`. Specimens use the markup below.
-The words inside follow `references/writing.md`.
+The words inside follow `shared/writing.md`.
 
 ```html
 <section id="r1-1">
@@ -153,7 +153,7 @@ The words inside follow `references/writing.md`.
   both measured from the specimen's own corner. When the axis spreads past the
   specimen (shadow, glow, outline), move the bracket past the widest rung's spread,
   `style="bottom:-30px"`, and give the section's frames that much padding. Rules →
-  `references/sweeping.md`.
+  `skills/design-helper/references/sweeping.md`.
 - `.dh-real` is the `실물과 다름` chip; its `다른 점` line joins the `dh-gain` list.
 
 
@@ -168,7 +168,7 @@ What fills that window is what gets judged, so it is the specimens.
 - **Every rung is in that first window**, on at least its first context. Drop
   near-duplicate rungs before letting one fall below it. Further contexts the axis
   reacts to follow below in the same rung order; never drop them to fit
-  (`references/sweeping.md#context`). A specimen taller than the window (a whole page)
+  (`skills/design-helper/references/sweeping.md#context`). A specimen taller than the window (a whole page)
   shows at least one full row of frames.
 - **The recommendation stays below the specimens.** Read before looking, it decides
   for the eye.

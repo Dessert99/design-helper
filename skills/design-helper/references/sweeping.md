@@ -25,7 +25,7 @@ A matrix puts one direction on rows and the other on columns, both labeled.
 
 ## Captions
 
-Use the caption structure in `references/writing.md#the-caption`; do not duplicate its
+Use the caption structure in `shared/writing.md#the-caption`; do not duplicate its
 rules here. Label the current project value `현재값` when it is one of the rungs, so the
 user can compare a change against the baseline. Costs describe the intended apply scope:
 reusing a token is not the same as changing its shared definition. Include gain and loss
@@ -43,7 +43,7 @@ When the rungs differ in one spot only (the bottom edge of a shadow, a title cut
   번짐이 넓어집니다.`
 - Skip it when the whole specimen is what changes (a surface color, a whole-page layout).
 
-Markup → `references/sheet.md`.
+Markup → `shared/sheet.md`.
 
 ### What is not the real thing
 
@@ -140,7 +140,7 @@ A position, order or layout axis is judged on the real page around it
 (`Structure and layout`, below), not on extra backgrounds and sizes.
 
 Show the contexts that apply together. Never drop one the axis reacts to because the
-sheet looks tidier without it; `references/sheet.md` says how they fit the first window.
+sheet looks tidier without it; `shared/sheet.md` says how they fit the first window.
 Context buttons may isolate one condition when that materially helps; they bring no
 sliders with them.
 
@@ -165,7 +165,7 @@ actually leaves alive before laying anything out.
 
 > "버튼 만들어야 하는데 아직 아무것도 없어"
 
-Clarify purpose and use when unknown — `references/clarification.md` — and inspect
+Clarify purpose and use when unknown — `shared/clarification.md` — and inspect
 available content and project conventions yourself. Then show starting points instead
 of asking the user to describe a look.
 
@@ -201,7 +201,7 @@ not come back.
 ### A look exists, but the user wants a different direction
 
 Anchor the exploration in what the code does today — the current value belongs in the
-middle, not thrown away. `references/stylesystems.md` calls this hunting a direction.
+middle, not thrown away. `shared/stylesystems.md` calls this hunting a direction.
 
 ## Stateful parts — two rows
 
@@ -231,7 +231,7 @@ that looks fine as gray outlines can crowd the real header, and a menu item that
 well in a plain list can disappear among the real icons and group labels.
 
 - **The project's own design** when one exists: its utilities, variables, fonts, icons
-  and component markup, per `references/stylesystems.md`. Copy the real screen's markup
+  and component markup, per `shared/stylesystems.md`. Copy the real screen's markup
   and classes; don't redraw it in generic black and white.
 - **The design the user asked for** when the new part has requirements (a Figma frame,
   a reference screen, a description). Draw those, on top of the existing design around it.

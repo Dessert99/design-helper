@@ -148,11 +148,12 @@ ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper  
 ```
 
 두 에이전트 모두 `SKILL.md`의 `description`은 세션을 시작할 때 읽고, 나머지
-(`SKILL.md`, `worker.md`, `references/`, `assets/`)는 스킬이 실행될 때 읽습니다. 그래서 본문을 고치면
+(`SKILL.md`, `worker.md`, `references/`, 플러그인의 `shared/` 폴더)는 스킬이 실행될 때 읽습니다. 그래서 본문을 고치면
 바로 적용되고, `description`을 고쳤을 때만 세션을 새로 열면 됩니다.
 
 심링크로 설치하면 플러그인 에이전트가 없으므로, Claude Code는 대신 일반 서브에이전트에게
-`worker.md`를 읽혀 일을 맡깁니다. 동작은 같습니다.
+`worker.md`를 읽혀 일을 맡깁니다. 동작은 같습니다. 스킬 폴더를 복사하지 말고 clone 안의
+폴더에 심링크를 거세요. 스킬은 심링크를 따라 clone으로 돌아가 `shared/` 폴더를 찾습니다.
 
 지우려면 심링크만 지우면 됩니다(`rm ~/.claude/skills/design-helper`). clone은 그대로
 남습니다.
@@ -225,29 +226,33 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 지시문은 영어지만 채팅 답변과 비교 시트의 글자는 모두 한국어입니다. 코드, 클래스 이름,
 파일 이름, 커밋 메시지는 영어로 씁니다.
 
-다른 언어로 바꾸려면 [clone 해서 설치](#clone-해서-설치)한 뒤 `skills/design-helper/worker.md`의
+다른 언어로 바꾸려면 [clone 해서 설치](#clone-해서-설치)한 뒤 `shared/core.md`의
 `## Language` 섹션을 고치면 됩니다. 플러그인으로 설치한 파일은 업데이트할 때마다 덮어써지니
 고쳐도 남지 않습니다. 지시문 곳곳에 따옴표로 들어간 한국어 문구(`토큰 그대로`, `끝났어` 등)도
 같이 바꿔야 합니다.
 
 ## 문서
 
-- [`SKILL.md`](skills/design-helper/SKILL.md): 메인 에이전트가 읽는 지침. 일을 서브에이전트에게 맡기고 사용자와 서브에이전트 사이에서 말을 전해, 메인 대화가 가볍게 유지됩니다. 서브에이전트를 쓸 수 없으면 메인이 직접 합니다
-- [`worker.md`](skills/design-helper/worker.md): 서브에이전트가 따르는 전체 지침. 작업 단위, 표본 그리는 규칙, 대답 해석, 확인, 마무리
-- [`agents/worker.md`](agents/worker.md): `worker.md`를 실행하는 Claude Code 플러그인 에이전트. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
-- [`references/`](skills/design-helper/references/): 필요할 때 읽는 세부 지침
-  - [`clarification.md`](skills/design-helper/references/clarification.md): 요청이 모호할 때 묻는 법
-  - [`sweeping.md`](skills/design-helper/references/sweeping.md): 후보 값, 캡션과 추천, 배경·크기 조건, 빈 화면에서 시작하기, 실제 디자인으로 그리는 배치 비교(회색 뼈대는 요청할 때만)
-  - [`writing.md`](skills/design-helper/references/writing.md): 사용자가 읽는 모든 한국어 문장을 쓰는 법. 짧은 문장, 기호 줄임 금지, 조사 붙여 쓰기, 캡션 배치
-  - [`sheet.md`](skills/design-helper/references/sheet.md): 시트 페이지의 요청 구분선, 목차, 배치, 스타일
-  - [`stylesystems.md`](skills/design-helper/references/stylesystems.md): 스타일 체계를 알아내고 체계별로 그리는 법
-  - [`controls.md`](skills/design-helper/references/controls.md): 필요할 때만 쓰는 슬라이더와 지켜야 할 규칙
-  - [`motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교
-  - [`liveview.md`](skills/design-helper/references/liveview.md): 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
-- [`assets/`](skills/design-helper/assets/): 일꾼이 매번 새로 쓰지 않고 복사해서 쓰는 고정 파일
-  - [`sheet.html`](skills/design-helper/assets/sheet.html): 스타일, 목차, 자동 새로고침이 들어 있는 빈 비교 페이지
-  - [`serve.py`](skills/design-helper/assets/serve.py): 2분 동안 요청이 없으면 스스로 정리하는 로컬 서버
-  - [`check.cjs`](skills/design-helper/assets/check.cjs): Playwright로 계산된 스타일을 읽고 스크린샷을 한 번에 찍는 스크립트
+- [`skills/design-helper/`](skills/design-helper/): 비교 스킬
+  - [`SKILL.md`](skills/design-helper/SKILL.md): 메인 에이전트가 먼저 읽는 지침. 스킬이 있는 이유, 플러그인 경로 찾는 법, 실행할 worker 지침
+  - [`worker.md`](skills/design-helper/worker.md): 이 스킬만의 규칙. 작업 단위, 표본 그리는 규칙, 대답 해석, 기록, 영향 범위, 마무리
+  - [`references/sweeping.md`](skills/design-helper/references/sweeping.md): 후보 값, 캡션과 추천, 배경·크기 조건, 빈 화면에서 시작하기, 실제 디자인으로 그리는 배치 비교(회색 뼈대는 요청할 때만)
+  - [`references/motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교
+- [`shared/`](shared/): 플러그인의 모든 스킬이 함께 쓰는 것
+  - [`main.md`](shared/main.md): 메인 에이전트가 스킬을 실행하는 방법. 일을 서브에이전트에게 맡기고 사용자와 서브에이전트 사이에서 말을 전해, 메인 대화가 가볍게 유지됩니다. 서브에이전트를 쓸 수 없으면 메인이 직접 합니다
+  - [`core.md`](shared/core.md): 모든 worker가 가장 먼저 읽는 규칙. 결정 루프와 원칙, 메인을 통해 말하기, 언어, 발견 사항, 검증, 시트
+  - [`clarification.md`](shared/clarification.md): 요청이 모호할 때 묻는 법
+  - [`writing.md`](shared/writing.md): 사용자가 읽는 모든 한국어 문장을 쓰는 법. 짧은 문장, 기호 줄임 금지, 조사 붙여 쓰기, 캡션 배치
+  - [`sheet.md`](shared/sheet.md): 시트 페이지의 요청 구분선, 목차, 배치, 스타일
+  - [`stylesystems.md`](shared/stylesystems.md): 스타일 체계를 알아내고 체계별로 그리는 법
+  - [`controls.md`](shared/controls.md): 필요할 때만 쓰는 슬라이더와 지켜야 할 규칙
+  - [`liveview.md`](shared/liveview.md): 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
+  - [`assets/`](shared/assets/): 일꾼이 매번 새로 쓰지 않고 복사해서 쓰는 고정 파일
+    - [`sheet.html`](shared/assets/sheet.html): 스타일, 목차, 자동 새로고침이 들어 있는 빈 비교 페이지
+    - [`serve.py`](shared/assets/serve.py): 2분 동안 요청이 없으면 스스로 정리하는 로컬 서버
+    - [`check.cjs`](shared/assets/check.cjs): Playwright로 계산된 스타일을 읽고 스크린샷을 한 번에 찍는 스크립트
+- [`agents/worker.md`](agents/worker.md): 모든 스킬이 띄우는 Claude Code 플러그인 에이전트. `shared/core.md`와 스킬의 `worker.md`를 읽습니다. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
+- [`docs/architecture.ko.md`](docs/architecture.ko.md): 스킬 묶음의 설계. 스킬마다 있어야 하는 이유, 공통 구조, Claude Code와 Codex 지원
 - [`docs/flows.ko.md`](docs/flows.ko.md): 상황별 사용 흐름
 - [`scripts/bump-version.sh`](scripts/bump-version.sh): 플러그인 매니페스트의 버전을 한 번에 바꾸고 커밋과 태그까지 만드는 스크립트
 

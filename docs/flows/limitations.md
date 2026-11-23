@@ -13,7 +13,7 @@
 
 반면 `worker.md`의 **An order with no axis in it**은 기존 대상이 없을 때 좌표 탐색 예외를 열고, `controls.md`도 두 축 컨트롤의 예외를 백지 매트릭스로 한정한다. 그래서 기존 디자인이 있을 때 좌표 탐색을 언제 시작하는지 지침끼리 먼저 맞춰야 한다. 대표 예시 03은 대상이 없는 경우로 한정했다.
 
-근거: [Style systems](../../skills/design-helper/references/stylesystems.md#draw-in-the-system-or-on-a-blank-slate), [Sweeping](../../skills/design-helper/references/sweeping.md#a-look-exists-but-the-user-wants-a-different-direction), [worker](../../skills/design-helper/worker.md#an-order-with-no-axis-in-it), [Controls](../../skills/design-helper/references/controls.md#optional-controls-not-the-default-sheet)
+근거: [Style systems](../../shared/stylesystems.md#draw-in-the-system-or-on-a-blank-slate), [Sweeping](../../skills/design-helper/references/sweeping.md#a-look-exists-but-the-user-wants-a-different-direction), [worker](../../skills/design-helper/worker.md#an-order-with-no-axis-in-it), [Controls](../../shared/controls.md#optional-controls-not-the-default-sheet)
 
 ### 두 속성의 조합을 함께 비교하고 확정하기
 
@@ -42,7 +42,7 @@
 
 같은 URL을 읽는 Playwright 탭과 사용자 탭은 같은 HTML을 받더라도 `sessionStorage`의 창·맥락 상태가 다를 수 있다. 그래서 다른 탭의 스크린샷만으로 사용자가 조작한 지금 상태까지 확인했다고 할 수는 없다.
 
-근거: [Controls: Choosing in chat](../../skills/design-helper/references/controls.md#choosing-in-chat)
+근거: [Controls: Choosing in chat](../../shared/controls.md#choosing-in-chat)
 
 <a id="일시중단"></a>
 ### 일시 중단과 다음 세션의 복원
@@ -51,4 +51,4 @@
 
 요청이 2분 동안 없으면 서버가 임시 폴더까지 삭제한다. 그 전의 서버 복구와 만료 후의 시안 재생성을 구분한다. 삭제된 시안은 복구하지 않는다. 이후에는 새 요청에 필요한 시안만 새 페이지에 그리고, 메모는 대화에 남은 확정값으로 다시 적는다.
 
-근거: [Live view — It reaps itself](../../skills/design-helper/references/liveview.md#it-reaps-itself), [At the end](../../skills/design-helper/references/liveview.md#at-the-end)
+근거: [Live view — It reaps itself](../../shared/liveview.md#it-reaps-itself), [At the end](../../shared/liveview.md#at-the-end)

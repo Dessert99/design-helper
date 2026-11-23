@@ -20,7 +20,7 @@ per session and deleted at the end:
 The sheet, the server, the built CSS, the memo, screenshots, any entry file a build
 tool needs, and the pid files below — all in `$WS`. **Nothing is ever written inside
 the project** except the selected changes the main agent applies after each choice. If a tool seems
-to need a file in the project, it doesn't — `references/stylesystems.md` has the flag or
+to need a file in the project, it doesn't — `shared/stylesystems.md` has the flag or
 entry file that keeps it out.
 
 Every background process gets a pid file so teardown can find it:
@@ -29,16 +29,16 @@ Every background process gets a pid file so teardown can find it:
 
 ## The kit
 
-The fixed parts are files in `assets/`, next to `worker.md`. Copy them into `$WS` once
+The fixed parts are files in `shared/assets/`. Copy them into `$WS` once
 per workspace, right after creating it, and never retype them:
 
-    A=<directory of worker.md>/assets
+    A=<plugin root>/shared/assets
     cp "$A/serve.py" "$A/sheet.html" "$A/check.cjs" "$WS/"
 
 - `serve.py`: the server below
 - `sheet.html`: the empty sheet, with the sheet style, the table of contents and the
-  reloader already in it (`references/sheet.md`)
-- `check.cjs`: computed styles and optional screenshot in one run (`worker.md#verify`)
+  reloader already in it (`shared/sheet.md`)
+- `check.cjs`: computed styles and optional screenshot in one run (`shared/core.md#verify`)
 
 ## Serve it
 
@@ -85,7 +85,7 @@ teardown. A hard crash cannot run cleanup.
 
 ## The reloader
 
-The last script in `assets/sheet.html`, at the end of `<body>`, so the DOM is parsed when
+The last script in `shared/assets/sheet.html`, at the end of `<body>`, so the DOM is parsed when
 it runs. Keep it as copied. The server embeds a content revision in the HTML and
 returns it as an ETag on HEAD. The revision covers the HTML and workspace CSS, so
 same-length edits within one second and a later CSS build both trigger a reload.
@@ -103,7 +103,7 @@ A revision is ready once its content is written, every caption and the recommend
 included, and its names are checked. Every ready revision takes these steps: the first
 sheet, an appended ladder, and an edit inside an existing section alike.
 
-1. **Check names** (`worker.md#verify`, Names). It takes a second and catches
+1. **Check names** (`shared/core.md#verify`, Names). It takes a second and catches
    the failure that shows nothing at all, so it runs before anyone sees the sheet.
 2. **Make sure it is served.** The server (and CSS watcher, if any) is up and the sheet
    URL answers. Workspace gone → a fresh sheet as above; server stopped → restart it.
@@ -116,7 +116,7 @@ sheet, an appended ladder, and an edit inside an existing section alike.
    **Never open a second tab for the same sheet**: open the URL only after confirming no such tab exists, and if the port
    changed, navigate the existing tab instead. Use those controls, not a page-level
    `window.focus()`, and never a URL opener as a focus fallback.
-4. **Verify** at the frequency in `worker.md#verify`: values for changed specimens,
+4. **Verify** at the frequency in `shared/core.md#verify`: values for changed specimens,
    pictures for the first ladder or layout changes. Fix what it finds in the sheet;
    the open tab picks up the fix on its next poll and keeps its scroll position. Fixes are not presented again.
 5. **Report**, saying what to look at: `맨 아래 그림자 사다리입니다`. If you couldn't
@@ -131,8 +131,8 @@ so it and the user's browser are looking at the same bytes. Don't steal focus fo
 fixes or for a turn that produces nothing new to compare.
 
 Two cases verify before showing instead: a sheet with controls
-(`references/controls.md`), and a sheet on `file://` (below), which can't reload itself.
-An optional interactive sheet keeps its state across reloads as `references/controls.md`
+(`shared/controls.md`), and a sheet on `file://` (below), which can't reload itself.
+An optional interactive sheet keeps its state across reloads as `shared/controls.md`
 describes.
 
 ## No python3

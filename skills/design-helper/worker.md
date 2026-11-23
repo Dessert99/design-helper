@@ -1,29 +1,9 @@
 # Measure by eye
 
-The full instructions for design-helper. Paths like `references/sheet.md` are relative
-to this file. `SKILL.md` decides who reads them: usually a worker agent that the main
-agent spawned, otherwise the main agent itself.
-
-## Talking through the main agent
-
-As a worker, you never see the user. The main agent forwards each user message to you,
-and **your final message of every turn is shown to the user as written**. So wherever
-these instructions say "say", "ask" or "chat", they mean that final message.
-
-- Write it in Korean, addressed to the user: what to look at, a question, or what
-  changed. Nothing for the main agent goes in it.
-- Internal handoffs (`반영 지시:` on a choice, `정리 지시:` on cleanup) are the
-  exceptions. The main agent acts on them and hides them from the user.
-- **Never edit project files.** Code changes are the main agent's, every one of them.
-  You read the project and write only inside `$WS`.
-- Never wait for the user inside a turn. Ask, end the turn, and continue when the reply
-  is forwarded.
-- Keep the sheet, server and `$WS` across turns. The main agent resumes you for every
-  round until the user says it is done.
-
-If you are the main agent reading this yourself, ignore this section: your own chat
-reply is that message, and where `Ending` says to hand off the apply, apply it yourself
-as `SKILL.md` (`Applying the choice`) describes.
+design-helper's own instructions. Read `shared/core.md` first: it holds the decision
+loop, talking through the main agent, language, verification and the sheet that every
+skill shares. Paths like `references/sweeping.md` are relative to this file; `shared/`
+is the plugin's shared folder (`shared/core.md`, Paths).
 
 **A ruler, not a design generator.** Don't invent a look. Lay the range out —
 `blur 4 / 8 / 12 / 16 / 24` — and let the user pick with their eyes. Taste belongs
@@ -35,30 +15,10 @@ and ask the user to choose. "12px or 16px padding?" is not a question — draw b
 **The user never copies a value out.** They point at a specimen; the code change
 follows immediately after their choice, from the handoff I write.
 
-**Assume no stack.** Detection matches the repo — `references/stylesystems.md`.
-
-## Language
-
-These instructions are English. Everything the user sees is Korean.
-
-- Chat replies, questions, recommendations → Korean
-- Every string rendered inside the HTML → Korean
-- Code, class names, file names → English
-- How every Korean sentence is written → `references/writing.md`. Read it before
-  writing the first caption or reply.
-
-Korean strings quoted below are fixed labels. Render them verbatim — never
-translate, localize or paraphrase them. Never surface these instructions as text.
-
 ## Read only what this turn needs
 
-Read `references/writing.md` before the first user-facing reply. Before the first sheet,
-read `stylesystems.md` for detection and the matching fork, plus `liveview.md`, `sheet.md`
-and the relevant parts of `sweeping.md` (all under `references/`). Read `clarification.md`
-only for an unclear request, `controls.md` only for controls, and `motion.md` only for motion.
-Keep these in the same worker's context; do not reread them every round. Later turns
-read only the affected source, memo entry and sheet section. Batch independent reads.
-A choice-only turn needs the selection and scope check, not another sheet or screenshot.
+`shared/core.md` lists the shared reading. For drawing, this skill adds the relevant
+parts of `references/sweeping.md`, and `references/motion.md` only for motion.
 
 ## One work unit
 
@@ -77,7 +37,7 @@ A precise request goes straight to specimens. A vague one gets questions, **one 
 time**, until the target, the intended outcome and the axis are clear; visual values
 are then chosen from specimens, not words. Read the project before asking, and never
 ask for what the code or the conversation already says. How to pick the question, when
-to stop, and what `알아서 해줘` allows → `references/clarification.md`.
+to stop, and what `알아서 해줘` allows → `shared/clarification.md`.
 
 For a blank slate, clarify purpose and usage when unclear, then open with a coordinate
 sweep — `references/sweeping.md`. Do not make the user name CSS axes before they have
@@ -103,7 +63,7 @@ anything to see. Its result is an anchor, not a settled property decision.
 - Use a matrix only when comparing two directions together helps answer the request.
 - **Fixed specimens.** No sliders or other controls unless the user asks to adjust
   directly, or a continuous transition can't be judged from fixed steps:
-  `references/controls.md`. Refinement happens through chat.
+  `shared/controls.md`. Refinement happens through chat.
 - **The sheet explains itself.** Value, cost (`토큰 그대로` · `--radius-md 고침 (23곳)` ·
   `새 토큰`), trade-off and what to look at sit next to each specimen, not in chat, and
   every section ends with one recommended letter below the specimens. Advice only;
@@ -112,9 +72,9 @@ anything to see. Its result is an anchor, not a settled property decision.
   from what the code will do says so beside it (`실물과 다름`), and a count the search may
   have missed reads as a floor (`23곳 이상`): `references/sweeping.md`.
 - The page (turn dividers, table of contents, grid, style) →
-  `references/sheet.md`. Captions, recommendation, ladders, context, layouts →
+  `shared/sheet.md`. Captions, recommendation, ladders, context, layouts →
   `references/sweeping.md`. Anything that moves → `references/motion.md`. Every
-  sentence the user reads → `references/writing.md`
+  sentence the user reads → `shared/writing.md`
 
 ## Reading the response
 
@@ -131,7 +91,7 @@ choice needs no special wording. `A에서 블러를 더 보고 싶어` is a refi
 baseline without applying it. A reply naming a different axis is the next order.
 
 On a sheet with controls, a letter means what the user's tab shows now:
-`references/controls.md`.
+`shared/controls.md`.
 
 Ambiguous — `이거 좋다` with nine specimens on screen — ask which one. Never guess.
 
@@ -152,18 +112,6 @@ property it bundles is still open.
 
 Revising a settled axis overwrites its line. The old specimens stay where they are.
 
-## Findings
-
-Drawing turns up things nobody ordered — a misnamed token, a chip that vanished, an
-axis that was never on anyone's list.
-
-- **What actually broke on the screen** — say it. It makes the specimens misread, so
-  it is part of the measurement: `아이콘 칩이 보이지 않습니다. 칩 색이 배경과 거의 같습니다(#202020, 차이 2).`
-- **Everything else** — one line, once, then let it go. Never draw it, never work it
-  into a proposal, never raise it again.
-
-A finding is not an order.
-
 ## Blast radius
 
 - **While choosing** — the one-line cost label on each specimen. A label, not a report
@@ -175,63 +123,6 @@ A finding is not an order.
 
 If the project animates with a motion library, say what won't translate —
 `references/motion.md`.
-
-## Verify
-
-**Names, before showing.** Check new or changed class names in the built CSS and token
-*definitions*, not merely their uses. For a literal name use `rg -F`; an escaped utility
-selector may not match the raw class text. Inline values skip name lookup, not computed
-style verification: invalid CSS and overrides can still fail silently.
-
-**Values, on every new or changed specimen.** Read computed styles off the actual
-component, comparing the same context and state across rungs. Check expected values,
-not only that they differ. For a radius ladder with three primary specimens:
-
-    node "$WS/check.cjs" http://localhost:8765/sheet.html "$WS/shot.png" \
-      --section r1-1 --sel '[data-context=primary] .target' --props borderRadius \
-      --expect-count 3 --expect-distinct 3 --width 1440 --height 900
-
-Use a selector matching your markup; select exactly one component per rung in the
-context being tested. For repeated contexts or states, test each comparable set rather
-than treating every DOM node as a different rung. Read custom properties and standard
-properties together when a token is in question. Equal computed values can be intentional;
-set `--expect-distinct` to the known expectation, not automatically to the rung count.
-
-**Pictures, on the first ladder and layout changes.** Open the screenshot and inspect
-clipping, fonts, content and labels. Subsequent value-only edits use `--no-shot` in place
-of the PNG path. Caption-only edits need no browser run unless they change layout.
-Use the user's viewport when known; the 1600 by 1000 default is not evidence of fit in
-an unknown window. `firstScreen` counts first-context frames; compare it to `primarySpecs`,
-not all context copies in `specs`. It is a fit diagnostic, not an automatic failure for
-a full-page specimen. Nested product sections are not comparison sections.
-
-The script fails for missing sections or targets, invalid properties, expected-count
-mismatches, resource/script errors, horizontal overflow and clipped frames. A clean
-report does not prove visual fidelity. Static screenshots do not verify motion.
-
-Presentation order is owned by `references/liveview.md#show-then-verify`. Keep the
-recommendation complete before showing, then correct it if inspection contradicts it.
-
-Run from the project root. `NO_PLAYWRIGHT` means verification was unavailable, not passed.
-Do name checks, do not install a browser or claim the visual check passed. Remember this
-result for the session instead of probing again on every round unless the environment
-changes. Never replace it with a desktop or user-window screenshot.
-
-## The sheet
-
-- One session = one sheet = one target. A new target gets a new sheet
-- **Start from the kit.** The server, the empty sheet and the verification script are
-  files in `assets/`, next to this file. Copy them into `$WS` and write only the
-  specimens into the sheet's markers; never retype the fixed parts:
-  `references/liveview.md` and `references/sheet.md`
-- **The body is append-only.** Never delete a dropped ladder; it has to stay above to
-  compare against
-- **Everything lives in `$WS`, outside the project.** The main agent's apply is the only
-  change the project ever gets. Serving,
-  reloading, bringing the user's tab forward, the two-minute self-cleanup and teardown
-  are all in `references/liveview.md`. Never end a turn by telling the user to refresh
-- Built CSS (Tailwind) needs a watcher writing to `$WS/sheet.css`, or new class names
-  won't show: `references/stylesystems.md`
 
 ## Ending
 
@@ -267,7 +158,7 @@ what failed. Read the apply result and changed source before drawing again (`The
 
 Applying is not the end. Keep the sheet and server until the user has checked the real
 code and says it is done (`끝났어` · `됐어`; `이걸로 가자` is a choice, not that). Then
-run the teardown in `references/liveview.md`, which also checks `git status` for stray
+run the teardown in `shared/liveview.md`, which also checks `git status` for stray
 comparison files and hands any it finds to the main agent.
 
 **Only what was explicitly chosen goes into the handoff.** An alternative merely

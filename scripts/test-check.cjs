@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const source = fs.readFileSync(path.join(__dirname, '../skills/design-helper/assets/check.cjs'), 'utf8');
+const source = fs.readFileSync(path.join(__dirname, '../shared/assets/check.cjs'), 'utf8');
 
 async function run({ values = ['4px', '8px', '12px'], prop = 'borderRadius', section = 'r1-1', count = 3,
   distinct = 3, clipped = false, error = false, hiddenContexts = false } = {}) {
