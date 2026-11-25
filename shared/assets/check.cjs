@@ -1,6 +1,10 @@
 // Reads computed values and layout off the comparison sheet, and screenshots it.
 // node check.cjs <url> <shot.png> --section r1-1 --sel '.target' --props borderRadius
 // For a value-only check, pass --no-shot in place of <shot.png>.
+// --a11y adds, per matched element, its text contrast against the background behind it
+// (WCAG ratio), its border and outline contrast against the background around it (for
+// non-text 3:1), and its rendered size. It reports; it never fails the run.
+// --frames looks for --sel inside the same-origin iframes of the section (a board page).
 // Prints NO_PLAYWRIGHT when no browser can be launched. That is not a pass.
 const fs = require('fs');
 const os = require('os');
@@ -13,15 +17,15 @@ const positional = [];
 const allowed = new Set(['--section', '--sel', '--props', '--width', '--height', '--expect-count', '--expect-distinct']);
 function usage(message) {
   console.error(message);
-  console.error('사용법: node check.cjs <url> <shot.png|--no-shot> --section id --sel css --props a,b [--expect-count n] [--expect-distinct n] [--width n] [--height n]');
+  console.error('사용법: node check.cjs <url> <shot.png|--no-shot> --section id --sel css --props a,b [--expect-count n] [--expect-distinct n] [--width n] [--height n] [--a11y] [--frames]');
   process.exit(2);
 }
 for (let i = 0; i < argv.length; i++) {
   const arg = argv[i];
-  if (arg === '--no-shot') options[arg] = true;
+  if (arg === '--no-shot' || arg === '--a11y' || arg === '--frames') options[arg] = true;
   else if (allowed.has(arg)) {
     const next = argv[i + 1];
-    if (!next || allowed.has(next) || next === '--no-shot' ||
+    if (!next || allowed.has(next) || next === '--no-shot' || next === '--a11y' || next === '--frames' ||
         (next.startsWith('--') && arg !== '--props')) usage('옵션 값이 없습니다: ' + arg);
     options[arg] = argv[++i];
   } else if (arg.startsWith('--')) usage('알 수 없는 옵션입니다: ' + arg);
@@ -31,6 +35,8 @@ const section = options['--section'];
 const sel = options['--sel'];
 const props = (options['--props'] || '').split(',').map(s => s.trim()).filter(Boolean);
 const noShot = !!options['--no-shot'];
+const a11y = !!options['--a11y'];
+const inFrames = !!options['--frames'];
 const [url, shot] = positional;
 const number = (key, fallback) => {
   const n = options[key] === undefined ? fallback : Number(options[key]);
@@ -41,7 +47,7 @@ const width = number('--width', 1600), height = number('--height', 1000);
 const expectedCount = number('--expect-count');
 const expectedDistinct = number('--expect-distinct');
 if (!url || (!noShot && !shot) || (noShot && shot) || positional.length > 2) usage('URL과 출력 방식을 확인하세요.');
-if (!!sel !== !!props.length || ((expectedCount || expectedDistinct) && !sel)) usage('선택자와 CSS 속성을 함께 지정하세요.');
+if (!!sel !== !!props.length || ((expectedCount || expectedDistinct || a11y) && !sel)) usage('선택자와 CSS 속성을 함께 지정하세요.');
 
 const ver = d => { try { return require(path.join(d, 'package.json')).version.split('.').map(Number); } catch { return [0]; } };
 const newer = (a, b) => { for (let i = 0; i < 3; i++) if ((b[i] || 0) !== (a[i] || 0)) return (b[i] || 0) - (a[i] || 0); return 0; };
@@ -122,7 +128,8 @@ async function launch() {
     if (response && !response.ok()) throw new Error('시트를 불러오지 못했습니다: ' + response.status());
     await p.evaluate(() => document.fonts && document.fonts.ready);
 
-    const report = await p.evaluate(({ sel, props, section, expectedCount, expectedDistinct }) => {
+    const report = await p.evaluate(({ sel, props, section, expectedCount, expectedDistinct, a11y, inFrames }) => {
+      const gcs = e => ((e.ownerDocument && e.ownerDocument.defaultView) || globalThis).getComputedStyle(e);
       const sections = [...document.querySelectorAll('.dh-main > section')];
       const root = section ? sections.find(s => s.id === section) : document;
       const issues = [];
@@ -144,6 +151,14 @@ async function launch() {
             primarySpecs: primary?.querySelectorAll('.spec').length || 0,
             overflowX: [...s.querySelectorAll('.dh-grid')].some(g => g.scrollWidth > g.clientWidth + 1),
             clippedFrames: [...s.querySelectorAll('.dh-frame')].filter(clipped).length,
+            // A board page taller or wider than its iframe is cut off without any overflow
+            // on the sheet itself.
+            clippedBoards: [...s.querySelectorAll('iframe')].filter(f => {
+              try {
+                const d = f.contentDocument.documentElement;
+                return d.scrollHeight > f.clientHeight + 1 || d.scrollWidth > f.clientWidth + 1;
+              } catch { return false; }
+            }).length,
             firstScreen: frames.filter(f => {
               const box = f.getBoundingClientRect();
               return box.width > 0 && box.height > 0 && box.top >= top && box.bottom - top <= innerHeight;
@@ -159,12 +174,17 @@ async function launch() {
       for (const s of r.sections) {
         if (!s.specs) issues.push('표본이 없습니다: ' + s.id);
         if (s.overflowX || s.clippedFrames) issues.push('표본이 넘치거나 잘립니다: ' + s.id);
+        if (s.clippedBoards) issues.push('보드가 iframe보다 커서 잘립니다: ' + s.id);
       }
       if (sel && root) {
-        const els = [...root.querySelectorAll(sel)];
+        const els = inFrames
+          ? [...root.querySelectorAll('iframe')].flatMap(f => {
+              try { return [...f.contentDocument.querySelectorAll(sel)]; } catch { return []; }
+            })
+          : [...root.querySelectorAll(sel)];
         r.matched = els.length;
         r.values = els.map(e => {
-          const c = getComputedStyle(e);
+          const c = gcs(e);
           return props.map(k => k.startsWith('--') || k.includes('-') ? c.getPropertyValue(k) : c[k]);
         });
         r.distinct = new Set(r.values.map(v => JSON.stringify(v))).size;
@@ -172,10 +192,50 @@ async function launch() {
         if (r.values.some(row => row.some(v => v === undefined || v === ''))) issues.push('CSS 속성 이름이나 변수 정의를 확인하세요.');
         if (expectedCount !== undefined && r.matched !== expectedCount) issues.push('예상한 요소 수와 다릅니다.');
         if (expectedDistinct !== undefined && r.distinct !== expectedDistinct) issues.push('예상한 적용값 수와 다릅니다.');
+        if (a11y) {
+          // Let the browser resolve any color syntax (oklch, color-mix, named) to sRGB bytes.
+          const cv = document.createElement('canvas'); cv.width = cv.height = 1;
+          const cx = cv.getContext('2d', { willReadFrequently: true });
+          const rgba = c => {
+            const m = /^rgba?\(([^)]+)\)$/.exec(c.trim());
+            if (m) { const p = m[1].split(/[\s,\/]+/).filter(Boolean).map(Number); return [p[0], p[1], p[2], p[3] === undefined ? 1 : p[3]]; }
+            cx.clearRect(0, 0, 1, 1); cx.fillStyle = '#000'; cx.fillStyle = c; cx.fillRect(0, 0, 1, 1);
+            const d = cx.getImageData(0, 0, 1, 1).data; return [d[0], d[1], d[2], d[3] / 255];
+          };
+          const over = (top, under) => [0, 1, 2].map(i => top[i] * top[3] + under[i] * (1 - top[3])).concat(1);
+          const lum = c => { const [r, g, b] = c.slice(0, 3).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+          // Composite every background from `node` up to the first opaque one, over white.
+          const behind = node => {
+            const layers = []; let image = false;
+            for (let n = node; n && n.nodeType === 1; n = n.parentElement) {
+              const cs = gcs(n);
+              if (cs.backgroundImage && cs.backgroundImage !== 'none') image = true;
+              const bg = rgba(cs.backgroundColor);
+              if (bg[3] > 0) layers.push(bg);
+              if (bg[3] >= 1) break;
+            }
+            let bg = [255, 255, 255, 1];
+            for (const layer of layers.reverse()) bg = over(layer, bg);
+            return { bg, image };
+          };
+          const ratio = (a, b) => { const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x); return Math.round((hi + 0.05) / (lo + 0.05) * 100) / 100; };
+          r.a11y = els.map(e => {
+            const cs = gcs(e);
+            const inside = behind(e), around = behind(e.parentElement);
+            const line = (width, style, color) =>
+              parseFloat(width) > 0 && style !== 'none' ? ratio(over(rgba(color), around.bg), around.bg) : null;
+            const box = e.getBoundingClientRect();
+            return { contrast: ratio(over(rgba(cs.color), inside.bg), inside.bg),
+              border: line(cs.borderTopWidth, cs.borderTopStyle, cs.borderTopColor),
+              outline: line(cs.outlineWidth, cs.outlineStyle, cs.outlineColor),
+              size: [Math.round(box.width), Math.round(box.height)],
+              backgroundImage: inside.image || around.image };
+          });
+        }
       }
       r.issues = issues;
       return r;
-    }, { sel, props, section, expectedCount, expectedDistinct });
+    }, { sel, props, section, expectedCount, expectedDistinct, a11y, inFrames });
 
     if (!noShot) {
       const el = section && await p.evaluateHandle(id => document.getElementById(id), section);

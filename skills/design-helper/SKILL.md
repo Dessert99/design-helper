@@ -7,7 +7,9 @@ description: Use when several visual variants need to be compared side by side
   choose by eye, then applies the choice to the code. Not a design generator; it
   lays out a range, it does not invent a look. Triggers on "5가지 버전으로 보여줘" ·
   "A 랑 B 중에 뭐가 나아" · "시안 여러 개 비교해줘" · "나란히 놓고 보자". Do not use
-  for ordinary UI coding, bug fixes, or implementing a design that is already decided.
+  for ordinary UI coding, bug fixes, or implementing a design that is already decided,
+  and not for building a whole design system or syncing a design record to code (the
+  design-system and design-sync skills in this plugin).
 ---
 
 # design-helper

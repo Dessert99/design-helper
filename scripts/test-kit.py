@@ -61,6 +61,14 @@ class KitTests(unittest.TestCase):
         self.assertEqual(head['Content-Length'], headers['Content-Length'])
         self.assertEqual(empty, b'')
 
+    def test_only_a_person_browser_arms_the_idle_cleanup(self):
+        server.opened = False
+        self.request(method='HEAD')                       # curl-like, no User-Agent
+        self.request(extra='User-Agent: Mozilla/5.0 HeadlessChrome/131.0\r\n')
+        self.assertFalse(server.opened)
+        self.request(extra='User-Agent: Mozilla/5.0 (Macintosh) Chrome/131.0 Safari/537.36\r\n')
+        self.assertTrue(server.opened)
+
     def test_equal_length_equal_mtime_edit(self):
         _, before, _ = self.request()
         stamp = self.html.stat().st_mtime_ns

@@ -15,6 +15,7 @@ insert only what the turn adds, just above its marker:
 | `<!-- dh:head -->` | `<link>` to project stylesheets (`tokens.css`, `$WS/sheet.css`) |
 | `/* dh:style */` | specimen CSS, inside the second `<style>` |
 | `<!-- dh:toc -->` | this turn's `dh-toc-turn` label and section links |
+| `<!-- dh:progress -->` | the checklist's status, design-system only (below) |
 | `<!-- dh:main -->` | this turn's divider and sections |
 | `<!-- dh:script -->` | control scripts, when a section has them |
 
@@ -81,6 +82,24 @@ that turn added. It gives a long sheet a way back to any earlier comparison.
 ```
 
 The sidebar's style and its highlighter are in the kit.
+
+### Checklist progress
+
+design-system shows where the checklist stands above the table of contents. It is
+rewritten in place (not appended) whenever a row changes, and like the table of contents
+it marks the reading position only.
+
+```html
+<!-- above dh:progress, replacing the previous block -->
+<div class="dh-progress">
+  <div class="dh-progress-h">체크리스트</div>
+  <div class="dh-progress-row"><span>글자</span><b>2 / 6</b></div>
+  <div class="dh-progress-row"><span>색</span><b>1 / 7</b></div>
+  <div class="dh-progress-row"><span>보류</span><b>1</b></div>
+</div>
+```
+
+Counts are settled rows over all rows of the area; `해당 없음` rows leave the count.
 
 
 ## Filling the width
@@ -163,13 +182,17 @@ When a section appears, the reloader scrolls its top to the top of the user's wi
 What fills that window is what gets judged, so it is the specimens.
 
 - **Above the grid: the title and at most two lines of description.** What to decide,
-  where to look, a shared `실물과 다름` note. Anything longer moves into the captions or
+  where to look, a shared `실물과 다름` note. An area's intents in design-system are a
+  short list after those two lines and don't count toward them; show them word for word
+  as they will be recorded. Anything longer moves into the captions or
   under the ladder.
 - **Every rung is in that first window**, on at least its first context. Drop
   near-duplicate rungs before letting one fall below it. Further contexts the axis
   reacts to follow below in the same rung order; never drop them to fit
-  (`skills/design-helper/references/sweeping.md#context`). A specimen taller than the window (a whole page)
-  shows at least one full row of frames.
+  (`skills/design-helper/references/sweeping.md#context`). A specimen taller or wider
+  than the window allows (a whole page, a design-system board) shows at least one full
+  specimen; `firstScreen` below `primarySpecs` is expected there, not a failure. Set the
+  section's grid minimum from the specimen's width so it is never clipped.
 - **The recommendation stays below the specimens.** Read before looking, it decides
   for the eye.
 

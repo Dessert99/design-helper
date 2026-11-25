@@ -24,6 +24,7 @@ anything first. The worker reads the project itself. Its first message holds:
 - the target, if you know it: files, component, route
 - what the conversation already settled about this target, with values
 - the project root, as an absolute path
+- the decision record's location, if the user named one (a Notion link)
 
 Which agent to spawn:
 
@@ -57,21 +58,44 @@ for the worker's result (Claude Code notifies you; in Codex, `wait_agent`).
 
 ## Applying the choice
 
-When the user picks, the worker's message ends with a `반영 지시:` block. In the same
-turn:
+When the user picks, the worker's message ends with a `반영 지시:` block, a `기록 지시:`
+block, or both. In the same turn, show the user everything above the first block, as
+written, then write the record (next section), then apply the code. With no `반영 지시:`
+block, stop after the record.
 
-1. Show the user everything above the block, as written. Not the block itself.
-2. Apply it, without asking again: the user's pick was the apply order. Change what the
+1. Nothing from the blocks is shown to the user.
+2. Apply the `반영 지시:` block, without asking again: the user's pick was the apply order. Change what the
    block lists, within the scope it states. If the code differs from it (the line moved,
    a name is missing), resolve it from the code; ask only if that would change the scope.
 3. Verify. Every class, token and `var(--x)` you wrote must exist: a wrong name fails
    silently and simply doesn't show. Run the check under `검증` if there is one, and the
-   project's own quick checks (typecheck, lint) when the change could break them.
+   project's own quick checks (typecheck, lint) when the change could break them. In a
+   project with a decision record, also run the check in `shared/agent-guide.md`
+   (`Checking before delivering`) on the lines you changed.
+   If the block has an `안내 블록:` line, write or update the agent block as
+   `shared/agent-guide.md` says, asking first when it is the first insertion.
 4. Report in one short Korean message: the files you changed and what you verified. The
    worker already gave the blast radius; don't repeat it.
 5. Start your next message to the worker with `반영 완료:` and the files you changed, or
    what failed, ahead of the forwarded user reply. It draws the next ladder on top of
    that code.
+
+## Writing the record
+
+A `기록 지시:` block lists exactly what to write (`shared/decisions.md`, `Recording`).
+
+1. Copy each screenshot it names out of the workspace first: the workspace may be
+   removed soon.
+2. Write the lines into the named file (or Notion page), the `README.md` checklist row,
+   and any `보관` links. Create the folder and files from the templates in
+   `shared/decisions.md` when they don't exist yet. Change nothing it doesn't list.
+3. Report in one short Korean line which file changed, and pass on its `다시 볼 곳:`
+   line when there is one.
+4. Start your next message to the worker with `기록 완료:` and the files, or what
+   failed.
+
+Writing the record needs no extra question: the user's pick was the order. Writing it
+outside the project (Notion) follows the same block.
 
 ## When the worker is gone
 

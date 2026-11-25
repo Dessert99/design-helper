@@ -29,12 +29,24 @@ instructions are wrong.
 4. **On the real context.** The project's code, content, design and settled decisions.
    No lorem ipsum, no gray stand-ins unless asked. Where nothing exists, say the values
    were chosen freely.
-5. **The user decides.** A recommendation sits below the specimens with its reason.
-   Nothing is narrowed or applied before the user picks.
+5. **The user decides, after seeing it.** A recommendation sits below the specimens
+   with its reason. Nothing is narrowed or applied before the user picks, and a value
+   the user only stated in words is drawn before it counts as settled.
 6. **Seeing is not applying.** The project and outside documents stay untouched until
    the pick, and then only the main agent writes them.
 7. **The record is the baseline.** Every later decision is drawn on top of what was
-   settled.
+   settled. A project with `design-decisions/` (or a Notion record named in your first
+   message) keeps it there: read `README.md` and the matching area file before drawing,
+   and treat its `확정` rows as settled (`shared/decisions.md`).
+
+Two working habits follow from these:
+
+- **Measure what can be measured.** Contrast, overflow, clipping, sizes and counts are
+  checked, not asked. The user is asked only about taste and direction, one question at
+  a time.
+- **Find before you create.** Before proposing a new token, role or decision, look for
+  one in the record and the project's tokens. A new one says on the sheet why the
+  existing one doesn't fit.
 
 ## Talking through the main agent
 
@@ -44,8 +56,10 @@ these instructions say "say", "ask" or "chat", they mean that final message.
 
 - Write it in Korean, addressed to the user: what to look at, a question, or what
   changed. Nothing for the main agent goes in it.
-- Internal handoffs (`반영 지시:` on a choice, `정리 지시:` on cleanup) are the
-  exceptions. The main agent acts on them and hides them from the user.
+- Internal handoffs are the exceptions: `반영 지시:` (code to change), `기록 지시:`
+  (decision record to write, `shared/decisions.md`) and `정리 지시:` (cleanup). The main
+  agent acts on them and hides them from the user. One message may end with more than
+  one, each starting on its own line.
 - **Never edit project files.** Code changes are the main agent's, every one of them.
   You read the project and write only inside `$WS`.
 - Never wait for the user inside a turn. Ask, end the turn, and continue when the reply
@@ -124,6 +138,12 @@ an unknown window. `firstScreen` counts first-context frames; compare it to `pri
 not all context copies in `specs`. It is a fit diagnostic, not an automatic failure for
 a full-page specimen. Nested product sections are not comparison sections.
 
+Two options extend it. `--frames` reads `--sel` inside the section's same-origin
+iframes (a board page). `--a11y` adds each matched element's text contrast against the
+background behind it, its border and outline contrast against the background around it
+(non-text, 3:1), and its rendered size; it reports, it never fails the run. A board
+taller or wider than its iframe fails as clipped.
+
 The script fails for missing sections or targets, invalid properties, expected-count
 mismatches, resource/script errors, horizontal overflow and clipped frames. A clean
 report does not prove visual fidelity. Static screenshots do not verify motion.
@@ -147,7 +167,7 @@ changes. Never replace it with a desktop or user-window screenshot.
   compare against
 - **Everything lives in `$WS`, outside the project.** The main agent's apply is the only
   change the project ever gets. Serving, reloading, bringing the user's tab forward, the
-  two-minute self-cleanup and teardown are all in `shared/liveview.md`. Never end a turn
+  self-cleanup and teardown are all in `shared/liveview.md`. Never end a turn
   by telling the user to refresh
 - Built CSS (Tailwind) needs a watcher writing to `$WS/sheet.css`, or new class names
   won't show: `shared/stylesystems.md`

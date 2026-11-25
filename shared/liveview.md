@@ -12,7 +12,7 @@ sheet is served, not opened as a file.
 Everything this skill makes lives in **one directory outside the project**, created once
 per session and deleted at the end:
 
-    WS=$(mktemp -d "${TMPDIR:-/tmp}/design-helper.XXXXXX")   # or a new folder in the session's scratch dir
+    WS=$(mktemp -d "${TMPDIR:-/tmp}/<skill name>.XXXXXX")   # or a new folder in the session's scratch dir
 
 `$WS` is the whole workspace, with nothing above it to clean up. Teardown deletes
 `$WS` itself and nothing else.
@@ -48,7 +48,17 @@ and reaps itself (below). Once per session, in the background:
     python3 "$WS/serve.py" 8765 >"$WS/server.log" 2>&1 &
     echo $! > "$WS/server.pid"
 
-Port busy → walk up (8766, 8767...). Never kill whatever is already there. When the
+**Make sure the server that answers is yours.** Another session's server may already
+hold the port and answer every request, so a `200` proves nothing. Write a token only
+this workspace has and read it back:
+
+    echo "$WS" > "$WS/dh-id.txt"
+    sleep 1; kill -0 "$(cat "$WS/server.pid")" &&
+      [ "$(curl -s http://localhost:8765/dh-id.txt)" = "$WS" ] && echo OURS
+
+No `OURS` (the process died, or the log says the address is in use): try the next port
+(8766, 8767...) the same way. Never kill whatever is already there. Every later check
+of "is it served" reads `dh-id.txt` the same way. When the
 first sheet is ready (`Show, then verify` below), open the URL, not the path:
 
     open http://localhost:8765/sheet.html
@@ -58,12 +68,17 @@ business on the network.
 
 ## It reaps itself
 
-After **120 seconds without a valid HTTP request**, the server sends SIGTERM to
-registered helpers, deletes this session's entire `$WS`, and exits. It never removes
-the project or the workspace's parent. Cleanup errors stay visible in the server log.
+The clock starts only once a person's browser has opened the sheet. Headless checks
+(`check.cjs`) and `curl` keep the session alive but don't start it. After that, **30
+minutes without a request** make the server send SIGTERM to registered helpers, delete
+this session's entire `$WS`, and exit. A sheet no browser ever opens is cleaned up after
+4 hours, so an abandoned session doesn't linger. It never removes the project or the
+workspace's parent. Cleanup errors stay visible in the server log.
 
 The reloader's HEAD requests keep the session alive while an open tab polls. Closing
-every comparison tab — or a browser suspending the tab — starts the two-minute clock.
+every comparison tab, or a browser suspending the tab, starts the 30-minute clock. A
+long turn on the agent's side (writing a record, applying code) never empties the
+workspace while the user's tab is open, and never before the user has seen the sheet.
 
 Before editing or presenting, check both the workspace and server:
 
@@ -106,7 +121,7 @@ sheet, an appended ladder, and an edit inside an existing section alike.
 1. **Check names** (`shared/core.md#verify`, Names). It takes a second and catches
    the failure that shows nothing at all, so it runs before anyone sees the sheet.
 2. **Make sure it is served.** The server (and CSS watcher, if any) is up and the sheet
-   URL answers. Workspace gone → a fresh sheet as above; server stopped → restart it.
+   URL answers from your workspace (`dh-id.txt`, above). Workspace gone → a fresh sheet as above; server stopped → restart it.
    Port taken → pick a free one; never kill what is already there.
    Reuse the successful readiness check from this edit; do not probe the same server
    again without a failure or delay.
@@ -137,7 +152,7 @@ describes.
 
 ## No python3
 
-Open the sheet on `file://` and say once that automatic reload and the two-minute
+Open the sheet on `file://` and say once that automatic reload and the automatic
 cleanup are unavailable. Verify each revision before showing it, then reload the tab
 through browser controls or ask for a manual refresh. Don't build a replacement server.
 
@@ -148,8 +163,11 @@ deletes everything it made:
 
     for f in "$WS"/*.pid; do kill "$(cat "$f")" 2>/dev/null; done; rm -rf "$WS"
 
+Say in the final message that the comparison tab can be closed: it no longer loads.
+
 Then run `git status` in the project. Nothing from this skill belongs there except the
-applied changes. If a comparison file shows up anyway, don't delete it yourself: end
+applied changes, the decision record (`design-decisions/`) and the agent block in
+`AGENTS.md` and `CLAUDE.md` (`shared/agent-guide.md`), all written by the main agent. If a comparison file shows up anyway, don't delete it yourself: end
 the final message with a block for the main agent. Include only files whose creation
 by this session is established; a name or untracked status alone is not enough. Preserve
 uncertain files. The main agent removes only the established comparison artifacts:

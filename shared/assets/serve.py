@@ -1,7 +1,9 @@
 import hashlib, http.server, io, os, pathlib, shutil, signal, sys, time
 D = os.path.dirname(os.path.abspath(__file__))
-IDLE = 120
-seen = time.monotonic()
+IDLE = 1800            # idle seconds after a person's browser has opened the sheet
+UNOPENED = 4 * 3600    # lifetime cap when no person's browser ever opens it
+started = seen = time.monotonic()
+opened = False         # a non-headless browser has requested something
 
 class H(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **k): super().__init__(*a, directory=D, **k)
@@ -9,9 +11,14 @@ class H(http.server.SimpleHTTPRequestHandler):
         super().setup()
         self.connection.settimeout(5)
     def parse_request(self):
-        global seen
+        global seen, opened
         ok = super().parse_request()
-        if ok: seen = time.monotonic()
+        if ok:
+            seen = time.monotonic()
+            # Headless checks (check.cjs) and curl keep the session alive but don't count
+            # as the user opening the sheet.
+            agent = self.headers.get('User-Agent', '')
+            if 'Mozilla' in agent and 'Headless' not in agent: opened = True
         return ok
     def end_headers(self):
         # Never answer a reload from cache: If-Modified-Since has 1s resolution and would
@@ -61,7 +68,10 @@ def main():
     server = http.server.HTTPServer(('127.0.0.1', int(sys.argv[1])), H)
     server.timeout = 1
     try:
-        while time.monotonic() - seen < IDLE:
+        while True:
+            now = time.monotonic()
+            if opened and now - seen >= IDLE: break
+            if not opened and now - started >= UNOPENED: break
             server.handle_request()
     finally:
         server.server_close()

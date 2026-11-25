@@ -109,7 +109,7 @@ Playwright를 쓸 수 있으면 바뀐 표본의 적용값을 확인합니다.
 - [Claude Code](https://claude.com/claude-code) 또는 Codex
 - 브라우저
 - `python3`: 시트를 띄우고 자동으로 새로고침하는 로컬 서버에 씁니다. 없으면 시트를
-  `file://`로 여는데, 이때는 자동 새로고침도 없고 2분 동안 요청이 없을 때 임시 폴더를
+  `file://`로 여는데, 이때는 자동 새로고침도 없고 30분 동안 요청이 없을 때 임시 폴더를
   지우는 자동 정리도 없습니다.
 - Playwright (선택): 계산된 스타일을 읽고 스크린샷을 찍는 데 씁니다. 없으면 이 확인은
   건너뜁니다.
@@ -143,8 +143,10 @@ codex plugin add design-helper@design-helper
 ```sh
 git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
-ln -sfn ~/src/design-helper/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
-ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper    # Codex
+for s in design-helper design-system design-sync; do
+  ln -sfn ~/src/design-helper/skills/$s ~/.claude/skills/$s   # Claude Code
+  ln -sfn ~/src/design-helper/skills/$s ~/.codex/skills/$s    # Codex
+done
 ```
 
 두 에이전트 모두 `SKILL.md`의 `description`은 세션을 시작할 때 읽고, 나머지
@@ -155,7 +157,7 @@ ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper  
 `worker.md`를 읽혀 일을 맡깁니다. 동작은 같습니다. 스킬 폴더를 복사하지 말고 clone 안의
 폴더에 심링크를 거세요. 스킬은 심링크를 따라 clone으로 돌아가 `shared/` 폴더를 찾습니다.
 
-지우려면 심링크만 지우면 됩니다(`rm ~/.claude/skills/design-helper`). clone은 그대로
+지우려면 심링크만 지우면 됩니다(`rm ~/.claude/skills/design-*`). clone은 그대로
 남습니다.
 
 ## 사용법
@@ -185,6 +187,17 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 상황별 예시 대화는 [사용 흐름 모음](docs/flows.ko.md)에 있습니다. 불만은 있는데 뭘 바꿀지
 모를 때, hover·focus 같은 상태 비교, 애니메이션 비교, 이미 정한 값 바꾸기 등 11가지
 상황을 다룹니다.
+
+### 디자인 시스템 만들기
+
+이름을 불러야만 실행되는 스킬이 두 개 더 있습니다. 스스로 실행되지 않습니다.
+
+| 명령어 | 하는 일 |
+|---|---|
+| `/design-helper:design-system` (Codex: `$design-system`) | 체크리스트를 따라갑니다(목적, 글자, 간격, 색, 모양, 그다음 선택으로 레이아웃, 모션, 컴포넌트). 항목마다 실제 화면으로 만든 보드에 시안을 그리고, 눈으로 보고 고릅니다. 값은 지금 코드, 공개 디자인 시스템(Tailwind 기본값, Radix Colors, Open Props, Material 3, shadcn/ui), 직접 만든 값에서 올 수 있고, 모두 고르기 전까지는 후보입니다. 대비와 누르는 영역 크기는 재서 시안에 표시합니다. 고른 것은 프로젝트의 `design-decisions/`나 알려 준 노션 페이지 아래에 기록합니다. 코드는 고치지 않습니다 |
+| `/design-helper:design-sync` (Codex: `$design-sync`) | 기록에 맞춰 코드를 바꿉니다. 바뀌는 토큰마다 실제 화면의 지금과 바꾼 뒤를 영향 범위와 함께 보여 주고, 고른 범위만 반영합니다. 그다음 `AGENTS.md`와 `CLAUDE.md`에 짧은 안내를 넣어, 이후의 AI 세션이 정한 값을 쓰게 합니다(처음 넣을 때는 먼저 묻습니다) |
+
+값을 정하거나 바꿀 때는 늘 시트를 거칩니다. 말로만 정한 값도 시안으로 그려 본 뒤에야 확정됩니다.
 
 ## 비슷한 스킬과 비교
 
@@ -238,7 +251,12 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
   - [`worker.md`](skills/design-helper/worker.md): 이 스킬만의 규칙. 작업 단위, 표본 그리는 규칙, 대답 해석, 기록, 영향 범위, 마무리
   - [`references/sweeping.md`](skills/design-helper/references/sweeping.md): 후보 값, 캡션과 추천, 배경·크기 조건, 빈 화면에서 시작하기, 실제 디자인으로 그리는 배치 비교(회색 뼈대는 요청할 때만)
   - [`references/motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교
+- [`skills/design-system/`](skills/design-system/): 체크리스트로 디자인 결정 기록을 만드는 스킬. [`references/checklist.md`](skills/design-system/references/checklist.md)에 기본 항목, 역할, 의도, 검사가, [`references/imports.md`](skills/design-system/references/imports.md)에 값을 가져올 수 있는 공개 시스템이 있습니다
+- [`skills/design-sync/`](skills/design-sync/): 기록에 맞춰 코드를 바꾸는 스킬
 - [`shared/`](shared/): 플러그인의 모든 스킬이 함께 쓰는 것
+  - [`decisions.md`](shared/decisions.md): 결정 기록의 구조, 상태, 규칙, `기록 지시:` 넘김
+  - [`board.md`](shared/board.md): design-system과 design-sync가 그리는 실제 화면 보드. 구역마다 따로 떠 두는 페이지
+  - [`agent-guide.md`](shared/agent-guide.md): 이후의 AI가 기록을 따르게 하는 안내 블록과 넘기기 전 점검
   - [`main.md`](shared/main.md): 메인 에이전트가 스킬을 실행하는 방법. 일을 서브에이전트에게 맡기고 사용자와 서브에이전트 사이에서 말을 전해, 메인 대화가 가볍게 유지됩니다. 서브에이전트를 쓸 수 없으면 메인이 직접 합니다
   - [`core.md`](shared/core.md): 모든 worker가 가장 먼저 읽는 규칙. 결정 루프와 원칙, 메인을 통해 말하기, 언어, 발견 사항, 검증, 시트
   - [`clarification.md`](shared/clarification.md): 요청이 모호할 때 묻는 법
@@ -249,7 +267,7 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
   - [`liveview.md`](shared/liveview.md): 임시 작업 폴더, 로컬 서버, 브라우저 탭 관리, 정리
   - [`assets/`](shared/assets/): 일꾼이 매번 새로 쓰지 않고 복사해서 쓰는 고정 파일
     - [`sheet.html`](shared/assets/sheet.html): 스타일, 목차, 자동 새로고침이 들어 있는 빈 비교 페이지
-    - [`serve.py`](shared/assets/serve.py): 2분 동안 요청이 없으면 스스로 정리하는 로컬 서버
+    - [`serve.py`](shared/assets/serve.py): 브라우저로 시트를 연 뒤 30분 동안 요청이 없으면 스스로 정리하는 로컬 서버
     - [`check.cjs`](shared/assets/check.cjs): Playwright로 계산된 스타일을 읽고 스크린샷을 한 번에 찍는 스크립트
 - [`agents/worker.md`](agents/worker.md): 모든 스킬이 띄우는 Claude Code 플러그인 에이전트. `shared/core.md`와 스킬의 `worker.md`를 읽습니다. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
 - [`docs/architecture.ko.md`](docs/architecture.ko.md): 스킬 묶음의 설계. 스킬마다 있어야 하는 이유, 공통 구조, Claude Code와 Codex 지원
@@ -264,7 +282,11 @@ HTTP 응답, 새로고침 판단과 검사기 보고서를 확인합니다.
 python3 scripts/test-kit.py
 node scripts/test-reloader.cjs
 node scripts/test-check.cjs
+python3 scripts/test-skills.py   # frontmatter, 실행 설정, 지침 속 경로
 ```
+
+결정 기록의 구조와 AI 안내 블록은 [Astryx](https://github.com/meta/astryx)(MIT)가 AI에게
+디자인 의도를 지키게 하는 방식을 참고했습니다. 방법만 빌렸고 문장이나 값은 복사하지 않았습니다.
 
 ## 라이선스
 

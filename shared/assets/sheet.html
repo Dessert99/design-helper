@@ -28,6 +28,11 @@ body { margin:0; background:var(--dh-page); color:var(--dh-ink);
 .dh-toc a { display:block; color:var(--dh-sub); text-decoration:none; padding:4px 8px;
          margin-left:-8px; border-radius:6px }
 .dh-toc a.dh-cur { background:var(--dh-accent-tint); color:var(--dh-accent); font-weight:600 }
+/* Checklist progress (design-system only): reading position, never a control. */
+.dh-progress { margin:0 0 22px; padding:0 0 16px; border-bottom:1px solid var(--dh-line); color:var(--dh-sub) }
+.dh-progress-h { font-size:11px; font-weight:700; color:var(--dh-muted); letter-spacing:.04em; margin:0 0 8px }
+.dh-progress-row { display:flex; justify-content:space-between; gap:8px; padding:2px 0 }
+.dh-progress-row b { font-weight:600; color:var(--dh-ink) }
 
 .dh-turn { display:flex; align-items:center; gap:16px; margin:72px 0 0;
         font-size:14px; font-weight:700; color:var(--dh-ink) }
@@ -76,6 +81,8 @@ body { margin:0; background:var(--dh-page); color:var(--dh-ink);
 </head>
 <body class="dh-has-toc">
 <nav class="dh-toc">
+  <!-- Checklist progress goes here (design-system): <div class="dh-progress">...</div> -->
+  <!-- dh:progress -->
   <div class="dh-toc-h">목차</div>
   <!-- Turn labels and section links go here: <div class="dh-toc-turn">요청 1 · ...</div> <a href="#r1-1">...</a> -->
   <!-- dh:toc -->

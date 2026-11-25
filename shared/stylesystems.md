@@ -87,8 +87,11 @@ Changing a config value moves every use of that class. Adding a new class moves 
 
 ### CSS variables — `:root { --* }` · `tokens.css` · `theme.css`
 
-Copy the required CSS into `$WS` and link its served relative URL, then draw with
-`var(--x)`. A filesystem path in `<link href>` is not served by this workspace server.
+Copy the stylesheets the target uses into `$WS` (the token file and the files that
+style the target's markup) and link their served relative URLs, then draw with
+`var(--x)`. Stylesheets that style `body`, `table` or other bare elements restyle the
+sheet itself: put specimens that need them in their own page inside an `<iframe>`
+(design-system's board does this) rather than rewriting the rules by hand. A filesystem path in `<link href>` is not served by this workspace server.
 Carry referenced imports, fonts and images into `$WS` with working relative paths too.
 Preserve the theme selector on the specimen root. Mark missing assets as `실물과 다름`.
 The copies do not follow project edits: copy again after a `반영 완료:` that touched them.

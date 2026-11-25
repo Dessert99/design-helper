@@ -122,7 +122,7 @@ See [operations](docs/flows/operations.md) for details.
 - A browser
 - `python3` to run the local server that serves and auto-reloads the sheet. Without it
   the sheet opens over `file://`, with no auto-reload and no automatic cleanup of the
-  temporary folder after two idle minutes.
+  temporary folder after 30 idle minutes.
 - Playwright (optional) to read computed styles and take screenshots. Without it that
   check is skipped.
 
@@ -156,8 +156,10 @@ keep in sync.
 ```sh
 git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
-ln -sfn ~/src/design-helper/skills/design-helper ~/.claude/skills/design-helper   # Claude Code
-ln -sfn ~/src/design-helper/skills/design-helper ~/.codex/skills/design-helper    # Codex
+for s in design-helper design-system design-sync; do
+  ln -sfn ~/src/design-helper/skills/$s ~/.claude/skills/$s   # Claude Code
+  ln -sfn ~/src/design-helper/skills/$s ~/.codex/skills/$s    # Codex
+done
 ```
 
 Both agents read the `description` in `SKILL.md` when a session starts, and the rest
@@ -169,7 +171,7 @@ subagent that reads `worker.md` instead. It works the same way. Link the skill f
 inside the clone, not a copy of it: the skill finds `shared/` by following the link back
 to the clone.
 
-To remove it, delete the symlink (`rm ~/.claude/skills/design-helper`). The clone stays.
+To remove it, delete the symlinks (`rm ~/.claude/skills/design-*`). The clone stays.
 
 ## Usage
 
@@ -199,6 +201,18 @@ Specimens in the browser are lettered A · B · C. You answer in chat.
 Example conversations are in the [usage flows](docs/flows.ko.md) (Korean only). They
 cover 11 situations, including not knowing what to change, comparing hover and focus
 states, comparing animation, and changing a value you already picked.
+
+### Building a design system
+
+Two more skills run only when you call them by name, never on their own:
+
+| Command | What it does |
+|---|---|
+| `/design-helper:design-system` (Codex: `$design-system`) | Walks a checklist (purpose, type, spacing, color, shape, then optional layout, motion, components). Each item is drawn on a board of your real screens and you pick by eye. Values can come from your code, from public systems (Tailwind defaults, Radix Colors, Open Props, Material 3, shadcn/ui) or from scratch; all are candidates until picked. Contrast and target sizes are measured and shown on the specimens. Picks go to `design-decisions/` in the project, or under a Notion page you give it. It writes no code |
+| `/design-helper:design-sync` (Codex: `$design-sync`) | Brings the code in line with the record: shows each changed token before and after on your real screens with its blast radius, applies the scope you pick, then adds a short block to `AGENTS.md` and `CLAUDE.md` so later agent sessions use the settled values (it asks before adding it the first time) |
+
+Deciding or changing a value always goes through a sheet: a value you only state in words
+is drawn before it counts as settled.
 
 ## Compared with similar skills
 
@@ -252,7 +266,12 @@ and so on) need to change too.
   - [`worker.md`](skills/design-helper/worker.md): this skill's own rules. The work unit, drawing rules, reading replies, the record, blast radius, finishing
   - [`references/sweeping.md`](skills/design-helper/references/sweeping.md): candidate values, captions and the recommendation, background and size, starting from a blank slate, layouts in the real design (gray skeleton only on request)
   - [`references/motion.md`](skills/design-helper/references/motion.md): comparing animation
+- [`skills/design-system/`](skills/design-system/): building the design decision record from a checklist; [`references/checklist.md`](skills/design-system/references/checklist.md) holds the default items, roles, intents and checks, [`references/imports.md`](skills/design-system/references/imports.md) the public systems values may come from
+- [`skills/design-sync/`](skills/design-sync/): bringing the code in line with the record
 - [`shared/`](shared/): what every skill in the plugin uses
+  - [`decisions.md`](shared/decisions.md): the decision record: structure, statuses, rules, and the `기록 지시:` handoff
+  - [`board.md`](shared/board.md): the board of real screens design-system and design-sync draw on, one frozen page per section
+  - [`agent-guide.md`](shared/agent-guide.md): the block that makes later agents follow the record, and the check before delivering
   - [`main.md`](shared/main.md): how the main agent runs a skill. It hands the work to a subagent and passes messages between it and you, so the main conversation stays small. Without subagents, the main agent does the work itself
   - [`core.md`](shared/core.md): rules every worker reads first. The decision loop and its principles, talking through the main agent, language, findings, verification, the sheet
   - [`clarification.md`](shared/clarification.md): asking about a vague request
@@ -263,7 +282,7 @@ and so on) need to change too.
   - [`liveview.md`](shared/liveview.md): the temporary folder, local server, browser tabs, cleanup
   - [`assets/`](shared/assets/): fixed files the worker copies instead of writing them each time
     - [`sheet.html`](shared/assets/sheet.html): the empty comparison sheet with its style, table of contents and auto-reload
-    - [`serve.py`](shared/assets/serve.py): the local server that cleans itself up after two idle minutes
+    - [`serve.py`](shared/assets/serve.py): the local server that cleans itself up after 30 idle minutes once your browser has opened the sheet
     - [`check.cjs`](shared/assets/check.cjs): reads computed styles and takes a screenshot with Playwright in one run
 - [`agents/worker.md`](agents/worker.md): the Claude Code plugin agent every skill spawns. It reads `shared/core.md` and the skill's `worker.md`. Codex plugins can't ship agents, so Codex spawns a plain subagent instead
 - [`docs/architecture.ko.md`](docs/architecture.ko.md): the design of the skill family: why each skill exists, the shared structure, Claude Code and Codex support (Korean)
@@ -277,7 +296,12 @@ reload decisions and checker reports; they do not prove rendered fidelity.
 python3 scripts/test-kit.py
 node scripts/test-reloader.cjs
 node scripts/test-check.cjs
+python3 scripts/test-skills.py   # frontmatter, invocation guards, paths named in instructions
 ```
+
+The decision record's structure and the agent block are adapted from how
+[Astryx](https://github.com/meta/astryx) (MIT) keeps design intent for agents. Only the
+approach is borrowed; no text or values are copied.
 
 ## License
 

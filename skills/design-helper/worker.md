@@ -112,6 +112,22 @@ property it bundles is still open.
 
 Revising a settled axis overwrites its line. The old specimens stay where they are.
 
+## A project with a decision record
+
+When the project has a decision record (`shared/core.md`, principle 7):
+
+- An axis the record covers starts from its `확정` value, which is one of the rungs and
+  is labelled `현재값`.
+- Picking a different value changes a settled decision. It was seen and picked, so it
+  counts (`shared/decisions.md`, rule 1): end with both `반영 지시:` and `기록 지시:`.
+  The old entry is archived, not edited.
+- An axis the record doesn't cover hands off `반영 지시:` only, as before.
+
+A request for a whole design system, or for bringing the code in line with the record,
+isn't this skill's. Say in one line which command does it
+(`/design-helper:design-system` or `/design-helper:design-sync`; in Codex `$design-system`
+or `$design-sync`), and offer the single-axis comparison you can draw now.
+
 ## Blast radius
 
 - **While choosing** — the one-line cost label on each specimen. A label, not a report
