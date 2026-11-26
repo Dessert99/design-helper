@@ -143,7 +143,7 @@ codex plugin add design-helper@design-helper
 ```sh
 git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
-for s in design-helper design-system design-sync; do
+for s in design-helper design-system design-ux design-sync; do
   ln -sfn ~/src/design-helper/skills/$s ~/.claude/skills/$s   # Claude Code
   ln -sfn ~/src/design-helper/skills/$s ~/.codex/skills/$s    # Codex
 done
@@ -190,11 +190,12 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 
 ### 디자인 시스템 만들기
 
-이름을 불러야만 실행되는 스킬이 두 개 더 있습니다. 스스로 실행되지 않습니다.
+이름을 불러야만 실행되는 스킬이 세 개 더 있습니다. 스스로 실행되지 않고, 각각 따로 쓸 수 있습니다. 어느 것도 다른 스킬을 먼저 쓸 필요가 없습니다.
 
 | 명령어 | 하는 일 |
 |---|---|
 | `/design-helper:design-system` (Codex: `$design-system`) | 체크리스트를 따라갑니다(목적, 글자, 간격, 색, 모양, 그다음 선택으로 레이아웃, 모션, 컴포넌트). 항목마다 실제 화면으로 만든 보드에 시안을 그리고, 눈으로 보고 고릅니다. 값은 지금 코드, 공개 디자인 시스템(Tailwind 기본값, Radix Colors, Open Props, Material 3, shadcn/ui), 직접 만든 값에서 올 수 있고, 모두 고르기 전까지는 후보입니다. 대비와 누르는 영역 크기는 재서 시안에 표시합니다. 고른 것은 프로젝트의 `design-decisions/`나 알려 준 노션 페이지 아래에 기록합니다. 코드는 고치지 않습니다 |
+| `/design-helper:design-ux` (Codex: `$design-ux`) | 기능 하나가 어떻게 동작할지 UX 디자이너의 순서로 정합니다. 목표와 과제, 그다음 흐름, 화면 구성, 상호작용, 상태, 문구 순입니다. 후보마다 실제 디자인으로 만든 동작하는 시안이 있고, 그 아래에 과제를 실제로 수행하며 찍은 단계 띠와 클릭 수, 화면 전환 수, 목록 위치 유지, 키보드만으로 끝낼 수 있는지가 붙습니다. 고른 것은 `design-decisions/ux-<과제>.md`에 기록합니다. 앱 전체 구조가 아니라 기능 하나 단위이고, 코드는 고치지 않습니다 |
 | `/design-helper:design-sync` (Codex: `$design-sync`) | 기록에 맞춰 코드를 바꿉니다. 바뀌는 토큰마다 실제 화면의 지금과 바꾼 뒤를 영향 범위와 함께 보여 주고, 고른 범위만 반영합니다. 그다음 `AGENTS.md`와 `CLAUDE.md`에 짧은 안내를 넣어, 이후의 AI 세션이 정한 값을 쓰게 합니다(처음 넣을 때는 먼저 묻습니다) |
 
 값을 정하거나 바꿀 때는 늘 시트를 거칩니다. 말로만 정한 값도 시안으로 그려 본 뒤에야 확정됩니다.
@@ -252,6 +253,7 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
   - [`references/sweeping.md`](skills/design-helper/references/sweeping.md): 후보 값, 캡션과 추천, 배경·크기 조건, 빈 화면에서 시작하기, 실제 디자인으로 그리는 배치 비교(회색 뼈대는 요청할 때만)
   - [`references/motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교
 - [`skills/design-system/`](skills/design-system/): 체크리스트로 디자인 결정 기록을 만드는 스킬. [`references/checklist.md`](skills/design-system/references/checklist.md)에 기본 항목, 역할, 의도, 검사가, [`references/imports.md`](skills/design-system/references/imports.md)에 값을 가져올 수 있는 공개 시스템이 있습니다
+- [`skills/design-ux/`](skills/design-ux/): 기능 하나가 어떻게 동작할지 정하는 스킬. [`references/patterns.md`](skills/design-ux/references/patterns.md)에 후보를 고르는 패턴 목록, [`references/evaluate.md`](skills/design-ux/references/evaluate.md)에 워크스루, 10가지 원칙, 상태 목록이 있습니다
 - [`skills/design-sync/`](skills/design-sync/): 기록에 맞춰 코드를 바꾸는 스킬
 - [`shared/`](shared/): 플러그인의 모든 스킬이 함께 쓰는 것
   - [`decisions.md`](shared/decisions.md): 결정 기록의 구조, 상태, 규칙, `기록 지시:` 넘김
@@ -269,6 +271,7 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
     - [`sheet.html`](shared/assets/sheet.html): 스타일, 목차, 자동 새로고침이 들어 있는 빈 비교 페이지
     - [`serve.py`](shared/assets/serve.py): 브라우저로 시트를 연 뒤 30분 동안 요청이 없으면 스스로 정리하는 로컬 서버
     - [`check.cjs`](shared/assets/check.cjs): Playwright로 계산된 스타일을 읽고 스크린샷을 한 번에 찍는 스크립트
+    - [`walk.cjs`](shared/assets/walk.cjs): 시안에서 과제를 실제로 수행하며 단계 띠를 찍고 클릭 수, 화면 전환, 키보드만으로 완료를 재는 스크립트
 - [`agents/worker.md`](agents/worker.md): 모든 스킬이 띄우는 Claude Code 플러그인 에이전트. `shared/core.md`와 스킬의 `worker.md`를 읽습니다. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
 - [`docs/architecture.ko.md`](docs/architecture.ko.md): 스킬 묶음의 설계. 스킬마다 있어야 하는 이유, 공통 구조, Claude Code와 Codex 지원
 - [`docs/flows.ko.md`](docs/flows.ko.md): 상황별 사용 흐름

@@ -33,12 +33,14 @@ The fixed parts are files in `shared/assets/`. Copy them into `$WS` once
 per workspace, right after creating it, and never retype them:
 
     A=<plugin root>/shared/assets
-    cp "$A/serve.py" "$A/sheet.html" "$A/check.cjs" "$WS/"
+    cp "$A/serve.py" "$A/sheet.html" "$A/check.cjs" "$A/walk.cjs" "$WS/"
 
 - `serve.py`: the server below
 - `sheet.html`: the empty sheet, with the sheet style, the table of contents and the
   reloader already in it (`shared/sheet.md`)
 - `check.cjs`: computed styles and optional screenshot in one run (`shared/core.md#verify`)
+- `walk.cjs`: walks a task through a prototype page, one screenshot per step, with clicks,
+  inputs, screen changes, list position and a keyboard-only run (design-ux)
 
 ## Serve it
 

@@ -49,6 +49,7 @@ const expectedDistinct = number('--expect-distinct');
 if (!url || (!noShot && !shot) || (noShot && shot) || positional.length > 2) usage('URL과 출력 방식을 확인하세요.');
 if (!!sel !== !!props.length || ((expectedCount || expectedDistinct || a11y) && !sel)) usage('선택자와 CSS 속성을 함께 지정하세요.');
 
+// >>> launch: kept identical in check.cjs and walk.cjs (scripts/test-kit.py checks it)
 const ver = d => { try { return require(path.join(d, 'package.json')).version.split('.').map(Number); } catch { return [0]; } };
 const newer = (a, b) => { for (let i = 0; i < 3; i++) if ((b[i] || 0) !== (a[i] || 0)) return (b[i] || 0) - (a[i] || 0); return 0; };
 const dirs = p => { try { return fs.readdirSync(p).map(f => path.join(p, f)); } catch { return []; } };
@@ -114,6 +115,7 @@ async function launch() {
   }
   return null;
 }
+// <<< launch
 
 (async () => {
   const b = await launch();
@@ -152,8 +154,9 @@ async function launch() {
             overflowX: [...s.querySelectorAll('.dh-grid')].some(g => g.scrollWidth > g.clientWidth + 1),
             clippedFrames: [...s.querySelectorAll('.dh-frame')].filter(clipped).length,
             // A board page taller or wider than its iframe is cut off without any overflow
-            // on the sheet itself.
-            clippedBoards: [...s.querySelectorAll('iframe')].filter(f => {
+            // on the sheet itself. A prototype shown as a window (data-window) scrolls inside
+            // on purpose and is left out.
+            clippedBoards: [...s.querySelectorAll('iframe:not([data-window])')].filter(f => {
               try {
                 const d = f.contentDocument.documentElement;
                 return d.scrollHeight > f.clientHeight + 1 || d.scrollWidth > f.clientWidth + 1;

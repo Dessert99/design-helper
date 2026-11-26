@@ -15,11 +15,15 @@ session of every agent in the project loads it.
 <!-- DESIGN-DECISIONS:START -->
 This project's design decisions live in `design-decisions/` (README.md lists them).
 - Before building or changing UI, read the matching file (typography, color, spacing, shape).
+  Before building or changing a feature, read its `ux-*.md` and follow its flow, patterns,
+  states and wording; its 완료 조건 says when the feature works.
 - Use only values marked `확정`, through their tokens. Never invent a value. If what you
   need is undecided, use the nearest existing token and tell the user it is undecided.
-- Do not change a decided value, in code or in these files. Changes go through
-  /design-helper:design-system (Codex: $design-system), where they are drawn before they
-  are chosen.
+  A `확정` value the code has no token for yet is not hardcoded: tell the user and point to
+  /design-helper:design-sync (Codex: $design-sync).
+- Do not change a decision, in code or in these files. Changes go through
+  /design-helper:design-system or /design-helper:design-ux (Codex: $design-system,
+  $design-ux), where they are drawn before they are chosen.
 - Before delivering UI, re-read the changed files and replace hardcoded colors, px
   sizes and font values with the decided tokens.
 <!-- DESIGN-DECISIONS:END -->
@@ -41,8 +45,10 @@ When the record is in Notion, the first line names the Notion page instead of th
 - **The first insertion asks once**, because it changes every future agent session in
   the project: `AGENTS.md와 CLAUDE.md에 디자인 결정을 따르라는 안내를 넣을까요?` Later
   updates of an existing block need no question.
-- Insert it when the code matches the record: at the end of a `design-sync` apply. Before
-  that, an agent would reach for settled values the code doesn't have yet.
+- Insert it the first time any skill writes the record (`shared/main.md`, Writing the
+  record), so a record made by one skill alone is already followed. The block's own rule
+  keeps agents from hardcoding settled values the code doesn't have yet. design-sync
+  updates it on every apply.
 - The user asks to remove it: delete the span with its markers, nothing else.
 
 ## Checking before delivering

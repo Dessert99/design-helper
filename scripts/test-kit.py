@@ -69,6 +69,12 @@ class KitTests(unittest.TestCase):
         self.request(extra='User-Agent: Mozilla/5.0 (Macintosh) Chrome/131.0 Safari/537.36\r\n')
         self.assertTrue(server.opened)
 
+    def test_browser_launcher_is_identical_in_both_scripts(self):
+        def region(name):
+            text = (ASSETS / name).read_text()
+            return text[text.index('// >>> launch'):text.index('// <<< launch')]
+        self.assertEqual(region('check.cjs'), region('walk.cjs'))
+
     def test_equal_length_equal_mtime_edit(self):
         _, before, _ = self.request()
         stamp = self.html.stat().st_mtime_ns

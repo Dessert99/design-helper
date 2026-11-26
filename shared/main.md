@@ -91,6 +91,8 @@ A `기록 지시:` block lists exactly what to write (`shared/decisions.md`, `Re
    `shared/decisions.md` when they don't exist yet. Change nothing it doesn't list.
 3. Report in one short Korean line which file changed, and pass on its `다시 볼 곳:`
    line when there is one.
+   The first time the project gets a record, also add the agent block
+   (`shared/agent-guide.md`): ask the question there once, and add it on a yes.
 4. Start your next message to the worker with `기록 완료:` and the files, or what
    failed.
 

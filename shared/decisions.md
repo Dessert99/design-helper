@@ -22,6 +22,7 @@ design-decisions/
 ├─ spacing.md
 ├─ shape.md
 ├─ <area>.md          more areas as the checklist adds them (layout, motion, components)
+├─ ux-<task>.md       one file per task design-ux decided (`ux-주문취소.md`)
 └─ assets/            the sheet screenshots each decision was made from
 ```
 
@@ -29,6 +30,12 @@ One file per area, so changing one area means reading one file. The whole pictur
 the checklist in `README.md`.
 
 ## `README.md`
+
+The first skill that writes the record creates `README.md`. Its minimal form is the
+title, `기반`, `접근성 기준`, `구현 방침` (each `미정` until decided) and a contents list
+of the files below it. UX files are listed under `## 과제`, one line each:
+`` - `ux-<task>.md`: <task> (<steps settled>) ``. design-system adds the sections shown here (목적과 분위기, 출발점
+값, 체크리스트, 결정 기록) when it is used; other skills never need them.
 
 ````markdown
 # 디자인 결정
@@ -145,8 +152,9 @@ verify: [본문 글자 대비 4.5:1 이상, 상태 색 대비 3:1 이상]
    specimens drawn on a sheet. A value the user states directly (`버튼은 8px로 둥글게`) is
    drawn, with the current value or its neighbours beside it, and stays `초안` until
    picked. The same holds for choosing a base, revising, and reverting.
-   Three rows can't be drawn and are settled in conversation, source `대화로 결정`:
-   `목적과 주 사용자`, `분위기`, and `동작 접근성 방침`. Nothing else is.
+   A few rows can't be drawn and are settled in conversation, source `대화로 결정`:
+   design-system's `목적과 주 사용자`, `분위기` and `동작 접근성 방침`, and design-ux's
+   `목표와 사용자` and `과제 단계`. Nothing else is.
 2. **One way to settle.** Code already using a value, silence, or an earlier mention is
    never a decision.
 3. **Revise by archiving.** The old entry becomes `보관` with a link to the new one, and
@@ -186,3 +194,52 @@ the text in a fenced block.
 Give exact text for every line, so the main agent writes without deciding anything.
 Screenshots are taken from the section that was picked from, before the workspace is
 removed.
+
+## A UX file (`ux-<task>.md`)
+
+design-ux writes one per task. Same frontmatter and statuses as an area file.
+
+````markdown
+---
+status: 초안
+decided: 2026-11-25
+reopen_when: [취소 정책 변경, 주문 목록 화면 개편]
+verify: [완료 조건 시나리오가 끝까지 통과, 키보드만으로 완료]
+---
+
+# 주문 취소 처리
+
+## 목표와 사용자
+- 사용자: 하루 수십 건의 주문을 처리하는 운영자
+- 목표: 취소 요청 주문을 찾아 취소를 확정한다
+- 의도 I1. 목록을 떠나지 않고 처리할 수 있어야 한다.
+
+## 과제 단계
+1. 취소 요청 주문 찾기 → 2. 내용 확인 → 3. 취소 확정 → 4. 처리됐음을 안다
+
+## 결정
+| 단계 | 결정 | 상태 | 출처 |
+|---|---|---|---|
+| 흐름 | 목록 옆 패널에서 처리, 화면 전환 없음 | 확정 | 시안 B (D1) |
+| 상호작용 | 취소는 확인 창 없이 바로, 대신 되돌리기 알림 5초 | 초안 | |
+| 상태 | 취소 요청이 없을 때: "처리할 취소 요청이 없습니다" | 보류 | |
+
+## 완료 조건
+- 목록에서 시작해 클릭 3번 이내로 취소를 확정하고, 목록 위치가 그대로다.
+- Tab과 Enter만으로 같은 과제를 끝낼 수 있다.
+
+## 결정 기록
+### D1. 흐름은 B, 목록 옆 패널
+- 결정: 사용자, 2026-11-25, 요청 3의 시안 B
+- 이유: A와 클릭 수가 같지만 취소 버튼이 숨어 있지 않다. C는 목록 위치를 잃는다.
+- 측정: 클릭 2 · 입력 0 · 전환 0 · 목록 위치 유지 · 키보드로 완료
+- 단계 띠: `assets/ux-주문취소-d1.png` (정상 상태, 라이트, 폭 1440, 시안 A부터 C)
+
+## 이 문서가 정하지 않는 것
+- 버튼과 패널의 색, 글자, 간격 (영역 파일)
+````
+
+- **결정** rows follow the seven steps of design-ux; a step not taken is absent or `보류`.
+- **완료 조건** are observable and checkable with the same scenario the step strip used.
+  They start `초안` and become `확정` when the user confirms them.
+- **목표와 사용자** and **과제 단계** carry their own `출처: 대화로 결정, <date>` line.

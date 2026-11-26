@@ -28,6 +28,9 @@ itself. So the board is its own page, shown in iframes.
   page's full height (read it with `check.cjs`, or set it from the page on load). Set the
   section's grid minimum from that width (`shared/sheet.md`, Filling the width). One
   specimen per row is fine.
+  A design-ux prototype is the exception: it is a window onto a page that scrolls inside
+  it, at a real viewport size (for example 1080 by 700). Mark that iframe `data-window`, so
+  `check.cjs` doesn't count its inner scroll as clipping.
 - **Values the code writes directly.** A role the project writes as a literal (`14px`,
   `#d0d4d9`) instead of through a token can't move with its token. Give the board an
   override variable for it, and say once in the section description which literals the
