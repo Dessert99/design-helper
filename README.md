@@ -251,19 +251,161 @@ Specimens in the browser are lettered A · B · C. You answer in chat.
 ### Skills you call by name
 
 Five more skills run only when you call them by name, never on their own. Each works alone;
-none needs another first. They write no code and leave only the decision record, except
-`design-sync`, which moves the record into the code.
+none needs another first.
 
-| Command | What it does |
-|---|---|
-| `/design-helper:design-system` (Codex: `$design-system`) | Walks a checklist (purpose, type, spacing, color, shape, then optional layout, motion, components). Each item is drawn on a board of your real screens and you pick by eye. Values can come from your code, from public systems (Tailwind defaults, Radix Colors, Open Props, Material 3, shadcn/ui) or from scratch; all are candidates until picked. Contrast and target sizes are measured and shown on the specimens. Picks go to `design-decisions/` in the project, or under a Notion page you give it. It writes no code |
-| `/design-helper:design-ux` (Codex: `$design-ux`) | Decides how one feature works, in a UX designer's order: goal and task, then flow, screen layout, interactions, states and wording. Each candidate is a working prototype on your real design; under it, a strip of screenshots taken while actually performing the task, with clicks, screen changes, whether the list keeps its place and whether the keyboard alone can finish. Picks go to `design-decisions/ux-<task>.md`. One feature at a time, not a whole app's structure. It writes no code |
-| `/design-helper:design-brand` (Codex: `$design-brand`) | Picks an icon set and a logo direction where they are really used: the header, a 360px mobile header, the 16px browser tab (also enlarged pixel by pixel), an app icon, buttons, table actions and empty states. Icon sets (Lucide, Phosphor, Tabler, Heroicons, Material Symbols) are compared on the concepts your product uses, with missing ones counted. Logos are drawn as SVG, one decision at a time (form, typeface, symbol direction, details, the small version), with blur and the thinnest strokes measured at 16px. It never draws after an existing brand, and marks every logo candidate as not trademark-searched. Picks go to `design-decisions/icons.md` and `logo.md`, the chosen files to `design-decisions/assets/brand/`. It writes no code |
-| `/design-helper:design-motion` (Codex: `$design-motion`) | Decides how one moment moves (a page entering, a list appearing, a panel opening, a scroll section) in a motion designer's order: purpose, choreography, easing or spring, timing, trigger and interruption, reduced motion. Candidates play with your real library (GSAP or Motion) on your real design, all on one clock at 1x, 0.5x or 0.25x with a scrubber; a scroll-linked moment (ScrollTrigger) plays the same scroll path in every candidate (down, up, down again) and measures whether elements move where they can be seen and whether they rewind when you scroll back up, each with a frame strip and a progress graph measured from the library itself: length, settling time, overshoot, whether layout moves, travel when reduced. Picks go to `design-decisions/motion-<moment>.md` as a spec table. A single CSS transition value stays with design-helper. It writes no code |
-| `/design-helper:design-sync` (Codex: `$design-sync`) | Brings the code in line with the record: shows each changed token before and after on your real screens with its blast radius, applies the scope you pick, then adds a short block to `AGENTS.md` and `CLAUDE.md` so later agent sessions use the settled values (it asks before adding it the first time) |
+All five work the way design-helper does: one decision is drawn as a few candidates on your
+real screens, and you pick a letter in chat. What differs is what they leave. Except for
+`design-sync`, they don't change your code; your picks go to `design-decisions/` in the
+project (or under a Notion page you give). That record is what later decisions and later
+coding follow.
 
-Deciding or changing a value always goes through a sheet: a value you only state in words
-is drawn before it counts as settled.
+The first time any skill writes the record, it asks once whether to add a short block to
+`AGENTS.md` and `CLAUDE.md`. With it, ordinary coding sessions afterwards read the record
+and use the settled values too.
+
+A value you state in words isn't settled right away. "Make buttons 8px round" is drawn as a
+candidate first, and settled once you pick it.
+
+#### design-system: a design system from scratch
+
+Command: `/design-helper:design-system` (Codex: `$design-system`)
+
+For when you don't know where to start. It walks a checklist one item at a time: purpose,
+type, spacing, color, shape and implementation policy, then asks whether to go on to
+layout, motion and components.
+
+```
+you   I want to set up a design system from scratch
+
+      → reads the screens and code, states the purpose and mood in a line to confirm
+      → first sheet: the current design and two or three different starting points,
+        drawn on a board of your real screens
+you   Go with B
+      → records the starting point, moves to the next item (splitting type roles)
+you   (look and pick, item by item)
+```
+
+- Candidate values come from your code, from public systems (Tailwind defaults, Radix
+  Colors, Open Props, Material 3, shadcn/ui) or from scratch. All are candidates until
+  picked.
+- Text contrast and target sizes are measured and shown on the specimens. Candidates that
+  fall short are shown, not hidden.
+- Leaves: one file per area in `design-decisions/` (type, color, spacing, shape and so on)
+  and the checklist's progress
+
+#### design-sync: bring the code in line with the record
+
+Command: `/design-helper:design-sync` (Codex: `$design-sync`)
+
+For moving settled values into the code. The only one of the five that changes code.
+
+```
+you   Make the code match the design record
+
+      → compares the record's settled values with the code's tokens (added, changed, same)
+      → counts the blast radius of each changed token and draws your real screens
+        as they are and as they will be
+you   Just the color area first
+      → applies only that scope, checks it, and reports values written directly
+        where a token exists
+```
+
+- Drafts and values left open are not moved.
+- Each apply updates the block in `AGENTS.md` and `CLAUDE.md`, and asks first when there is
+  none yet.
+- Leaves: the changed code and the agent block
+
+#### design-ux: how one feature works
+
+Command: `/design-helper:design-ux` (Codex: `$design-ux`)
+
+For deciding a flow or a behavior. A still screen or a description can't tell how many
+clicks a task takes or where people get lost. It follows a UX designer's order: goal and
+user and the task's steps are settled in conversation; flow, screen layout, interactions,
+states and wording are picked from prototypes.
+
+```
+you   I want to rethink how order cancellations are handled
+
+      → states the goal and the task's steps in a line each to confirm
+      → draws flow candidates (today's, a panel beside the list, detail and back)
+        as working prototypes
+      → under each, a strip of screenshots taken while actually performing the task,
+        with clicks, screen changes, whether the list keeps its place and whether
+        the keyboard alone can finish
+you   Go with B
+      → records the flow, proposes completion conditions (three clicks or fewer),
+        next is the screen layout
+```
+
+- You can click through every prototype. Measured facts and judgments (where people would
+  get stuck, which principle breaks) are written apart.
+- One feature at a time, not a whole app's navigation.
+- Leaves: `design-decisions/ux-<task>.md` (flow, patterns, states, wording, completion
+  conditions)
+
+#### design-brand: icon sets and logos
+
+Command: `/design-helper:design-brand` (Codex: `$design-brand`)
+
+For choosing an icon set or making a logo. A logo or an icon looks fine on its own, then
+smears in a 16px browser tab or collides with the menu button in a 360px mobile header. So
+every candidate is drawn on the spots it will really be used.
+
+```
+you   I want a proper logo. Start with the form
+
+      → confirms the name, what the product does, three personality words and
+        brands it must not resemble
+      → draws a wordmark, a lettermark, a symbol and a combination in the header,
+        the mobile header, the 16px tab (also enlarged 8 times), an app icon and a
+        dark strip; measures blur and the thinnest parts at 16px
+you   The combination
+      → next: typeface, symbol direction, details, the small version
+```
+
+- Icon sets (Lucide, Phosphor, Tabler, Heroicons, Material Symbols) are compared on the
+  concepts your product uses, with missing icons counted. Weight, size per spot and icons
+  whose meaning splits (settings: gear or sliders) are settled one at a time.
+- Logos are drawn as SVG only. It never draws after an existing brand, and every logo
+  candidate is marked as not trademark-searched; that search is yours to do.
+- It doesn't choose colors. The record's primary color is used when it has one.
+- Leaves: `design-decisions/icons.md` (the set and the icon name per concept), `logo.md`,
+  and the logo files in `assets/brand/` (SVG, favicon, app icon PNG)
+
+#### design-motion: moments where things move
+
+Command: `/design-helper:design-motion` (Codex: `$design-motion`)
+
+For a page entering, a list appearing, a panel opening or a scroll section: moments where
+several elements move, or that GSAP or Motion drives. One CSS property's duration or easing
+stays with design-helper. It follows a motion designer's order: purpose, choreography
+(what moves when), character (easing or spring), timing, trigger and interruption, reduced
+motion.
+
+```
+you   The dashboard cards feel sluggish coming in. Start with the order
+
+      → confirms the purpose (a screen seen often?) and today's motion
+      → plays order candidates (all together, one after another, title first)
+        with your real library
+      → one play bar runs every candidate on the same clock at 1x, 0.5x or 0.25x,
+        and a scrubber steps frame by frame
+      → under each, a frame strip and a progress graph, the length, overshoot and
+        whether layout moves
+you   Go with C
+      → records it, next is the easing
+```
+
+- Measurements come from seeking the real animation to each moment, not from a CSS
+  imitation.
+- A scroll-linked moment plays the same scroll path in every candidate (down, up, down
+  again) and measures whether elements move where they can be seen and whether they rewind
+  when you scroll back up.
+- The reduced-motion version (what people with reduced motion turned on see) can't be
+  skipped.
+- Leaves: `design-decisions/motion-<moment>.md` (a spec table with target, property,
+  timing, easing, trigger, interruption and the reduced version, plus a reference snippet)
 
 ## Compared with similar skills
 
