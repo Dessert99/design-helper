@@ -42,6 +42,13 @@ per workspace, right after creating it, and never retype them:
 - `walk.cjs`: walks a task through a prototype page, one screenshot per step, with clicks,
   inputs, screen changes, list position and a keyboard-only run (design-ux)
 
+The skill that needs them copies these as well, from the same folder:
+
+- `icons.cjs`, `pixel.cjs` (design-brand): public icon sets gathered per concept; a logo
+  or icon rendered at its real sizes, enlarged, measured and exported
+- `motion.js`, `motion.cjs` (design-motion): the play bar that runs a section's specimens
+  on one clock; the measurement that seeks the real animation for frames and a graph
+
 ## Serve it
 
 `$WS/serve.py` is a static file server for `$WS` that sends `Cache-Control: no-store`
@@ -164,6 +171,11 @@ One command, when the user says it's done. It stops everything this skill starte
 deletes everything it made:
 
     for f in "$WS"/*.pid; do kill "$(cat "$f")" 2>/dev/null; done; rm -rf "$WS"
+
+When that last message also ends with a `기록 지시:` that names screenshots in `$WS`, the
+main agent copies them after the turn, so keep the folder: stop the processes only, and
+end with a `정리 지시:` line `- 작업 폴더: <$WS>`. The main agent removes it after writing
+the record.
 
 Say in the final message that the comparison tab can be closed: it no longer loads.
 

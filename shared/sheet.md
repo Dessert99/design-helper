@@ -184,8 +184,9 @@ What fills that window is what gets judged, so it is the specimens.
 - **Above the grid: the title and at most two lines of description.** What to decide,
   where to look, a shared `실물과 다름` note. An area's intents in design-system are a
   short list after those two lines and don't count toward them; show them word for word
-  as they will be recorded. design-ux's lines for steps 1 and 2 and its held-constant
-  note are the same kind of short list. Anything longer moves into the captions or
+  as they will be recorded. design-ux's and design-motion's lines for steps 1 and 2,
+  design-brand's step 1 lines, and every held-constant note are the same kind of short
+  list: `<ul class="dh-list">`, styled by the kit. Anything longer moves into the captions or
   under the ladder.
 - **Every rung is in that first window**, on at least its first context. Drop
   near-duplicate rungs before letting one fall below it. Further contexts the axis

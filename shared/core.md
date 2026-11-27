@@ -146,7 +146,8 @@ taller or wider than its iframe fails as clipped.
 
 The script fails for missing sections or targets, invalid properties, expected-count
 mismatches, resource/script errors, horizontal overflow and clipped frames. A clean
-report does not prove visual fidelity. Static screenshots do not verify motion.
+report does not prove visual fidelity. Static screenshots do not verify motion; design-motion
+measures it by seeking the real animation (`shared/assets/motion.cjs`).
 
 Presentation order is owned by `shared/liveview.md#show-then-verify`. Keep the
 recommendation complete before showing, then correct it if inspection contradicts it.

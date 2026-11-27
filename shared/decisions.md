@@ -23,7 +23,11 @@ design-decisions/
 ├─ shape.md
 ├─ <area>.md          more areas as the checklist adds them (layout, motion, components)
 ├─ ux-<task>.md       one file per task design-ux decided (`ux-주문취소.md`)
+├─ icons.md           the icon set and its concept table (design-brand)
+├─ logo.md            the logo and its versions (design-brand)
+├─ motion-<moment>.md one file per moment design-motion decided (`motion-대시보드진입.md`)
 └─ assets/            the sheet screenshots each decision was made from
+   └─ brand/          the chosen logo files (design-brand)
 ```
 
 One file per area, so changing one area means reading one file. The whole picture is
@@ -34,7 +38,8 @@ the checklist in `README.md`.
 The first skill that writes the record creates `README.md`. Its minimal form is the
 title, `기반`, `접근성 기준`, `구현 방침` (each `미정` until decided) and a contents list
 of the files below it. UX files are listed under `## 과제`, one line each:
-`` - `ux-<task>.md`: <task> (<steps settled>) ``. design-system adds the sections shown here (목적과 분위기, 출발점
+`` - `ux-<task>.md`: <task> (<steps settled>) ``; motion files the same way under
+`## 움직임`, and `icons.md` and `logo.md` with the area files. design-system adds the sections shown here (목적과 분위기, 출발점
 값, 체크리스트, 결정 기록) when it is used; other skills never need them.
 
 ````markdown
@@ -153,8 +158,9 @@ verify: [본문 글자 대비 4.5:1 이상, 상태 색 대비 3:1 이상]
    drawn, with the current value or its neighbours beside it, and stays `초안` until
    picked. The same holds for choosing a base, revising, and reverting.
    A few rows can't be drawn and are settled in conversation, source `대화로 결정`:
-   design-system's `목적과 주 사용자`, `분위기` and `동작 접근성 방침`, and design-ux's
-   `목표와 사용자` and `과제 단계`. Nothing else is.
+   design-system's `목적과 주 사용자`, `분위기` and `동작 접근성 방침`, design-ux's
+   `목표와 사용자` and `과제 단계`, design-brand's `바탕`, and design-motion's `순간과 목적`,
+   `지금 움직임` and the library in `구현 방침`. Nothing else is.
 2. **One way to settle.** Code already using a value, silence, or an earlier mention is
    never a decision.
 3. **Revise by archiving.** The old entry becomes `보관` with a link to the new one, and
@@ -191,7 +197,8 @@ One pick may touch several files, and one reply may hold several picks. Repeat t
 exist yet gets its full text instead of lines (`- 내용: 아래 전문 그대로`), followed by
 the text in a fenced block.
 
-Give exact text for every line, so the main agent writes without deciding anything.
+Give exact text for every line, so the main agent writes without deciding anything. Code
+inside the block is written as it is in the source: never HTML-escape it (`=>`, not `=&gt;`).
 Screenshots are taken from the section that was picked from, before the workspace is
 removed.
 
@@ -243,3 +250,113 @@ verify: [완료 조건 시나리오가 끝까지 통과, 키보드만으로 완�
 - **완료 조건** are observable and checkable with the same scenario the step strip used.
   They start `초안` and become `확정` when the user confirms them.
 - **목표와 사용자** and **과제 단계** carry their own `출처: 대화로 결정, <date>` line.
+
+## Brand files (`icons.md`, `logo.md`)
+
+design-brand writes them. Same frontmatter, statuses and 결정 기록 as an area file; the
+step rows replace 역할과 값.
+
+````markdown
+---
+status: 초안
+decided: 2026-11-26
+reopen_when: [제품 이름 변경, 주 색 변경]
+verify: [16px에서 가장 가는 부분 1px 이상, 상표 검색 (사용자, 아직 안 함)]
+---
+
+# 로고
+
+## 바탕
+- 이름: 바른장부 · 하는 일: 작은 가게의 장부 앱 · 성격: 정확함, 믿음직함, 담백함
+- 쓰이는 자리: 웹 헤더, 브라우저 탭, 앱 아이콘 · 닮으면 안 되는 브랜드: (사용자가 말한 것)
+- 출처: 대화로 결정, 2026-11-26
+
+## 결정
+| 단계 | 결정 | 상태 | 출처 |
+|---|---|---|---|
+| 형식 | 조합형: 헤더는 심볼과 이름, 작은 자리는 심볼만 | 확정 | 시안 D (D1) |
+| 서체 | Pretendard ExtraBold (OFL) | 초안 | |
+
+## 파일
+| 판 | 파일 | 최소 크기 |
+|---|---|---|
+| 전체 | `assets/brand/logo.svg` | 높이 20px |
+| 심볼 | `assets/brand/logo-mark.svg` | 24px |
+| 작은 판 | `assets/brand/logo-small.svg`, `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png` | 16px |
+
+## 결정 기록
+### D1. 형식은 D, 조합형
+- 결정: 사용자, 2026-11-26, 요청 2의 시안 D
+- 측정: 16px 흐린 픽셀 8% · 가장 가는 부분 1.6px · 360 헤더 폭 60px
+- 판단: 없음
+- 스크린샷: `assets/logo-d1.png` (라이트, 폭 1440, 시안 A부터 D)
+````
+
+- `icons.md` has the same parts with `## 세트` and `## 개념 표` instead of `## 파일`:
+
+  ```markdown
+  ## 세트
+  - Lucide 1.81.0 (React: `lucide-react`), 라이선스 ISC
+  - 굵기: 세트 기본값 (I3 전까지)
+
+  ## 개념 표
+  | 개념 | 아이콘 이름 | 쓰는 곳 |
+  |---|---|---|
+  | 설정 | `Settings` (`settings`) | 옆 메뉴 "설정" |
+  ```
+
+  The name is the component the code imports, then the set's file name. Agents pick icons
+  from that table and never draw or import others.
+- `verify` keeps the trademark search line until the user says it was done.
+
+## A motion file (`motion-<moment>.md`)
+
+design-motion writes one per moment. Same frontmatter and statuses.
+
+````markdown
+---
+status: 초안
+decided: 2026-11-26
+reopen_when: [대시보드 카드 구성 변경, 모션 토큰 변경]
+verify: [전체 700ms 이내, transform과 opacity만]
+---
+
+# 대시보드 진입
+
+## 순간과 목적
+- 순간: 대시보드를 열 때 제목과 카드가 나타남 · 라이브러리: GSAP 3.15
+- 목적: 내용이 준비됐음을 알림 · 자주 봄, 생산적
+- 출처: 대화로 결정, 2026-11-26
+
+## 결정
+| 단계 | 결정 | 상태 | 출처 |
+|---|---|---|---|
+| 안무 | 제목 먼저, 카드는 0.15초 겹쳐 한꺼번에 | 확정 | 시안 C (D1) |
+| 성격 | power2.out | 초안 | |
+| 움직임 줄이기 | 투명도만 150ms | 보류 | |
+
+## 사양
+| 대상 | 속성 | 시간 | 곡선 | 시작 | 트리거 | 끊길 때 | 줄인 판 |
+|---|---|---|---|---|---|---|---|
+| 제목 | y 24→0, opacity 0→1 | 400ms | power2.out | 0 | 처음 그릴 때 한 번 | 해당 없음 | opacity만 |
+| 카드 | y 24→0, opacity 0→1 | 400ms | power2.out | 150ms, 한꺼번에 | 위와 같음 | 해당 없음 | opacity만 |
+
+## 완료 조건
+- 전체 700ms 이내, transform과 opacity만 움직인다.
+- (움직임 줄이기를 고르면 그 판의 이동 거리가 여기에 더해진다.)
+
+## 결정 기록
+### D1. 안무는 C
+- 결정: 사용자, 2026-11-26, 요청 3의 시안 C
+- 측정: 전체 550ms · 90% 도달 370ms · 넘침 0px · 동시에 최대 5개
+- 판단: 없음
+- 프레임 띠: `assets/motion-대시보드진입-d1.png` (라이트, 폭 1440, 시안 A부터 D)
+
+## 기준 코드
+(step 7 picked: 10 to 20 lines in the project's library, reference only)
+````
+
+- **사양** is the handoff: one row per element or group, filled as steps are picked;
+  cells not decided yet read `미정`.
+- **완료 조건** are stated so they can be checked after building (length, what moves,
+  travel when reduced) and become `확정` when the user confirms them.

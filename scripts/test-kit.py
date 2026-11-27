@@ -69,11 +69,12 @@ class KitTests(unittest.TestCase):
         self.request(extra='User-Agent: Mozilla/5.0 (Macintosh) Chrome/131.0 Safari/537.36\r\n')
         self.assertTrue(server.opened)
 
-    def test_browser_launcher_is_identical_in_both_scripts(self):
+    def test_browser_launcher_is_identical_in_every_script(self):
         def region(name):
             text = (ASSETS / name).read_text()
             return text[text.index('// >>> launch'):text.index('// <<< launch')]
-        self.assertEqual(region('check.cjs'), region('walk.cjs'))
+        for name in ['walk.cjs', 'pixel.cjs', 'motion.cjs']:
+            self.assertEqual(region('check.cjs'), region(name), name)
 
     def test_equal_length_equal_mtime_edit(self):
         _, before, _ = self.request()
@@ -109,6 +110,33 @@ class KitTests(unittest.TestCase):
     def test_missing_sheet_is_retryable(self):
         self.html.unlink()
         self.assertEqual(self.request()[0], 503)
+
+    def test_new_kit_scripts_reject_invalid_cli(self):
+        cases = {
+            'icons.cjs': [[], ['unknown'], ['find', 'nope', 'gear'], ['find', 'lucide'], ['collect']],
+            'pixel.cjs': [[], ['a.svg'], ['a.svg', 'out', '--unknown'], ['a.svg', 'out', '--sizes', '0'],
+                          ['outline', 'a.svg'], ['a.svg', 'out', '--png', 'name']],
+            'motion.cjs': [[], ['url'], ['url', 'out', '--step', '0'], ['url', 'out', '--frames', 'x'],
+                           ['url', 'out', '--unknown'], ['url', 'out', '--span']],
+        }
+        for name, runs in cases.items():
+            for args in runs:
+                result = subprocess.run(['node', str(ASSETS / name), *args], capture_output=True, cwd=self.ws)
+                self.assertEqual(result.returncode, 2, f'{name} {args}: {result.stdout} {result.stderr}')
+
+    def test_icon_map_is_validated_before_any_download(self):
+        bad = self.ws / 'map.json'
+        bad.write_text('{"sets": {"lucide": {}}, "concepts": [{"id": "설정"}]}')
+        result = subprocess.run(['node', str(ASSETS / 'icons.cjs'), 'collect', str(bad), str(self.ws / 'icons')],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('id', result.stderr)
+        self.assertFalse((self.ws / 'icons').exists())
+
+    def test_motion_connector_drives_by_seeking(self):
+        source = (ASSETS / 'motion.js').read_text()
+        for needed in ['api.gsap', 'api.motion', 'api.custom', 'api.reduced', '.dh-play[data-for]', 'm.seek(']:
+            self.assertIn(needed, source)
 
     def test_checker_rejects_invalid_cli(self):
         for args in [[], ['url', '--no-shot', '--width', 'NaN'],

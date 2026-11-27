@@ -17,13 +17,17 @@ This project's design decisions live in `design-decisions/` (README.md lists the
 - Before building or changing UI, read the matching file (typography, color, spacing, shape).
   Before building or changing a feature, read its `ux-*.md` and follow its flow, patterns,
   states and wording; its 완료 조건 says when the feature works.
+- Icons come only from `icons.md`'s set and concept table; the logo and favicon only from
+  `assets/brand/`. Animating a moment with a `motion-*.md` follows its 사양 table,
+  including the reduced-motion row.
 - Use only values marked `확정`, through their tokens. Never invent a value. If what you
   need is undecided, use the nearest existing token and tell the user it is undecided.
   A `확정` value the code has no token for yet is not hardcoded: tell the user and point to
   /design-helper:design-sync (Codex: $design-sync).
 - Do not change a decision, in code or in these files. Changes go through
-  /design-helper:design-system or /design-helper:design-ux (Codex: $design-system,
-  $design-ux), where they are drawn before they are chosen.
+  /design-helper:design-system, /design-helper:design-ux, /design-helper:design-brand or
+  /design-helper:design-motion (Codex: $design-system, $design-ux, $design-brand,
+  $design-motion), where they are drawn before they are chosen.
 - Before delivering UI, re-read the changed files and replace hardcoded colors, px
   sizes and font values with the decided tokens.
 <!-- DESIGN-DECISIONS:END -->

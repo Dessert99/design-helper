@@ -5,6 +5,8 @@
 // (WCAG ratio), its border and outline contrast against the background around it (for
 // non-text 3:1), and its rendered size. It reports; it never fails the run.
 // --frames looks for --sel inside the same-origin iframes of the section (a board page).
+// The prop name `box` returns the element's box "x y width height" in its own page, so
+// gaps between elements can be computed.
 // Prints NO_PLAYWRIGHT when no browser can be launched. That is not a pass.
 const fs = require('fs');
 const os = require('os');
@@ -49,7 +51,7 @@ const expectedDistinct = number('--expect-distinct');
 if (!url || (!noShot && !shot) || (noShot && shot) || positional.length > 2) usage('URL과 출력 방식을 확인하세요.');
 if (!!sel !== !!props.length || ((expectedCount || expectedDistinct || a11y) && !sel)) usage('선택자와 CSS 속성을 함께 지정하세요.');
 
-// >>> launch: kept identical in check.cjs and walk.cjs (scripts/test-kit.py checks it)
+// >>> launch: kept identical in every kit script that opens a browser (scripts/test-kit.py checks it)
 const ver = d => { try { return require(path.join(d, 'package.json')).version.split('.').map(Number); } catch { return [0]; } };
 const newer = (a, b) => { for (let i = 0; i < 3; i++) if ((b[i] || 0) !== (a[i] || 0)) return (b[i] || 0) - (a[i] || 0); return 0; };
 const dirs = p => { try { return fs.readdirSync(p).map(f => path.join(p, f)); } catch { return []; } };
@@ -127,6 +129,9 @@ async function launch() {
     p.on('requestfailed', r => failures.push('리소스 요청 실패: ' + r.url()));
     p.on('response', r => { if (r.status() >= 400) failures.push('리소스 응답 오류: ' + r.status() + ' ' + r.url()); });
     const response = await p.goto(url, { waitUntil: 'load', timeout: 15000 });
+    // A motion sheet: wait until its play bars have connected their specimens.
+    await p.waitForFunction(() => ![...document.querySelectorAll('.dh-play')].some(b => !b.querySelector('input')),
+      null, { timeout: 15000 }).catch(() => failures.push('재생 막대가 준비되지 않았습니다.'));
     if (response && !response.ok()) throw new Error('시트를 불러오지 못했습니다: ' + response.status());
     await p.evaluate(() => document.fonts && document.fonts.ready);
 
@@ -156,6 +161,13 @@ async function launch() {
             // A board page taller or wider than its iframe is cut off without any overflow
             // on the sheet itself. A prototype shown as a window (data-window) scrolls inside
             // on purpose and is left out.
+            // Each board's own page size, so its iframe can be given the board's real height.
+            boards: [...s.querySelectorAll('iframe')].map(f => {
+              try {
+                const d = f.contentDocument.documentElement;
+                return { src: f.getAttribute('src'), width: d.scrollWidth, height: d.scrollHeight };
+              } catch { return { src: f.getAttribute('src'), width: null, height: null }; }
+            }),
             clippedBoards: [...s.querySelectorAll('iframe:not([data-window])')].filter(f => {
               try {
                 const d = f.contentDocument.documentElement;
@@ -180,15 +192,24 @@ async function launch() {
         if (s.clippedBoards) issues.push('보드가 iframe보다 커서 잘립니다: ' + s.id);
       }
       if (sel && root) {
+        const from = [];
         const els = inFrames
           ? [...root.querySelectorAll('iframe')].flatMap(f => {
-              try { return [...f.contentDocument.querySelectorAll(sel)]; } catch { return []; }
+              try {
+                const found = [...f.contentDocument.querySelectorAll(sel)];
+                found.forEach(() => from.push(f.getAttribute('src')));
+                return found;
+              } catch { return []; }
             })
           : [...root.querySelectorAll(sel)];
         r.matched = els.length;
+        if (inFrames) r.from = from;   // the iframe each row of values came from
         r.values = els.map(e => {
           const c = gcs(e);
-          return props.map(k => k.startsWith('--') || k.includes('-') ? c.getPropertyValue(k) : c[k]);
+          return props.map(k => {
+            if (k === 'box') { const b = e.getBoundingClientRect(); return [b.x, b.y, b.width, b.height].map(v => Math.round(v * 10) / 10).join(' '); }
+            return k.startsWith('--') || k.includes('-') ? c.getPropertyValue(k) : c[k];
+          });
         });
         r.distinct = new Set(r.values.map(v => JSON.stringify(v))).size;
         if (!els.length) issues.push('선택자와 일치하는 요소가 없습니다: ' + sel);
@@ -228,7 +249,11 @@ async function launch() {
             const line = (width, style, color) =>
               parseFloat(width) > 0 && style !== 'none' ? ratio(over(rgba(color), around.bg), around.bg) : null;
             const box = e.getBoundingClientRect();
+            // An icon is a graphic: its stroke (or fill) against the background, 3:1.
+            const svg = e.closest && e.closest('svg');
+            const paint = svg && [cs.stroke, cs.fill].find(v => v && v !== 'none' && !/^url/.test(v));
             return { contrast: ratio(over(rgba(cs.color), inside.bg), inside.bg),
+              graphic: paint ? ratio(over(rgba(paint), inside.bg), inside.bg) : null,
               border: line(cs.borderTopWidth, cs.borderTopStyle, cs.borderTopColor),
               outline: line(cs.outlineWidth, cs.outlineStyle, cs.outlineColor),
               size: [Math.round(box.width), Math.round(box.height)],

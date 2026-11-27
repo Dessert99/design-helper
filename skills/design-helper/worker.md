@@ -123,11 +123,13 @@ When the project has a decision record (`shared/core.md`, principle 7):
   The old entry is archived, not edited.
 - An axis the record doesn't cover hands off `반영 지시:` only, as before.
 
-A request for a whole design system, for how a feature should flow, or for bringing the
-code in line with the record, isn't this skill's. Say in one line which command does it
-(`/design-helper:design-system`, `/design-helper:design-ux` or `/design-helper:design-sync`;
-in Codex `$design-system`, `$design-ux` or `$design-sync`), and offer the single-axis
-comparison you can draw now.
+A request for a whole design system, for how a feature should flow, for an icon set or a
+logo, for motion that a library (GSAP, Motion) drives or that moves several elements in
+order, or for bringing the code in line with the record, isn't this skill's. Say in one
+line which command does it (`/design-helper:design-system`, `/design-helper:design-ux`,
+`/design-helper:design-brand`, `/design-helper:design-motion` or
+`/design-helper:design-sync`; in Codex `$design-system`, `$design-ux`, `$design-brand`,
+`$design-motion` or `$design-sync`), and offer the single-axis comparison you can draw now.
 
 ## Blast radius
 

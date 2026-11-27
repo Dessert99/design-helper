@@ -39,7 +39,7 @@ const scenario = JSON.parse(fs.readFileSync(opt['--scenario'], 'utf8'));
 const width = Number(opt['--width'] || 1440), height = Number(opt['--height'] || 900);
 fs.mkdirSync(out, { recursive: true });
 
-// >>> launch: kept identical in check.cjs and walk.cjs (scripts/test-kit.py checks it)
+// >>> launch: kept identical in every kit script that opens a browser (scripts/test-kit.py checks it)
 const ver = d => { try { return require(path.join(d, 'package.json')).version.split('.').map(Number); } catch { return [0]; } };
 const newer = (a, b) => { for (let i = 0; i < 3; i++) if ((b[i] || 0) !== (a[i] || 0)) return (b[i] || 0) - (a[i] || 0); return 0; };
 const dirs = p => { try { return fs.readdirSync(p).map(f => path.join(p, f)); } catch { return []; } };

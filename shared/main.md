@@ -52,8 +52,9 @@ for the worker's result (Claude Code notifies you; in Codex, `wait_agent`).
   you can't tell, forward it.
 - The user says it is done (`끝났어`, `됐어`): forward it, show the worker's last
   message, and close the worker if your tools can (`close_agent` in Codex). If that
-  message ends with a `정리 지시:` block, show only what is above it, delete exactly the
-  paths it lists only when creation by this session is established. A filename or
+  message ends with a `정리 지시:` block, show only what is above it, write any `기록 지시:`
+  first, then delete exactly the paths it lists only when creation by this session is
+  established (a `작업 폴더:` line is the worker's own workspace, so it is). A filename or
   untracked status alone is not evidence. Preserve uncertain files. Report cleanup briefly.
 
 ## Applying the choice

@@ -68,7 +68,10 @@ Stagger only reads with enough items. Six minimum.
   state attributes, the sheet imitates them (`references/sweeping.md`).
 - **Motion libraries don't take these values directly.** If the project uses Framer
   Motion, GSAP or similar, spring physics has no CSS equivalent — a cubic-bezier is an
-  approximation, not a translation. Mark the specimens `실물과 다름` on the sheet
+  approximation, not a translation. When the motion being compared runs on GSAP or Motion
+  in the code, say in one line that design-motion plays it with the real library
+  (`/design-helper:design-motion`, Codex `$design-motion`); draw the CSS version only if
+  the user still wants it here. Mark the specimens `실물과 다름` on the sheet
   (`references/sweeping.md`), and **put it in the blast radius report**, not
   discovered afterwards:
 

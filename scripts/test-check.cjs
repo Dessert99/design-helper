@@ -36,6 +36,7 @@ async function run({ values = ['4px', '8px', '12px'], prop = 'borderRadius', sec
       return { ok: () => true };
     },
     evaluate: (fn, args) => fn(args),
+    waitForFunction: async () => {},
   };
   const browser = { newPage: async () => page, close: async () => {} };
   const fakeRequire = name => name === '/virtual/playwright'

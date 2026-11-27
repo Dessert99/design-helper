@@ -156,7 +156,7 @@ keep in sync.
 ```sh
 git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
-for s in design-helper design-system design-ux design-sync; do
+for s in design-helper design-system design-ux design-brand design-motion design-sync; do
   ln -sfn ~/src/design-helper/skills/$s ~/.claude/skills/$s   # Claude Code
   ln -sfn ~/src/design-helper/skills/$s ~/.codex/skills/$s    # Codex
 done
@@ -204,12 +204,14 @@ states, comparing animation, and changing a value you already picked.
 
 ### Building a design system
 
-Three more skills run only when you call them by name, never on their own. Each works alone; none needs another first:
+Five more skills run only when you call them by name, never on their own. Each works alone; none needs another first:
 
 | Command | What it does |
 |---|---|
 | `/design-helper:design-system` (Codex: `$design-system`) | Walks a checklist (purpose, type, spacing, color, shape, then optional layout, motion, components). Each item is drawn on a board of your real screens and you pick by eye. Values can come from your code, from public systems (Tailwind defaults, Radix Colors, Open Props, Material 3, shadcn/ui) or from scratch; all are candidates until picked. Contrast and target sizes are measured and shown on the specimens. Picks go to `design-decisions/` in the project, or under a Notion page you give it. It writes no code |
 | `/design-helper:design-ux` (Codex: `$design-ux`) | Decides how one feature works, in a UX designer's order: goal and task, then flow, screen layout, interactions, states and wording. Each candidate is a working prototype on your real design; under it, a strip of screenshots taken while actually performing the task, with clicks, screen changes, whether the list keeps its place and whether the keyboard alone can finish. Picks go to `design-decisions/ux-<task>.md`. One feature at a time, not a whole app's structure. It writes no code |
+| `/design-helper:design-brand` (Codex: `$design-brand`) | Picks an icon set and a logo direction where they are really used: the header, a 360px mobile header, the 16px browser tab (also enlarged pixel by pixel), an app icon, buttons, table actions and empty states. Icon sets (Lucide, Phosphor, Tabler, Heroicons, Material Symbols) are compared on the concepts your product uses, with missing ones counted. Logos are drawn as SVG, one decision at a time (form, typeface, symbol direction, details, the small version), with blur and the thinnest strokes measured at 16px. It never draws after an existing brand, and marks every logo candidate as not trademark-searched. Picks go to `design-decisions/icons.md` and `logo.md`, the chosen files to `design-decisions/assets/brand/`. It writes no code |
+| `/design-helper:design-motion` (Codex: `$design-motion`) | Decides how one moment moves (a page entering, a list appearing, a panel opening, a scroll section) in a motion designer's order: purpose, choreography, easing or spring, timing, trigger and interruption, reduced motion. Candidates play with your real library (GSAP or Motion) on your real design, all on one clock at 1x, 0.5x or 0.25x with a scrubber, each with a frame strip and a progress graph measured from the library itself: length, settling time, overshoot, whether layout moves, travel when reduced. Picks go to `design-decisions/motion-<moment>.md` as a spec table. A single CSS transition value stays with design-helper. It writes no code |
 | `/design-helper:design-sync` (Codex: `$design-sync`) | Brings the code in line with the record: shows each changed token before and after on your real screens with its blast radius, applies the scope you pick, then adds a short block to `AGENTS.md` and `CLAUDE.md` so later agent sessions use the settled values (it asks before adding it the first time) |
 
 Deciding or changing a value always goes through a sheet: a value you only state in words
@@ -269,6 +271,8 @@ and so on) need to change too.
   - [`references/motion.md`](skills/design-helper/references/motion.md): comparing animation
 - [`skills/design-system/`](skills/design-system/): building the design decision record from a checklist; [`references/checklist.md`](skills/design-system/references/checklist.md) holds the default items, roles, intents and checks, [`references/imports.md`](skills/design-system/references/imports.md) the public systems values may come from
 - [`skills/design-ux/`](skills/design-ux/): deciding how one feature works; [`references/patterns.md`](skills/design-ux/references/patterns.md) lists the patterns candidates come from, [`references/evaluate.md`](skills/design-ux/references/evaluate.md) the walkthrough, the ten heuristics and the state list
+- [`skills/design-brand/`](skills/design-brand/): picking an icon set and a logo direction; [`references/icons.md`](skills/design-brand/references/icons.md) lists the public sets, [`references/logo.md`](skills/design-brand/references/logo.md) the forms, typefaces, symbol directions and the rules against resembling other brands
+- [`skills/design-motion/`](skills/design-motion/): deciding how one moment moves; [`references/choreography.md`](skills/design-motion/references/choreography.md) lists the choreography, easing and timing options, [`references/libraries.md`](skills/design-motion/references/libraries.md) how GSAP and Motion are loaded and connected
 - [`skills/design-sync/`](skills/design-sync/): bringing the code in line with the record
 - [`shared/`](shared/): what every skill in the plugin uses
   - [`decisions.md`](shared/decisions.md): the decision record: structure, statuses, rules, and the `기록 지시:` handoff
@@ -287,6 +291,10 @@ and so on) need to change too.
     - [`serve.py`](shared/assets/serve.py): the local server that cleans itself up after 30 idle minutes once your browser has opened the sheet
     - [`check.cjs`](shared/assets/check.cjs): reads computed styles and takes a screenshot with Playwright in one run
     - [`walk.cjs`](shared/assets/walk.cjs): performs a task in a prototype and records the step strip, clicks, screen changes and a keyboard-only run
+    - [`icons.cjs`](shared/assets/icons.cjs): gathers public icon sets per concept and reports missing icons, stroke and license
+    - [`pixel.cjs`](shared/assets/pixel.cjs): renders a logo at its real sizes, enlarges the small ones, measures blur and the thinnest parts, turns text into outlines and exports PNGs
+    - [`motion.js`](shared/assets/motion.js): the play bar that runs a section's motion specimens on one clock, and the connector a specimen uses for GSAP or Motion
+    - [`motion.cjs`](shared/assets/motion.cjs): seeks a specimen's real animation to fixed times for the frame strip, the progress graph and the measurements
 - [`agents/worker.md`](agents/worker.md): the Claude Code plugin agent every skill spawns. It reads `shared/core.md` and the skill's `worker.md`. Codex plugins can't ship agents, so Codex spawns a plain subagent instead
 - [`docs/architecture.ko.md`](docs/architecture.ko.md): the design of the skill family: why each skill exists, the shared structure, Claude Code and Codex support (Korean)
 - [`docs/flows.ko.md`](docs/flows.ko.md): usage flows by situation (Korean)

@@ -143,7 +143,7 @@ codex plugin add design-helper@design-helper
 ```sh
 git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
-for s in design-helper design-system design-ux design-sync; do
+for s in design-helper design-system design-ux design-brand design-motion design-sync; do
   ln -sfn ~/src/design-helper/skills/$s ~/.claude/skills/$s   # Claude Code
   ln -sfn ~/src/design-helper/skills/$s ~/.codex/skills/$s    # Codex
 done
@@ -190,12 +190,14 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 
 ### 디자인 시스템 만들기
 
-이름을 불러야만 실행되는 스킬이 세 개 더 있습니다. 스스로 실행되지 않고, 각각 따로 쓸 수 있습니다. 어느 것도 다른 스킬을 먼저 쓸 필요가 없습니다.
+이름을 불러야만 실행되는 스킬이 다섯 개 더 있습니다. 스스로 실행되지 않고, 각각 따로 쓸 수 있습니다. 어느 것도 다른 스킬을 먼저 쓸 필요가 없습니다.
 
 | 명령어 | 하는 일 |
 |---|---|
 | `/design-helper:design-system` (Codex: `$design-system`) | 체크리스트를 따라갑니다(목적, 글자, 간격, 색, 모양, 그다음 선택으로 레이아웃, 모션, 컴포넌트). 항목마다 실제 화면으로 만든 보드에 시안을 그리고, 눈으로 보고 고릅니다. 값은 지금 코드, 공개 디자인 시스템(Tailwind 기본값, Radix Colors, Open Props, Material 3, shadcn/ui), 직접 만든 값에서 올 수 있고, 모두 고르기 전까지는 후보입니다. 대비와 누르는 영역 크기는 재서 시안에 표시합니다. 고른 것은 프로젝트의 `design-decisions/`나 알려 준 노션 페이지 아래에 기록합니다. 코드는 고치지 않습니다 |
 | `/design-helper:design-ux` (Codex: `$design-ux`) | 기능 하나가 어떻게 동작할지 UX 디자이너의 순서로 정합니다. 목표와 과제, 그다음 흐름, 화면 구성, 상호작용, 상태, 문구 순입니다. 후보마다 실제 디자인으로 만든 동작하는 시안이 있고, 그 아래에 과제를 실제로 수행하며 찍은 단계 띠와 클릭 수, 화면 전환 수, 목록 위치 유지, 키보드만으로 끝낼 수 있는지가 붙습니다. 고른 것은 `design-decisions/ux-<과제>.md`에 기록합니다. 앱 전체 구조가 아니라 기능 하나 단위이고, 코드는 고치지 않습니다 |
+| `/design-helper:design-brand` (Codex: `$design-brand`) | 아이콘 세트와 로고 방향을 실제로 쓰이는 자리에서 고릅니다. 헤더, 360px 모바일 헤더, 16px 브라우저 탭(픽셀 그대로 키운 그림도), 앱 아이콘, 버튼, 표의 행 동작, 빈 상태에 입혀 비교합니다. 아이콘 세트(Lucide, Phosphor, Tabler, Heroicons, Material Symbols)는 제품이 쓰는 개념으로 비교하고, 없는 아이콘 수를 셉니다. 로고는 SVG로 그리고, 형식, 서체, 심볼 방향, 세부, 작은 판을 하나씩 정합니다. 16px에서 흐려지는 정도와 가장 가는 부분의 두께를 잽니다. 기존 브랜드를 따라 그리지 않고, 모든 로고 시안에 상표 검색을 하지 않았다고 표시합니다. 고른 것은 `design-decisions/icons.md`와 `logo.md`에, 고른 파일은 `design-decisions/assets/brand/`에 기록합니다. 코드는 고치지 않습니다 |
+| `/design-helper:design-motion` (Codex: `$design-motion`) | 한 순간(페이지 진입, 목록 등장, 패널 열기, 스크롤 구간)이 어떻게 움직일지 모션 디자이너의 순서로 정합니다. 목적, 안무, 곡선이나 spring, 시간, 트리거와 끊길 때, 움직임 줄이기 순입니다. 후보는 프로젝트의 실제 라이브러리(GSAP 또는 Motion)와 실제 디자인으로 재생합니다. 모두 한 시계로 1배, 0.5배, 0.25배와 진행 막대로 봅니다. 후보마다 라이브러리에서 직접 잰 프레임 띠와 진행 그래프, 전체 시간, 거의 멈추는 시각, 넘침, 레이아웃이 흔들리는지, 줄인 판의 이동 거리가 붙습니다. 고른 것은 `design-decisions/motion-<순간>.md`에 사양 표로 기록합니다. CSS 전환 값 하나는 지금처럼 design-helper가 맡습니다. 코드는 고치지 않습니다 |
 | `/design-helper:design-sync` (Codex: `$design-sync`) | 기록에 맞춰 코드를 바꿉니다. 바뀌는 토큰마다 실제 화면의 지금과 바꾼 뒤를 영향 범위와 함께 보여 주고, 고른 범위만 반영합니다. 그다음 `AGENTS.md`와 `CLAUDE.md`에 짧은 안내를 넣어, 이후의 AI 세션이 정한 값을 쓰게 합니다(처음 넣을 때는 먼저 묻습니다) |
 
 값을 정하거나 바꿀 때는 늘 시트를 거칩니다. 말로만 정한 값도 시안으로 그려 본 뒤에야 확정됩니다.
@@ -254,6 +256,8 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
   - [`references/motion.md`](skills/design-helper/references/motion.md): 애니메이션 비교
 - [`skills/design-system/`](skills/design-system/): 체크리스트로 디자인 결정 기록을 만드는 스킬. [`references/checklist.md`](skills/design-system/references/checklist.md)에 기본 항목, 역할, 의도, 검사가, [`references/imports.md`](skills/design-system/references/imports.md)에 값을 가져올 수 있는 공개 시스템이 있습니다
 - [`skills/design-ux/`](skills/design-ux/): 기능 하나가 어떻게 동작할지 정하는 스킬. [`references/patterns.md`](skills/design-ux/references/patterns.md)에 후보를 고르는 패턴 목록, [`references/evaluate.md`](skills/design-ux/references/evaluate.md)에 워크스루, 10가지 원칙, 상태 목록이 있습니다
+- [`skills/design-brand/`](skills/design-brand/): 아이콘 세트와 로고 방향을 고르는 스킬. [`references/icons.md`](skills/design-brand/references/icons.md)에 공개 아이콘 세트 목록, [`references/logo.md`](skills/design-brand/references/logo.md)에 형식, 서체, 심볼 방향과 다른 브랜드와 닮지 않게 하는 규칙이 있습니다
+- [`skills/design-motion/`](skills/design-motion/): 한 순간이 어떻게 움직일지 정하는 스킬. [`references/choreography.md`](skills/design-motion/references/choreography.md)에 안무, 곡선, 시간 후보가, [`references/libraries.md`](skills/design-motion/references/libraries.md)에 GSAP와 Motion을 시안에 넣고 연결하는 법이 있습니다
 - [`skills/design-sync/`](skills/design-sync/): 기록에 맞춰 코드를 바꾸는 스킬
 - [`shared/`](shared/): 플러그인의 모든 스킬이 함께 쓰는 것
   - [`decisions.md`](shared/decisions.md): 결정 기록의 구조, 상태, 규칙, `기록 지시:` 넘김
@@ -272,6 +276,10 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
     - [`serve.py`](shared/assets/serve.py): 브라우저로 시트를 연 뒤 30분 동안 요청이 없으면 스스로 정리하는 로컬 서버
     - [`check.cjs`](shared/assets/check.cjs): Playwright로 계산된 스타일을 읽고 스크린샷을 한 번에 찍는 스크립트
     - [`walk.cjs`](shared/assets/walk.cjs): 시안에서 과제를 실제로 수행하며 단계 띠를 찍고 클릭 수, 화면 전환, 키보드만으로 완료를 재는 스크립트
+    - [`icons.cjs`](shared/assets/icons.cjs): 공개 아이콘 세트를 개념별로 모으고 없는 아이콘, 획 두께, 라이선스를 알려 주는 스크립트
+    - [`pixel.cjs`](shared/assets/pixel.cjs): 로고를 실제 크기로 그려 작은 크기는 키워 보여 주고, 흐려지는 정도와 가장 가는 부분을 재고, 글자를 윤곽선으로 바꾸고 PNG를 뽑는 스크립트
+    - [`motion.js`](shared/assets/motion.js): 한 구역의 모션 시안을 한 시계로 재생하는 재생 막대와, 시안이 GSAP나 Motion을 연결하는 연결부
+    - [`motion.cjs`](shared/assets/motion.cjs): 시안의 실제 애니메이션을 정해진 시각으로 옮겨 프레임 띠, 진행 그래프, 측정값을 만드는 스크립트
 - [`agents/worker.md`](agents/worker.md): 모든 스킬이 띄우는 Claude Code 플러그인 에이전트. `shared/core.md`와 스킬의 `worker.md`를 읽습니다. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
 - [`docs/architecture.ko.md`](docs/architecture.ko.md): 스킬 묶음의 설계. 스킬마다 있어야 하는 이유, 공통 구조, Claude Code와 Codex 지원
 - [`docs/flows.ko.md`](docs/flows.ko.md): 상황별 사용 흐름
