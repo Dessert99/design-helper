@@ -10,13 +10,13 @@
 > [!NOTE]
 > Replies and every string on the comparison sheet are in **Korean**. See [Language](#language) to change that.
 
-**1. "I want to set up a design system from scratch": the same screen is drawn in four different directions, side by side, each naming what differs (type, color, corners, spacing).**
+**1. "Show me a few layouts for the homepage": the same homepage in four layouts, side by side at real size, while your project code stays untouched.**
 
-![Comparison sheet: a cafe booking screen drawn in four directions, starting points A to D](assets/launch-before.png)
+![Comparison sheet: a cafe homepage's first screen in four layouts, A to D](assets/launch-before.png)
 
-**2. "Go with B": the pick is recorded as the starting point, and type, color and spacing are then picked again one at a time. Your code stays as it is.**
+**2. "Go with B": the chosen layout is applied to the code and the first screen is checked.**
 
-![After picking B: the chosen screen, the design-decisions/README.md record and the AGENTS.md block](assets/launch-after.png)
+![After picking B: the split-hero homepage and the Home.css and Home.tsx changes](assets/launch-after.png)
 
 ## Six skills
 
