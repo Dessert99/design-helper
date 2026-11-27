@@ -21,7 +21,8 @@ differs, and say so once in `실물과 다름`: the engine is the same, the impo
     <script src="../motion.js"></script>
     <script>
       const tl = gsap.timeline();
-      if (dhMotion.reduced)   // from step 7 on tl.from('.title, .card', { opacity: 0, duration: 0.15 });
+      // The reduced branch exists from step 7 on.
+      if (dhMotion.reduced) tl.from('.title, .card', { opacity: 0, duration: 0.15 });
       else tl.from('.title', { y: 24, opacity: 0, duration: 0.4, ease: 'power2.out' })
             .from('.card', { y: 24, opacity: 0, duration: 0.4, ease: 'power2.out', stagger: 0.06 }, 0.1);
       dhMotion.gsap(tl, { track: ['.title', '.card'] });
