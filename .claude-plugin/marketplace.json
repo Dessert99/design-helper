@@ -10,7 +10,7 @@
     {
       "name": "design-helper",
       "description": "Settle design decisions by eye, one at a time: every candidate is drawn on your real screens side by side and you pick. Six skills: values and layouts (applied to code), a design system, syncing it to code, feature UX flows, icon sets and logos, and library motion (GSAP, Motion).",
-      "version": "0.4.1",
+      "version": "0.5.0",
       "source": "./",
       "author": {
         "name": "Dessert99",
