@@ -5,7 +5,7 @@
 
 [English](README.md) | [한국어](README.ko.md)
 
-> 시안을 먼저 보고, 고른 뒤에만 코드에 반영하는 Claude Code·Codex 스킬
+> 디자인 결정을 하나씩, 실제 화면 위에 그려 보고 고르게 하는 Claude Code·Codex 플러그인 (스킬 6개)
 
 **1. "5가지 보여줘": 후보를 비교합니다. 제품 코드는 그대로 둡니다.**
 
@@ -14,6 +14,21 @@
 **2. "C로 갈게": 선택한 값을 코드에 반영합니다.**
 
 ![C 를 고른 뒤: blur 12px 이 적용된 카드와 tokens.css 변경](assets/launch-after.png)
+
+## 스킬 여섯 개
+
+한 플러그인 안에 스킬이 여섯 개 있습니다. 모두 같은 방식으로 일합니다. 결정 하나를 실제 화면 위에 여러 안으로 그리고, 나란히 놓고 차이에 이름을 붙이면, 사용자가 눈으로 고릅니다. 생성형 디자인 도구처럼 완성품을 한 번에 내놓지 않습니다.
+
+| 스킬 | 정하는 것 | 실행 | 결과물 |
+|---|---|---|---|
+| `design-helper` | 값 하나(여백, 모서리, 그림자, 색, CSS 전환 시간과 곡선)나 배치 하나 | 말하면 자동 실행 | 코드 반영 |
+| `design-system` | 디자인 시스템을 체크리스트 순서로 (글자, 간격, 색, 모양 등) | 이름으로 호출 | 결정 기록 |
+| `design-sync` | 결정 기록 중 확정된 값을 코드에 맞추기 | 이름으로 호출 | 코드 반영, AI 안내 블록 |
+| `design-ux` | 기능 하나의 흐름, 화면 구성, 상호작용, 상태, 문구 | 이름으로 호출 | 결정 기록 |
+| `design-brand` | 아이콘 세트와 로고 방향 | 이름으로 호출 | 결정 기록, 로고 파일 |
+| `design-motion` | 여러 요소가 움직이는 순간 (GSAP, Motion, 스크롤 연동) | 이름으로 호출 | 결정 기록 (모션 사양) |
+
+각 스킬은 따로 씁니다. 어느 것도 다른 스킬을 먼저 쓸 필요가 없습니다. 결정 기록은 프로젝트의 `design-decisions/`(노션 링크를 주면 노션)에 쌓이고, 어느 스킬이든 이미 정한 값 위에 다음 안을 그립니다. 아래 "왜 만들었나"부터 "사용법"까지는 자동 실행되는 `design-helper` 이야기이고, 나머지 다섯은 [이름으로 부르는 스킬](#이름으로-부르는-스킬)에 있습니다.
 
 ## 왜 만들었나
 
@@ -97,9 +112,11 @@ Playwright를 쓸 수 있으면 바뀐 표본의 적용값을 확인합니다.
 - **다음 할 일을 정하지 않습니다.** "다음은 색을 보죠" 같은 제안이나 남은 단계 목록을 내놓지
   않습니다. 다음에 뭘 볼지는 사용자가 정합니다.
 - **동작이 맞는지는 확인하지 못합니다.** 포커스 트랩, 키보드 조작, 스크린리더는 눈으로 고를
-  수 있는 게 아니라서 다루지 않습니다.
-- **애니메이션은 사용자가 보고 정합니다.** 스크린샷에는 멈춘 화면만 찍히기 때문에, 움직임은
-  사용자가 브라우저에서 보고 말해 준 대로 정합니다.
+  수 있는 게 아니라서 design-helper는 다루지 않습니다. 기능의 흐름과 키보드만으로 끝낼 수
+  있는지는 `design-ux`가 시안에서 직접 수행해 잽니다.
+- **CSS 애니메이션은 사용자가 보고 정합니다.** 스크린샷에는 멈춘 화면만 찍히기 때문에,
+  design-helper의 움직임 비교는 사용자가 브라우저에서 보고 말해 준 대로 정합니다. GSAP나
+  Motion으로 움직이는 것은 `design-motion`이 실제 라이브러리를 시각마다 옮겨 가며 잽니다.
 - **선택 전 코드 변경 여부를 자동 검사하지는 않습니다.** 비교 파일을 프로젝트 밖에 두도록
   지시하지만, `git diff`로 제품 코드가 그대로인지 확인하는 기능은 아직 없습니다.
 
@@ -111,7 +128,10 @@ Playwright를 쓸 수 있으면 바뀐 표본의 적용값을 확인합니다.
   `file://`로 여는데, 이때는 자동 새로고침도 없고 30분 동안 요청이 없을 때 임시 폴더를
   지우는 자동 정리도 없습니다.
 - Playwright (선택): 계산된 스타일을 읽고 스크린샷을 찍는 데 씁니다. 없으면 이 확인은
-  건너뜁니다.
+  건너뜁니다. `design-ux`의 단계 띠, `design-brand`의 16px 측정, `design-motion`의 프레임 띠와
+  측정도 Playwright로 하므로, 이 세 스킬은 Playwright가 있어야 제대로 씁니다.
+- 인터넷 (경우에 따라): 프로젝트에 설치돼 있지 않은 아이콘 세트, GSAP, Motion, 서체는 작업
+  폴더에 `npm pack`으로 받아 씁니다.
 
 ## 설치
 
@@ -129,19 +149,41 @@ codex plugin marketplace add Dessert99/design-helper
 codex plugin add design-helper@design-helper
 ```
 
-설치한 뒤 세션을 새로 열어야 스킬이 잡힙니다. 업데이트할 때는 마켓플레이스를 새로 받고
-(Claude Code는 `/plugin marketplace update design-helper`, Codex는
-`codex plugin marketplace upgrade`) 다시 설치하면 됩니다.
+설치한 뒤 세션을 새로 열어야 스킬이 잡힙니다. 여섯 스킬이 모두 `design-helper:` 아래에
+등록됩니다. 업데이트할 때는 마켓플레이스를 새로 받고 (Claude Code는
+`/plugin marketplace update design-helper`, Codex는 `codex plugin marketplace upgrade`)
+다시 설치하면 됩니다.
 
 ### clone 해서 설치
 
 스킬을 직접 고치고 싶을 때, 예를 들어 [언어를 바꿀 때](#언어-설정) 이렇게 설치합니다.
-원하는 곳에 clone 한 뒤, 쓰는 에이전트의 스킬 폴더에 심링크를 겁니다. 심링크는 원본을
-가리키기만 하므로 clone을 고치면 바로 반영되고, 따로 맞춰 둘 사본도 생기지 않습니다.
+clone 한 폴더를 마켓플레이스로 등록하면 플러그인으로 쓰면서 고칠 수 있습니다.
 
 ```sh
 git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
+# Claude Code: 터미널에서 (세션 안에서는 /plugin marketplace add ~/src/design-helper)
+claude plugin marketplace add ~/src/design-helper
+claude plugin install design-helper@design-helper
+
+# Codex
+codex plugin marketplace add ~/src/design-helper
+codex plugin add design-helper@design-helper
+```
+
+- **Claude Code**는 이렇게 설치한 플러그인을 clone 폴더에서 바로 읽습니다. 고친 내용은 새
+  세션이나 `/reload-plugins`부터 반영됩니다.
+- **Codex**는 설치할 때 사본을 만듭니다. 고친 뒤에는 `codex plugin add design-helper@design-helper`를
+  다시 실행해야 반영됩니다.
+
+#### 심링크로 설치
+
+플러그인 대신 스킬 폴더를 하나씩 링크할 수도 있습니다. 심링크는 원본을 가리키기만 하므로
+clone을 고치면 바로 반영되고, 따로 맞춰 둘 사본도 생기지 않습니다. 플러그인 설치와 섞지
+마세요. 같은 스킬이 두 번 등록됩니다. 이 방식에서는 명령어에 `design-helper:` 접두사가
+붙지 않습니다(`/design-brand`).
+
+```sh
 for s in design-helper design-system design-ux design-brand design-motion design-sync; do
   ln -sfn ~/src/design-helper/skills/$s ~/.claude/skills/$s   # Claude Code
   ln -sfn ~/src/design-helper/skills/$s ~/.codex/skills/$s    # Codex
@@ -183,16 +225,16 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 | `좋네` | 어느 표본인지 되묻습니다 |
 | `끝났어` · `됐어` | 서버를 끄고 임시 파일을 정리합니다 |
 
-### 디자인 시스템 만들기
+### 이름으로 부르는 스킬
 
-이름을 불러야만 실행되는 스킬이 다섯 개 더 있습니다. 스스로 실행되지 않고, 각각 따로 쓸 수 있습니다. 어느 것도 다른 스킬을 먼저 쓸 필요가 없습니다.
+이름을 불러야만 실행되는 스킬이 다섯 개 더 있습니다. 스스로 실행되지 않고, 각각 따로 쓸 수 있습니다. 어느 것도 다른 스킬을 먼저 쓸 필요가 없습니다. 모두 코드는 고치지 않고 결정 기록만 남기며, 예외는 기록을 코드에 옮기는 `design-sync`입니다.
 
 | 명령어 | 하는 일 |
 |---|---|
 | `/design-helper:design-system` (Codex: `$design-system`) | 체크리스트를 따라갑니다(목적, 글자, 간격, 색, 모양, 그다음 선택으로 레이아웃, 모션, 컴포넌트). 항목마다 실제 화면으로 만든 보드에 시안을 그리고, 눈으로 보고 고릅니다. 값은 지금 코드, 공개 디자인 시스템(Tailwind 기본값, Radix Colors, Open Props, Material 3, shadcn/ui), 직접 만든 값에서 올 수 있고, 모두 고르기 전까지는 후보입니다. 대비와 누르는 영역 크기는 재서 시안에 표시합니다. 고른 것은 프로젝트의 `design-decisions/`나 알려 준 노션 페이지 아래에 기록합니다. 코드는 고치지 않습니다 |
 | `/design-helper:design-ux` (Codex: `$design-ux`) | 기능 하나가 어떻게 동작할지 UX 디자이너의 순서로 정합니다. 목표와 과제, 그다음 흐름, 화면 구성, 상호작용, 상태, 문구 순입니다. 후보마다 실제 디자인으로 만든 동작하는 시안이 있고, 그 아래에 과제를 실제로 수행하며 찍은 단계 띠와 클릭 수, 화면 전환 수, 목록 위치 유지, 키보드만으로 끝낼 수 있는지가 붙습니다. 고른 것은 `design-decisions/ux-<과제>.md`에 기록합니다. 앱 전체 구조가 아니라 기능 하나 단위이고, 코드는 고치지 않습니다 |
 | `/design-helper:design-brand` (Codex: `$design-brand`) | 아이콘 세트와 로고 방향을 실제로 쓰이는 자리에서 고릅니다. 헤더, 360px 모바일 헤더, 16px 브라우저 탭(픽셀 그대로 키운 그림도), 앱 아이콘, 버튼, 표의 행 동작, 빈 상태에 입혀 비교합니다. 아이콘 세트(Lucide, Phosphor, Tabler, Heroicons, Material Symbols)는 제품이 쓰는 개념으로 비교하고, 없는 아이콘 수를 셉니다. 로고는 SVG로 그리고, 형식, 서체, 심볼 방향, 세부, 작은 판을 하나씩 정합니다. 16px에서 흐려지는 정도와 가장 가는 부분의 두께를 잽니다. 기존 브랜드를 따라 그리지 않고, 모든 로고 시안에 상표 검색을 하지 않았다고 표시합니다. 고른 것은 `design-decisions/icons.md`와 `logo.md`에, 고른 파일은 `design-decisions/assets/brand/`에 기록합니다. 코드는 고치지 않습니다 |
-| `/design-helper:design-motion` (Codex: `$design-motion`) | 한 순간(페이지 진입, 목록 등장, 패널 열기, 스크롤 구간)이 어떻게 움직일지 모션 디자이너의 순서로 정합니다. 목적, 안무, 곡선이나 spring, 시간, 트리거와 끊길 때, 움직임 줄이기 순입니다. 후보는 프로젝트의 실제 라이브러리(GSAP 또는 Motion)와 실제 디자인으로 재생합니다. 모두 한 시계로 1배, 0.5배, 0.25배와 진행 막대로 봅니다. 후보마다 라이브러리에서 직접 잰 프레임 띠와 진행 그래프, 전체 시간, 거의 멈추는 시각, 넘침, 레이아웃이 흔들리는지, 줄인 판의 이동 거리가 붙습니다. 고른 것은 `design-decisions/motion-<순간>.md`에 사양 표로 기록합니다. CSS 전환 값 하나는 지금처럼 design-helper가 맡습니다. 코드는 고치지 않습니다 |
+| `/design-helper:design-motion` (Codex: `$design-motion`) | 한 순간(페이지 진입, 목록 등장, 패널 열기, 스크롤 구간)이 어떻게 움직일지 모션 디자이너의 순서로 정합니다. 목적, 안무, 곡선이나 spring, 시간, 트리거와 끊길 때, 움직임 줄이기 순입니다. 후보는 프로젝트의 실제 라이브러리(GSAP 또는 Motion)와 실제 디자인으로 재생합니다. 모두 한 시계로 1배, 0.5배, 0.25배와 진행 막대로 봅니다. 스크롤 연동(ScrollTrigger)은 모든 시안에 같은 스크롤 경로(내림, 올림, 다시 내림)를 재생해, 카드가 보이는 자리에서 움직이는지와 다시 올렸을 때 되감기는지를 잽니다. 후보마다 라이브러리에서 직접 잰 프레임 띠와 진행 그래프, 전체 시간, 거의 멈추는 시각, 넘침, 레이아웃이 흔들리는지, 줄인 판의 이동 거리가 붙습니다. 고른 것은 `design-decisions/motion-<순간>.md`에 사양 표로 기록합니다. CSS 전환 값 하나는 지금처럼 design-helper가 맡습니다. 코드는 고치지 않습니다 |
 | `/design-helper:design-sync` (Codex: `$design-sync`) | 기록에 맞춰 코드를 바꿉니다. 바뀌는 토큰마다 실제 화면의 지금과 바꾼 뒤를 영향 범위와 함께 보여 주고, 고른 범위만 반영합니다. 그다음 `AGENTS.md`와 `CLAUDE.md`에 짧은 안내를 넣어, 이후의 AI 세션이 정한 값을 쓰게 합니다(처음 넣을 때는 먼저 묻습니다) |
 
 값을 정하거나 바꿀 때는 늘 시트를 거칩니다. 말로만 정한 값도 시안으로 그려 본 뒤에야 확정됩니다.
@@ -238,8 +280,8 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 파일 이름, 커밋 메시지는 영어로 씁니다.
 
 다른 언어로 바꾸려면 [clone 해서 설치](#clone-해서-설치)한 뒤 `shared/core.md`의
-`## Language` 섹션을 고치면 됩니다. 플러그인으로 설치한 파일은 업데이트할 때마다 덮어써지니
-고쳐도 남지 않습니다. 지시문 곳곳에 따옴표로 들어간 한국어 문구(`토큰 그대로`, `끝났어` 등)도
+`## Language` 섹션을 고치면 됩니다. GitHub에서 바로 설치한 플러그인 파일은 업데이트할 때마다
+덮어써지니 고쳐도 남지 않습니다. 지시문 곳곳에 따옴표로 들어간 한국어 문구(`토큰 그대로`, `끝났어` 등)도
 같이 바꿔야 합니다.
 
 ## 문서
@@ -256,7 +298,7 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 - [`skills/design-sync/`](skills/design-sync/): 기록에 맞춰 코드를 바꾸는 스킬
 - [`shared/`](shared/): 플러그인의 모든 스킬이 함께 쓰는 것
   - [`decisions.md`](shared/decisions.md): 결정 기록의 구조, 상태, 규칙, `기록 지시:` 넘김
-  - [`board.md`](shared/board.md): design-system과 design-sync가 그리는 실제 화면 보드. 구역마다 따로 떠 두는 페이지
+  - [`board.md`](shared/board.md): 모든 스킬이 시안을 그리는 실제 화면 보드. 구역마다 따로 떠 두는 페이지
   - [`agent-guide.md`](shared/agent-guide.md): 이후의 AI가 기록을 따르게 하는 안내 블록과 넘기기 전 점검
   - [`main.md`](shared/main.md): 메인 에이전트가 스킬을 실행하는 방법. 일을 서브에이전트에게 맡기고 사용자와 서브에이전트 사이에서 말을 전해, 메인 대화가 가볍게 유지됩니다. 서브에이전트를 쓸 수 없으면 메인이 직접 합니다
   - [`core.md`](shared/core.md): 모든 worker가 가장 먼저 읽는 규칙. 결정 루프와 원칙, 메인을 통해 말하기, 언어, 발견 사항, 검증, 시트
@@ -273,7 +315,7 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
     - [`walk.cjs`](shared/assets/walk.cjs): 시안에서 과제를 실제로 수행하며 단계 띠를 찍고 클릭 수, 화면 전환, 키보드만으로 완료를 재는 스크립트
     - [`icons.cjs`](shared/assets/icons.cjs): 공개 아이콘 세트를 개념별로 모으고 없는 아이콘, 획 두께, 라이선스를 알려 주는 스크립트
     - [`pixel.cjs`](shared/assets/pixel.cjs): 로고를 실제 크기로 그려 작은 크기는 키워 보여 주고, 흐려지는 정도와 가장 가는 부분을 재고, 글자를 윤곽선으로 바꾸고 PNG를 뽑는 스크립트
-    - [`motion.js`](shared/assets/motion.js): 한 구역의 모션 시안을 한 시계로 재생하는 재생 막대와, 시안이 GSAP나 Motion을 연결하는 연결부
+    - [`motion.js`](shared/assets/motion.js): 한 구역의 모션 시안을 한 시계로 재생하는 재생 막대와, 시안이 GSAP나 Motion을 연결하는 연결부. 스크롤 연동 시안은 정해진 스크롤 경로를 시계로 삼습니다
     - [`motion.cjs`](shared/assets/motion.cjs): 시안의 실제 애니메이션을 정해진 시각으로 옮겨 프레임 띠, 진행 그래프, 측정값을 만드는 스크립트
 - [`agents/worker.md`](agents/worker.md): 모든 스킬이 띄우는 Claude Code 플러그인 에이전트. `shared/core.md`와 스킬의 `worker.md`를 읽습니다. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
 - [`scripts/bump-version.sh`](scripts/bump-version.sh): 플러그인 매니페스트의 버전을 한 번에 바꾸고 커밋과 태그까지 만드는 스크립트
@@ -290,7 +332,10 @@ python3 scripts/test-skills.py   # frontmatter, 실행 설정, 지침 속 경로
 ```
 
 결정 기록의 구조와 AI 안내 블록은 [Astryx](https://github.com/meta/astryx)(MIT)가 AI에게
-디자인 의도를 지키게 하는 방식을 참고했습니다. 방법만 빌렸고 문장이나 값은 복사하지 않았습니다.
+디자인 의도를 지키게 하는 방식을 참고했습니다. design-ux의 단계는 Double Diamond와 Nielsen
+Norman Group의 과제 분석, 워크스루, 10가지 원칙을, design-motion의 라이브러리 수칙은
+GreenSock의 [gsap-skills](https://github.com/greensock/gsap-skills)(MIT)를 참고했습니다.
+모두 방법만 빌렸고 문장이나 값은 복사하지 않았습니다.
 
 ## 라이선스
 

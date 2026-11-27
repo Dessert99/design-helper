@@ -5,7 +5,7 @@
 
 [English](README.md) | [한국어](README.ko.md)
 
-> A Claude Code and Codex skill for seeing design options before changing your code.
+> A Claude Code and Codex plugin of six skills that let you settle design decisions one at a time, each drawn on your real screens before you pick.
 
 > [!NOTE]
 > Replies and every string on the comparison sheet are in **Korean**. See [Language](#language) to change that.
@@ -17,6 +17,28 @@
 **2. "Go with C": Apply the chosen value to the code.**
 
 ![After picking C: the card with blur 12px and the tokens.css diff](assets/launch-after.png)
+
+## Six skills
+
+One plugin holds six skills, and they all work the same way: one decision is drawn as a
+few candidates on your real screens, side by side with the differences named, and you
+pick by eye. None of them hands you a finished design in one go the way a generative
+design tool does.
+
+| Skill | Decides | Runs | Leaves |
+|---|---|---|---|
+| `design-helper` | one value (spacing, radius, shadow, color, a CSS transition's duration or easing) or one layout | on its own when you ask | a code change |
+| `design-system` | a design system, item by item from a checklist (type, spacing, color, shape and more) | when called by name | the decision record |
+| `design-sync` | bringing the code in line with the settled values of the record | when called by name | a code change, an agent block |
+| `design-ux` | one feature's flow, screen layout, interactions, states and wording | when called by name | the decision record |
+| `design-brand` | an icon set and a logo direction | when called by name | the decision record, logo files |
+| `design-motion` | a moment where several elements move (GSAP, Motion, scroll-linked) | when called by name | the decision record (a motion spec) |
+
+Each skill works alone; none needs another first. Decisions collect in the project's
+`design-decisions/` (or under a Notion page you give), and every skill draws its next
+candidates on top of what is already settled. From "Why" to "Usage" below is about
+`design-helper`, the one that runs on its own; the other five are under
+[Skills you call by name](#skills-you-call-by-name).
 
 ## Why
 
@@ -108,9 +130,13 @@ apply. Cleanup removes project artifacts only with evidence that this session cr
 - **It doesn't plan your next step.** No "let's look at color next" and no list of
   remaining steps. You decide what to look at next.
 - **It can't check behavior.** Focus traps, keyboard handling and screen readers can't
-  be judged by eye, so they're out of scope.
-- **You judge motion.** Screenshots only capture a still frame, so animation is settled
-  by what you see in the browser and tell it.
+  be judged by eye, so design-helper leaves them out. A feature's flow and whether the
+  keyboard alone can finish it are measured by `design-ux`, which performs the task in
+  each prototype.
+- **You judge CSS motion.** Screenshots only capture a still frame, so design-helper's
+  motion comparisons are settled by what you see in the browser and tell it. Motion run by
+  GSAP or Motion is measured by `design-motion`, which seeks the real library to each
+  moment.
 - **It doesn't automatically check that code stayed untouched before your pick.** Its
   instructions keep comparison files outside the project, but there is no `git diff`
   check for unexpected product code changes yet.
@@ -123,7 +149,11 @@ apply. Cleanup removes project artifacts only with evidence that this session cr
   the sheet opens over `file://`, with no auto-reload and no automatic cleanup of the
   temporary folder after 30 idle minutes.
 - Playwright (optional) to read computed styles and take screenshots. Without it that
-  check is skipped.
+  check is skipped. `design-ux`'s step strips, `design-brand`'s 16px measurements and
+  `design-motion`'s frame strips and measurements also run on Playwright, so those three
+  need it to work fully.
+- Internet access (sometimes): icon sets, GSAP, Motion and typefaces the project doesn't
+  have installed are fetched into the workspace with `npm pack`.
 
 ## Install
 
@@ -141,20 +171,41 @@ codex plugin marketplace add Dessert99/design-helper
 codex plugin add design-helper@design-helper
 ```
 
-Start a new session afterwards so the skill loads. To update, refresh the marketplace
+Start a new session afterwards so the skills load; all six appear under `design-helper:`.
+To update, refresh the marketplace
 (`/plugin marketplace update design-helper` in Claude Code,
 `codex plugin marketplace upgrade` in Codex) and install again.
 
 ### From a clone
 
-Use this if you want to edit the skill, for example to [change its language](#language).
-Clone it anywhere and symlink the skill folder into your agent's skills directory. The
-symlink points at the clone, so your edits take effect right away and there's no copy to
-keep in sync.
+Use this if you want to edit the skills, for example to [change their language](#language).
+Register the clone as a marketplace and you can edit it while using it as a plugin.
 
 ```sh
 git clone https://github.com/Dessert99/design-helper.git ~/src/design-helper
 
+# Claude Code: from the shell (inside a session: /plugin marketplace add ~/src/design-helper)
+claude plugin marketplace add ~/src/design-helper
+claude plugin install design-helper@design-helper
+
+# Codex
+codex plugin marketplace add ~/src/design-helper
+codex plugin add design-helper@design-helper
+```
+
+- **Claude Code** reads a plugin installed this way straight from the clone. Edits apply
+  from the next session or after `/reload-plugins`.
+- **Codex** copies the plugin on install. Run `codex plugin add design-helper@design-helper`
+  again after editing.
+
+#### With symlinks
+
+You can instead link each skill folder. The symlink points at the clone, so your edits take
+effect right away and there's no copy to keep in sync. Don't mix this with the plugin
+install, or each skill is registered twice. Commands then have no `design-helper:` prefix
+(`/design-brand`).
+
+```sh
 for s in design-helper design-system design-ux design-brand design-motion design-sync; do
   ln -sfn ~/src/design-helper/skills/$s ~/.claude/skills/$s   # Claude Code
   ln -sfn ~/src/design-helper/skills/$s ~/.codex/skills/$s    # Codex
@@ -197,16 +248,18 @@ Specimens in the browser are lettered A · B · C. You answer in chat.
 | "Nice" | Asks which specimen you mean |
 | "Done" | Stops the server and cleans up the temporary files |
 
-### Building a design system
+### Skills you call by name
 
-Five more skills run only when you call them by name, never on their own. Each works alone; none needs another first:
+Five more skills run only when you call them by name, never on their own. Each works alone;
+none needs another first. They write no code and leave only the decision record, except
+`design-sync`, which moves the record into the code.
 
 | Command | What it does |
 |---|---|
 | `/design-helper:design-system` (Codex: `$design-system`) | Walks a checklist (purpose, type, spacing, color, shape, then optional layout, motion, components). Each item is drawn on a board of your real screens and you pick by eye. Values can come from your code, from public systems (Tailwind defaults, Radix Colors, Open Props, Material 3, shadcn/ui) or from scratch; all are candidates until picked. Contrast and target sizes are measured and shown on the specimens. Picks go to `design-decisions/` in the project, or under a Notion page you give it. It writes no code |
 | `/design-helper:design-ux` (Codex: `$design-ux`) | Decides how one feature works, in a UX designer's order: goal and task, then flow, screen layout, interactions, states and wording. Each candidate is a working prototype on your real design; under it, a strip of screenshots taken while actually performing the task, with clicks, screen changes, whether the list keeps its place and whether the keyboard alone can finish. Picks go to `design-decisions/ux-<task>.md`. One feature at a time, not a whole app's structure. It writes no code |
 | `/design-helper:design-brand` (Codex: `$design-brand`) | Picks an icon set and a logo direction where they are really used: the header, a 360px mobile header, the 16px browser tab (also enlarged pixel by pixel), an app icon, buttons, table actions and empty states. Icon sets (Lucide, Phosphor, Tabler, Heroicons, Material Symbols) are compared on the concepts your product uses, with missing ones counted. Logos are drawn as SVG, one decision at a time (form, typeface, symbol direction, details, the small version), with blur and the thinnest strokes measured at 16px. It never draws after an existing brand, and marks every logo candidate as not trademark-searched. Picks go to `design-decisions/icons.md` and `logo.md`, the chosen files to `design-decisions/assets/brand/`. It writes no code |
-| `/design-helper:design-motion` (Codex: `$design-motion`) | Decides how one moment moves (a page entering, a list appearing, a panel opening, a scroll section) in a motion designer's order: purpose, choreography, easing or spring, timing, trigger and interruption, reduced motion. Candidates play with your real library (GSAP or Motion) on your real design, all on one clock at 1x, 0.5x or 0.25x with a scrubber, each with a frame strip and a progress graph measured from the library itself: length, settling time, overshoot, whether layout moves, travel when reduced. Picks go to `design-decisions/motion-<moment>.md` as a spec table. A single CSS transition value stays with design-helper. It writes no code |
+| `/design-helper:design-motion` (Codex: `$design-motion`) | Decides how one moment moves (a page entering, a list appearing, a panel opening, a scroll section) in a motion designer's order: purpose, choreography, easing or spring, timing, trigger and interruption, reduced motion. Candidates play with your real library (GSAP or Motion) on your real design, all on one clock at 1x, 0.5x or 0.25x with a scrubber; a scroll-linked moment (ScrollTrigger) plays the same scroll path in every candidate (down, up, down again) and measures whether elements move where they can be seen and whether they rewind when you scroll back up, each with a frame strip and a progress graph measured from the library itself: length, settling time, overshoot, whether layout moves, travel when reduced. Picks go to `design-decisions/motion-<moment>.md` as a spec table. A single CSS transition value stays with design-helper. It writes no code |
 | `/design-helper:design-sync` (Codex: `$design-sync`) | Brings the code in line with the record: shows each changed token before and after on your real screens with its blast radius, applies the scope you pick, then adds a short block to `AGENTS.md` and `CLAUDE.md` so later agent sessions use the settled values (it asks before adding it the first time) |
 
 Deciding or changing a value always goes through a sheet: a value you only state in words
@@ -253,8 +306,8 @@ The instructions are in English, but chat replies and everything on the comparis
 sheet are in Korean. Code, class names, file names and commit messages stay in English.
 
 To change it, install [from a clone](#from-a-clone) and edit the `## Language` section in
-`shared/core.md`. A plugin install is replaced on every update, so edits
-there don't last. The Korean phrases quoted in the instructions (`토큰 그대로`, `끝났어`
+`shared/core.md`. A plugin installed straight from GitHub is replaced on every update, so
+edits there don't last. The Korean phrases quoted in the instructions (`토큰 그대로`, `끝났어`
 and so on) need to change too.
 
 ## Docs
@@ -271,7 +324,7 @@ and so on) need to change too.
 - [`skills/design-sync/`](skills/design-sync/): bringing the code in line with the record
 - [`shared/`](shared/): what every skill in the plugin uses
   - [`decisions.md`](shared/decisions.md): the decision record: structure, statuses, rules, and the `기록 지시:` handoff
-  - [`board.md`](shared/board.md): the board of real screens design-system and design-sync draw on, one frozen page per section
+  - [`board.md`](shared/board.md): the board of real screens every skill draws candidates on, one frozen page per section
   - [`agent-guide.md`](shared/agent-guide.md): the block that makes later agents follow the record, and the check before delivering
   - [`main.md`](shared/main.md): how the main agent runs a skill. It hands the work to a subagent and passes messages between it and you, so the main conversation stays small. Without subagents, the main agent does the work itself
   - [`core.md`](shared/core.md): rules every worker reads first. The decision loop and its principles, talking through the main agent, language, findings, verification, the sheet
@@ -288,7 +341,7 @@ and so on) need to change too.
     - [`walk.cjs`](shared/assets/walk.cjs): performs a task in a prototype and records the step strip, clicks, screen changes and a keyboard-only run
     - [`icons.cjs`](shared/assets/icons.cjs): gathers public icon sets per concept and reports missing icons, stroke and license
     - [`pixel.cjs`](shared/assets/pixel.cjs): renders a logo at its real sizes, enlarges the small ones, measures blur and the thinnest parts, turns text into outlines and exports PNGs
-    - [`motion.js`](shared/assets/motion.js): the play bar that runs a section's motion specimens on one clock, and the connector a specimen uses for GSAP or Motion
+    - [`motion.js`](shared/assets/motion.js): the play bar that runs a section's motion specimens on one clock, and the connector a specimen uses for GSAP or Motion; a scroll-linked specimen uses a fixed scroll path as its clock
     - [`motion.cjs`](shared/assets/motion.cjs): seeks a specimen's real animation to fixed times for the frame strip, the progress graph and the measurements
 - [`agents/worker.md`](agents/worker.md): the Claude Code plugin agent every skill spawns. It reads `shared/core.md` and the skill's `worker.md`. Codex plugins can't ship agents, so Codex spawns a plain subagent instead
 - [`scripts/bump-version.sh`](scripts/bump-version.sh): sets the version in every plugin manifest, then commits and tags the release
@@ -304,8 +357,11 @@ python3 scripts/test-skills.py   # frontmatter, invocation guards, paths named i
 ```
 
 The decision record's structure and the agent block are adapted from how
-[Astryx](https://github.com/meta/astryx) (MIT) keeps design intent for agents. Only the
-approach is borrowed; no text or values are copied.
+[Astryx](https://github.com/meta/astryx) (MIT) keeps design intent for agents. design-ux's
+steps draw on the Double Diamond and Nielsen Norman Group's task analysis, walkthroughs and
+ten heuristics; design-motion's library rules on GreenSock's
+[gsap-skills](https://github.com/greensock/gsap-skills) (MIT). Only the approach is
+borrowed; no text or values are copied.
 
 ## License
 

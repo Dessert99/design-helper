@@ -1,6 +1,6 @@
 {
   "name": "design-helper",
-  "description": "Settle CSS values, layout and motion by eye: draws every candidate side by side in the browser, you pick one, and it applies the choice to your code.",
+  "description": "Settle design decisions by eye, one at a time: every candidate is drawn on your real screens side by side and you pick. Six skills: values and layouts (applied to code), a design system, syncing it to code, feature UX flows, icon sets and logos, and library motion (GSAP, Motion).",
   "version": "0.4.1",
   "author": {
     "name": "Dessert99",
@@ -9,5 +9,18 @@
   "homepage": "https://github.com/Dessert99/design-helper",
   "repository": "https://github.com/Dessert99/design-helper",
   "license": "MIT",
-  "keywords": ["design", "css", "ui", "layout", "motion", "comparison", "frontend"]
+  "keywords": [
+    "design",
+    "css",
+    "ui",
+    "layout",
+    "design-system",
+    "ux",
+    "icons",
+    "logo",
+    "motion",
+    "gsap",
+    "comparison",
+    "frontend"
+  ]
 }
