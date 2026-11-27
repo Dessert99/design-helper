@@ -10,13 +10,13 @@
 > [!NOTE]
 > Replies and every string on the comparison sheet are in **Korean**. See [Language](#language) to change that.
 
-**1. "Show me five options": Compare them while your project code stays untouched.**
+**1. "I want to set up a design system from scratch": the same screen is drawn in four different directions, side by side, each naming what differs (type, color, corners, spacing).**
 
-![Comparison sheet: the card's shadow blur in five versions, A–E](assets/launch-before.png)
+![Comparison sheet: a cafe booking screen drawn in four directions, starting points A to D](assets/launch-before.png)
 
-**2. "Go with C": Apply the chosen value to the code.**
+**2. "Go with B": the pick is recorded as the starting point, and type, color and spacing are then picked again one at a time. Your code stays as it is.**
 
-![After picking C: the card with blur 12px and the tokens.css diff](assets/launch-after.png)
+![After picking B: the chosen screen, the design-decisions/README.md record and the AGENTS.md block](assets/launch-after.png)
 
 ## Six skills
 
