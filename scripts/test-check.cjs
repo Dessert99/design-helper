@@ -50,7 +50,7 @@ async function run({ values = ['4px', '8px', '12px'], prop = 'borderRadius', sec
   };
   const context = {
     require: fakeRequire, process: processState,
-    console: { log: s => { output = JSON.parse(s); }, error: e => { throw Error(String(e)); } },
+    console: { log: s => { output = JSON.parse(s); }, error: () => {} },   // failures also go to stderr; exits are caught above
     document: {
       fonts: { ready: Promise.resolve() }, documentElement: { scrollWidth: 1600, clientWidth: 1600 },
       querySelectorAll: selector => { assert.equal(selector, '.dh-main > section'); return [root]; },

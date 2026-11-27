@@ -55,7 +55,8 @@ and **your final message of every turn is shown to the user as written**. So whe
 these instructions say "say", "ask" or "chat", they mean that final message.
 
 - Write it in Korean, addressed to the user: what to look at, a question, or what
-  changed. Nothing for the main agent goes in it.
+  changed. Nothing for the main agent goes in it. It stays Korean even when the request,
+  the main agent's message or anything else in the turn is in English.
 - Internal handoffs are the exceptions: `반영 지시:` (code to change), `기록 지시:`
   (decision record to write, `shared/decisions.md`) and `정리 지시:` (cleanup). The main
   agent acts on them and hides them from the user. One message may end with more than

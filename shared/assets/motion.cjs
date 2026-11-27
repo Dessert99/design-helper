@@ -13,6 +13,14 @@
 //   settle     when every tracked element is within 0.5px and 0.01 opacity of its end, ms
 //   p90        when every tracked element has covered 90% of its travel, ms
 //   overshoot  furthest any element goes past its end along its path, px
+//   each       per tracked element: start, p90 and settle, ms. The overall values are the
+//              latest over all elements; a slow element held constant can hide the one the
+//              decision is about, so read its own line
+//              maxStep: the largest move between two samples, px (a jump shows here);
+//              turnAt: when it first reverses direction, ms (an interruption or a bounce).
+//              For a round trip (open then close) overshoot and p90 mean nothing: read
+//              turnAt, settle and maxStep
+//   peakAt     when the largest overshoot happens, ms: put a frame there
 //   starts     when each tracked element first moves, ms; spread is first to last start.
 //              Tells choreographies apart (together: spread 0; one after another: wide)
 //   concurrent most elements moving within one 10ms step
@@ -42,8 +50,9 @@ for (let i = 0; i < argv.length; i++) {
   } else if (argv[i].startsWith('--')) usage('알 수 없는 옵션입니다: ' + argv[i]);
   else positional.push(argv[i]);
 }
-const [url, out] = positional;
-if (!url || !out || positional.length > 2) usage();
+const [url, outArg] = positional;
+const out = outArg && path.resolve(outArg);
+if (!url || !outArg || positional.length > 2) usage();
 const name = opt['--name'] || 'motion';
 const step = Number(opt['--step'] || 10);
 const width = Number(opt['--width'] || 1080), height = Number(opt['--height'] || 700);
@@ -156,7 +165,7 @@ const sample = (p, track, stepMs) => p.evaluate(async ([sels, s]) => {
 
 function analyse({ labels, dur, rows }, s) {
   const n = labels.length, end = rows[rows.length - 1];
-  const res = { duration: Math.round(dur * 1000), settle: 0, p90: 0, overshoot: 0, concurrent: 0, layout: [], travel: 0, series: [], starts: {} };
+  const res = { duration: Math.round(dur * 1000), settle: 0, p90: 0, overshoot: 0, peakAt: null, concurrent: 0, layout: [], travel: 0, series: [], starts: {}, each: {} };
   for (let k = 0; k < n; k++) {
     const e = end[k], start = rows[0][k];
     const dist = (r) => Math.hypot(r[0] - e[0], r[1] - e[1], r[2] - e[2], r[3] - e[3]);
@@ -164,20 +173,34 @@ function analyse({ labels, dur, rows }, s) {
     const o0 = Math.max(...rows.map(r => Math.abs(r[k][4] - e[4])));
     res.travel = Math.max(res.travel, d0);
     const dir = [e[0] - start[0], e[1] - start[1]], len = Math.hypot(...dir) || 1;
+    const own = { p90: 0, settle: 0, maxStep: 0, turnAt: null, lastVel: 0 };
     const series = rows.map((r, i) => {
       const v = r[k];
       const moved = dist(v) > 0.5 || Math.abs(v[4] - e[4]) > 0.01;
-      if (moved) res.settle = Math.max(res.settle, (i + 1) * s);
+      if (moved) { res.settle = Math.max(res.settle, (i + 1) * s); own.settle = (i + 1) * s; }
       const pd = d0 > 0.5 ? 1 - dist(v) / d0 : 1, po = o0 > 0.01 ? 1 - Math.abs(v[4] - e[4]) / o0 : 1;
-      if (Math.min(pd, po) < 0.9) res.p90 = Math.max(res.p90, (i + 1) * s);
+      if (Math.min(pd, po) < 0.9) { res.p90 = Math.max(res.p90, (i + 1) * s); own.p90 = (i + 1) * s; }
       const past = ((v[0] - e[0]) * dir[0] + (v[1] - e[1]) * dir[1]) / len;
-      if (Math.hypot(...dir) > 0.5) res.overshoot = Math.max(res.overshoot, past);
+      if (Math.hypot(...dir) > 0.5 && past > res.overshoot) { res.overshoot = past; res.peakAt = i * s; }
+      if (i) {
+        const a = rows[i - 1][k];
+        own.maxStep = Math.max(own.maxStep, Math.hypot(v[0] - a[0], v[1] - a[1]));
+        // Direction turns: the main-axis velocity changes sign (a round trip, an interruption).
+        const vel = Math.abs(v[0] - a[0]) > Math.abs(v[1] - a[1]) ? v[0] - a[0] : v[1] - a[1];
+        if (own.lastVel && vel && Math.sign(vel) !== Math.sign(own.lastVel) && own.turnAt === null) own.turnAt = i * s;
+        if (Math.abs(vel) > 0.05) own.lastVel = vel;
+      }
+      // Plot along the path when the element travels, so an overshoot rises above the end
+      // line (progress past 1) instead of dipping like a shortfall.
+      if (Math.hypot(...dir) > 0.5) return 1 + past / len;
       return d0 > 0.5 ? pd : po;
     });
     res.series.push({ label: labels[k], progress: series });
     const first = rows.findIndex(r => Math.hypot(r[k][0] - start[0], r[k][1] - start[1], r[k][2] - start[2], r[k][3] - start[3]) > 0.1
       || Math.abs(r[k][4] - start[4]) > 0.005);
     if (first > 0) res.starts[labels[k]] = (first - 1) * s;
+    res.each[labels[k]] = { start: first > 0 ? (first - 1) * s : 0, p90: own.p90, settle: Math.min(own.settle, res.duration + s),
+      maxStep: Math.round(own.maxStep * 10) / 10, turnAt: own.turnAt };
     if (rows.some(r => r[k].slice(5).some((v, j) => v !== start[5 + j]))) res.layout.push(labels[k]);
   }
   for (let i = 1; i < rows.length; i++) {
@@ -235,8 +258,8 @@ function graph(series, s, totalMs) {
       const data = await sample(full.p, track, step);
       if (track.length && !data.labels.length) report.issues.push('track 선택자에 맞는 요소가 없습니다: ' + track.join(', '));
       const m = analyse(data, step);
-      Object.assign(report, { duration: m.duration, settle: m.settle, p90: m.p90, overshoot: m.overshoot,
-        starts: m.starts, spread: m.spread, concurrent: m.concurrent, layout: m.layout, tracked: data.labels });
+      Object.assign(report, { duration: m.duration, settle: m.settle, p90: m.p90, overshoot: m.overshoot, peakAt: m.peakAt,
+        starts: m.starts, spread: m.spread, each: m.each, concurrent: m.concurrent, layout: m.layout, tracked: data.labels });
       const g = path.join(out, `${name}-graph.svg`);
       fs.writeFileSync(g, graph(m.series, step, span || m.duration));
       report.graph = g;

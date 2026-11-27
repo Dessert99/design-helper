@@ -31,7 +31,10 @@ in the tab. Draw what the spots make of each form; don't argue it.
 - Never a font whose license is unknown, and never a system font for the final mark: the
   file can't travel with the logo.
 - A typeface step compares two to four faces that genuinely differ (geometric, humanist,
-  rounded, a serif) at one weight. Weight and spacing are L5.
+  rounded, a serif) at one weight: the heaviest weight every candidate has (often 700),
+  said on the sheet when it differs from the current one. Weight and spacing are L5. At header size faces look
+  alike: add one row with the header logo enlarged 4 times to that step's board.
+- SUIT is not on `@fontsource`; it is the `@sun-typeface/suit` package.
 - `pixel.cjs outline` needs TTF, OTF or WOFF. Keep one of those beside the woff2.
 
 ## Symbol directions (L4)
@@ -49,9 +52,10 @@ Two to four directions, each one plain drawing. A direction picked is refined in
 
 ## Details (L5)
 
-One attribute per section: stroke weight, letter spacing, corner radius, the symbol's
-size against the name, the gap between them. Ladders of three to five, the current
-candidate among them.
+One attribute per section: the name's weight, letter spacing, the symbol's line weight
+(when it is drawn with lines), corner radius, the symbol's size against the name, the gap
+between them. Ladders of three to five in order, the current version in its place on the
+ladder (labelled `현재값`), not moved to A.
 
 ## Small versions (L6)
 
@@ -61,7 +65,9 @@ The 16 and 32px version is a separate drawing, not the big one shrunk.
   turns into gray (`blur` above about 0.3).
 - Snap straight edges to whole pixels of the 16px grid.
 - Candidates: the full mark shrunk (as the baseline), the symbol alone, a simplified
-  symbol, the first letter. Draw them in the tab and enlarged.
+  symbol, the first letter. When the small spot already shows the symbol alone, the first
+  two are one drawing: use versions snapped to the grid at different sizes or gaps
+  instead. Draw them in the tab and enlarged.
 
 ## Not like anyone else
 

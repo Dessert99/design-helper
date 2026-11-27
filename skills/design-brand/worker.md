@@ -45,6 +45,7 @@ other. Start the track the user asked for; doing only one is fine.
 | L6 작은 판 | the simplified version for 16 and 32px | sheet |
 
 Big before small: a form is chosen before its typeface, a typeface before its spacing.
+L5 attributes the user chooses not to see are recorded as `보류` rows, one per attribute.
 A later step never reopens an earlier one silently; if it has to, say so and treat it as
 a revision.
 
@@ -80,8 +81,11 @@ only shortened.
 ## The spots board
 
 Every candidate is one board of spots (`shared/board.md`): the project's own stylesheets,
-its real header, buttons, table and empty state where they exist, real sizes. Spots
-the project doesn't have are left out, except those step 1 named.
+its real header, buttons, table and empty state where they exist, real sizes. Icon spots
+the project doesn't have are left out. Logo spots: the headers, the tab at 16 and 32, the
+enlargement and the dark strip are always drawn; the app icon and the profile picture
+only when step 1 names them. With no mobile header, narrow the real one to 360, hide its
+navigation and add a menu button with the project's icon button class.
 
 | track | spots |
 |---|---|
@@ -103,7 +107,12 @@ the project doesn't have are left out, except those step 1 named.
   (`board.html#phosphor`), which loads `../icons/phosphor.js`. A logo board's hash is the
   letter: each logo candidate is three files, `$WS/<section id>/logo-<letter>.svg`,
   `-mark.svg` (the symbol alone) and `-small.svg` (the 16px version), copies of each other
-  where they don't differ, so the board always finds all three and inlines them.
+  where they don't differ, so the board always finds all three. The headers and the dark
+  strip inline them (they follow `currentColor`); the tab and the 32px spot show the small
+  file as an `<img>`, the way a browser draws a favicon. Ids inside the files (a `<mask>`)
+  carry the letter, so files inlined into one page don't collide.
+- **After the first logo pick**, `A` is what the record holds now (`assets/brand/`),
+  labelled `기록 그대로`, not the old code.
 - **Board height.** `check.cjs --frames` reports each board's page size under `boards`;
   set the iframe to it.
 
@@ -132,7 +141,8 @@ Draw each candidate as SVG by hand, from the step's options in `references/logo.
 - **Text** uses a font file the board page loads with `@font-face`: the project's own
   fonts first, then open-licensed ones (`references/logo.md`, Typefaces). Record the
   license with the font.
-- **Measure every candidate** at the sizes its spots use:
+- **Measure every candidate** at the sizes its spots use, from the file each spot shows
+  (the `-small.svg` for 16 and 32):
 
       node "$WS/pixel.cjs" "$WS/r2-1/logo-B-small.svg" "$WS/r2-1/px" --name B \
         --sizes 16,32,180 --color '#1d4e89' --font "Pretendard=$WS/fonts/Pretendard-Bold.woff"
@@ -140,8 +150,13 @@ Draw each candidate as SVG by hand, from the step's options in `references/logo.
   It writes the PNGs in `--color`, the 8 times enlargement for 16 and 32, and per size
   `blur` (share of partly covered pixels) and `thin` (thinnest parts, in screen pixels).
   At 16px read `blur` first; `thin` is scaled from a large render. Compare these between
-  candidates measured the same way; they are approximate. Give the current logo the font
-  its page uses, or say on its caption that the measurement used another.
+  candidates measured the same way; they are approximate. Text drawn from a font and the
+  same text turned into outlines measure differently, so from the first logo pick on,
+  measure outlined files only (`pixel.cjs outline` first), and say so once when a number
+  differs from an earlier step's. `thin` sees holes inside the mark, not a gap open to
+  the outside (between two shapes); give such a gap from the drawing in 16px pixels and
+  check it in the enlargement. Give the current logo the font its page uses, or say on
+  its caption that the measurement used another.
 - **The header width** at 360px and the gap to the menu button are read with `check.cjs
   --frames --sel '<logo>, <menu button>' --props box` (each box is `x y width height`).
 
@@ -158,6 +173,10 @@ Measured facts and judgments are kept apart.
 - **Every logo candidate carries a `상표 검색 안 함` chip** (`dh-real` style). A search is
   the user's to do; it goes into `logo.md`'s `verify`.
 - Gains and losses as usual (`shared/writing.md`, The caption).
+- Every sentence rests on a measurement or on the drawing's own numbers, in screen
+  pixels (never viewBox units). What only the eye says goes on the `판단` line.
+- A candidate dropped because it resembled a brand from step 1 gets one line under the
+  grid (`뺀 안: 접힌 모서리 메모지, 에버노트와 닮았습니다`).
 
 The recommendation weighs the facts at the smallest spot first, then the judgments.
 
@@ -186,11 +205,15 @@ The recommendation weighs the facts at the smallest spot first, then the judgmen
 
        node "$WS/pixel.cjs" outline "$WS/r4-1/logo-C.svg" "$WS/fonts/Name-Bold.woff" "$WS/brand/logo.svg"
 
-   Then export the small sizes from the small version:
-   `pixel.cjs "$WS/brand/logo-small.svg" "$WS/brand" --sizes 16,32 --png favicon-32:32,apple-touch-icon:180:<background>`.
-   The block copies `$WS/brand/` files to `design-decisions/assets/brand/`
-   (`logo.svg`, `logo-mark.svg`, `logo-small.svg`, `favicon.svg`, `favicon-32.png`,
-   `apple-touch-icon.png`), replacing the previous ones; the replaced decision is archived
+   Then export the small sizes: `pixel.cjs "$WS/brand/logo-small.svg" "$WS/brand" --sizes 16,32
+   --color <primary> --png favicon-32:32` and, from the mark, `pixel.cjs "$WS/brand/logo-mark.svg"
+   "$WS/brand" --color <foreground> --png apple-touch-icon:180:<background>:15` (15% padding).
+   `favicon.svg` is the small version with its color written in (`fill="#1d4e89"` instead of
+   `currentColor`): a tab draws the file as an image, where `currentColor` is black.
+   The block copies the `$WS/brand/` files that changed with this pick to
+   `design-decisions/assets/brand/` (of `logo.svg`, `logo-mark.svg`, `logo-small.svg`,
+   `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`; all six on the first pick),
+   replacing the previous ones; the replaced decision is archived
    as usual, its screenshot stays.
 5. The report says, in Korean: what was settled, where it was written, and the next step.
 

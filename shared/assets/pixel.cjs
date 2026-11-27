@@ -1,7 +1,7 @@
 // Renders a logo or icon SVG at the sizes it will really be used, and measures how it holds up.
 //
 // node pixel.cjs <file.svg> <out dir> [--sizes 16,32,180] [--zoom 8] [--name logo]
-//                [--font "Family=path/to/font.woff"]... [--png favicon-32:32,apple-touch-icon:180:#ffffff]
+//                [--font "Family=path/to/font.woff"]... [--png favicon-32:32,apple-touch-icon:180:#ffffff:15]
 //                [--color #1d4e89] [--lang ko]
 // node pixel.cjs outline <in.svg> <font file> <out.svg>
 //
@@ -21,7 +21,8 @@
 //              (a white ring inside a dark tile counts as a stroke). Under about 1 means
 //              those parts break up or vanish.
 //   ink        share of the square that is drawn
-// --png writes exports (name:size or name:size:background) for the record's assets.
+// --png writes exports for the record's assets: name:size, name:size:background, or
+// name:size:background:padding% (an app icon needs about 15% padding on a solid background).
 //
 // outline: replaces each <text> (x, y, font-size, text-anchor, letter-spacing, fill; no
 // <tspan>) with a <path> drawn from the font file, so the logo no longer needs the font.
@@ -180,9 +181,11 @@ if (argv[0] === 'outline') {
   const zoom = Number(opt['--zoom'] || 8);
   if (sizes.some(s => !(s > 0 && s <= 1024)) || !(zoom >= 1 && zoom <= 32)) usage('크기는 1에서 1024, 확대는 1에서 32 사이여야 합니다.');
   const exportsList = (opt['--png'] || '').split(',').filter(Boolean).map(s => {
-    const [name, size, bg] = s.split(':');
-    if (!name || !(Number(size) > 0)) usage('--png는 이름:크기 또는 이름:크기:배경색입니다: ' + s);
-    return { name, size: Number(size), bg: bg || null };
+    const [name, size, bg, pad] = s.split(':');
+    if (!name || !(Number(size) > 0) || (pad && !(Number(pad) >= 0 && Number(pad) < 50))) {
+      usage('--png는 이름:크기[:배경색[:여백%]]입니다: ' + s);
+    }
+    return { name, size: Number(size), bg: bg || null, pad: Number(pad || 0) };
   });
   const fonts = opt.fonts.map(f => {
     const [family, p] = f.split('=');
@@ -214,12 +217,14 @@ if (argv[0] === 'outline') {
         return [...document.querySelectorAll('text')].map(t => getComputedStyle(t).fontFamily);
       });
       if (families.length && !fonts.length) report.issues.push('글자가 있지만 --font가 없어 설치된 글꼴로 그렸습니다: ' + [...new Set(families)].join(', '));
-      const shoot = async (size, bg) => {
-        await p.evaluate(([s, c]) => {
+      const shoot = async (size, bg, pad = 0) => {
+        await p.evaluate(([s, c, padPct]) => {
           const el = document.getElementById('s');
           el.style.width = el.style.height = s + 'px';
           el.style.background = c || 'transparent';
-        }, [size, bg]);
+          el.style.boxSizing = 'border-box';
+          el.style.padding = (s * padPct / 100) + 'px';
+        }, [size, bg, pad]);
         return p.locator('#s').screenshot({ omitBackground: !bg });
       };
       const measure = (png, s, z) => p.evaluate(async ([b64, size, zoomBy]) => {
@@ -300,7 +305,7 @@ if (argv[0] === 'outline') {
       }
       for (const e of exportsList) {
         const f = path.join(out, `${e.name}.png`);
-        fs.writeFileSync(f, await shoot(e.size, e.bg));
+        fs.writeFileSync(f, await shoot(e.size, e.bg, e.pad));
         report.exports.push({ png: f, size: e.size, background: e.bg });
       }
     } finally { await b.close(); }

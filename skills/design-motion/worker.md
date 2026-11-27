@@ -22,7 +22,8 @@ decision per sheet section.
   (a hover, a button press) belongs to design-helper: say so in one line and offer to
   continue here only if the moment involves more than one element or the library. The
   record's motion tokens (design-system) are used first; a value outside them reads
-  `새 값` in the cost slot.
+  `새 값` in the cost slot. With no motion tokens in the record, say so once in the
+  description and leave the chip off.
 - **It names what comes next**, in the order below. The user may jump, skip or stop.
 
 ## The steps
@@ -48,7 +49,10 @@ line (`라이브러리: GSAP 3.15`); only a library chosen in conversation becau
 has none also goes to `README.md` `구현 방침` (`references/libraries.md`, No library yet).
 
 **Where to start** follows the request: `카드 등장 순서` starts at 3, `튕기는 느낌` at 4,
-`더 빠르게` at 5, `스크롤 따라오게` at 6. Steps 1 and 2 are never skipped, only shortened.
+`더 빠르게` at 5, `스크롤 따라오게` at 6. A request naming several steps starts at the
+earliest and the report lists the rest in order. Steps 1 and 2 are never skipped, only
+shortened. Step 2's frame strip is the one under `A 지금` in the first section. A step the
+session started past stays out of the record until the end, when it is `보류`.
 
 **Step 7 can't be skipped.** When the user ends before it, draw the reduced version of
 the chosen motion with one alternative and ask for a pick in the same report; keep the
@@ -85,22 +89,32 @@ settled values applied, at real size.
   around it (a dashboard's title, toolbar and cards, not the whole page), wrapped in one
   element the measurement clips to (`<div class="moment">`). Keep it 520px wide or less
   when the moment allows, so two specimens sit side by side at 1440. A wider moment is
-  drawn one per row: the bar is sticky, and `firstScreen` below `primarySpecs` is
-  expected.
+  drawn one per row. Either way the graph and strip make each cell tall, so on a motion
+  sheet `firstScreen` below `primarySpecs` is expected; the bar is sticky for that reason.
 
 - **Only the decision being made differs.** Steps not decided yet are held at the
   plainest choice (`references/choreography.md`, Held constant), named once in the
   section description as held, not chosen.
 - **Connect the animation** with `../motion.js` so the sheet and the measurement can
   drive it: `dhMotion.gsap(tl, { track })` or `dhMotion.motion(controls, { track })`.
-  `track` names the elements that move. Branch on `dhMotion.reduced` for the reduced
-  version (`references/libraries.md`).
+  `track` names the elements that move. From step 7 on, branch on `dhMotion.reduced` for
+  the reduced version (`references/libraries.md`); before it there is no reduced branch.
+- **Fixed overlays** (a panel or dialog with `position: fixed`) become `position: absolute`
+  inside the clipped wrapper, said once in `실물과 다름`.
+- **A ladder moves only the element the decision is about.** In a timing ladder for a
+  panel, its backdrop keeps the code's length, named as held.
 - **The sheet.** Put `<div class="dh-play" data-for="<section id>"></div>` between the
   description and the grid, and `<script src="motion.js"></script>` above `dh:script`
   once. Each specimen is an iframe at its real size. The bar plays every specimen of the
   section on one clock and slows them together, so their differences stay.
 - **`실물과 다름`** once in the section description, with what is imitated: the data
   arriving, a React component mounting (`AnimatePresence`), a route change.
+- **Interruption** (step 6) is drawn on one seekable clock: the specimen computes the
+  whole path with the library's own math before connecting (`references/libraries.md`,
+  Interruption), marks the moment of the second trigger on screen (`닫기 누름`), and
+  connects through `dhMotion.custom`. A round trip starts and ends in the same place, so
+  its facts are `turnAt` (how soon it reverses), `settle` (until it is gone) and `maxStep`
+  (the largest move per step: a jump shows here), not overshoot or p90.
 - **Scroll-linked specimens** (step 6) have no bar: the person scrolls inside the iframe.
   Their frame strip is taken at scroll positions instead of times (seek the scroll,
   screenshot), and the caption says which positions.
@@ -117,7 +131,11 @@ library drew:
   sheet.
 
 - Give every specimen of a section the same `--span` (the longest duration) and the same
-  `--frames`, so the graphs and strips line up.
+  `--frames`, so the graphs and strips line up. Choose the frames to include the moments
+  that differ: the largest overshoot (`peakAt`), the slowest specimen's `p90`. Drop a
+  numbered frame equal to `end`; label the end frame `<ms>ms (끝)`.
+- Read the decided element's own line in `each` (start, p90, settle, maxStep, turnAt);
+  the overall values are the latest over every tracked element.
 - Under each specimen: the progress graph (`<name>-graph.svg`, one color per tracked
   selector with a legend) and the frame strip: the screenshots in order, each labelled with
   its time, each at least a third of the clip's width and linked to its full PNG. A frame
@@ -162,13 +180,14 @@ speeds are for seeing the difference, and the recommendation says if one is invi
 2. End with a `기록 지시:` block (`shared/decisions.md`) for `motion-<moment>.md`: the
    step's row in `결정`, the rows it fills in `사양`, a D entry with the measured facts and
    the judgment line, the screenshot. The first pick creates the file with steps 1 and 2.
-3. **When step 3 (안무) is picked**, propose `완료 조건` from what was measured (`전체
-   700ms 이내`, `transform과 opacity만`), marked `초안`, confirmed in chat. The reduced line
+3. **When step 3 (안무) is picked**, or at the first pick when the session started past
+   step 3, propose `완료 조건` from what was measured (`전체 700ms 이내`,
+   `transform과 opacity만`), marked `초안`, confirmed in chat. Until then `verify` is `[]`. The reduced line
    (`줄인 판 이동 0px`) joins when step 7 is picked.
    A 사양 cell whose value comes from the code, not a pick, says so (`y 20→0 (지금 코드)`).
 4. **When step 7 is picked**, the block also writes `기준 코드`: the chosen motion as a
    short snippet in the project's library, with the reduced branch. It is a reference,
-   not an apply.
+   not an apply. Steps left `보류` use their held values, named in a line above the code.
 5. The report says, in Korean: what was settled, where it was written, and the next step.
 
 ## Ending

@@ -5,22 +5,23 @@ has none is a copy downloaded into `$WS`, and the caption names its version.
 
 | library | in package.json | file a specimen loads | global | license |
 |---|---|---|---|---|
-| GSAP | `gsap` | `gsap/dist/gsap.min.js`, plugins from `gsap/dist/<Plugin>.min.js` | `gsap` | free for all use including plugins (Webflow's standard license, since 2025); not for building a visual animation builder |
-| Motion | `motion`, or the older `framer-motion` | `motion/dist/motion.js` | `Motion` | MIT |
+| GSAP | `gsap` | `gsap/dist/gsap.min.js` as `lib-gsap.js`, plugins as `lib-<Plugin>.js` | `gsap` | free for all use including plugins (Webflow's standard license, since 2025); not for building a visual animation builder |
+| Motion | `motion`, or the older `framer-motion` | `motion/dist/motion.js` as `lib-motion.js` | `Motion` | MIT |
 
-Copy the file from the project's `node_modules` into the section folder; without one,
+Copy the file from the project's `node_modules` into the section folder under the `lib-`
+name, so it is never confused with the kit's `motion.js`; without one,
 `npm pack gsap` or `npm pack motion` into `$WS/vendor` and copy from there. For a project
 on `framer-motion`, use `motion` at the same major version or the latest when the major
 differs, and say so once in `실물과 다름`: the engine is the same, the import name is not.
 
 ## GSAP
 
-    <script src="gsap.min.js"></script>
-    <script src="ScrollTrigger.min.js"></script>   <!-- only when used -->
+    <script src="lib-gsap.js"></script>
+    <script src="lib-ScrollTrigger.js"></script>   <!-- only when used -->
     <script src="../motion.js"></script>
     <script>
       const tl = gsap.timeline();
-      if (dhMotion.reduced) tl.from('.title, .card', { opacity: 0, duration: 0.15 });
+      if (dhMotion.reduced)   // from step 7 on tl.from('.title, .card', { opacity: 0, duration: 0.15 });
       else tl.from('.title', { y: 24, opacity: 0, duration: 0.4, ease: 'power2.out' })
             .from('.card', { y: 24, opacity: 0, duration: 0.4, ease: 'power2.out', stagger: 0.06 }, 0.1);
       dhMotion.gsap(tl, { track: ['.title', '.card'] });
@@ -37,7 +38,7 @@ differs, and say so once in `실물과 다름`: the engine is the same, the impo
 
 ## Motion
 
-    <script src="motion.js"></script>
+    <script src="lib-motion.js"></script>
     <script src="../motion.js"></script>
     <script>
       const { animate, stagger } = Motion;
@@ -58,7 +59,30 @@ differs, and say so once in `실물과 다름`: the engine is the same, the impo
   hand-overs are imitated: write the from and to boxes as `x`, `y`, `scale` and say so in
   `실물과 다름`.
 - A spring's length is computed by the library; `motion.cjs` reports it as `duration`.
+- When the code gives no transition, Motion picks a spring for `x`, `y`, `scale` and
+  `rotate` and a tween for `opacity` and colors. `animate()` with no transition gives the
+  same defaults, so copy the code's transition as it is, or leave it out the same way.
 - `scroll()` and `useScroll` belong to the scroll, like a scrubbed ScrollTrigger.
+
+## Interruption
+
+A second trigger mid-way (close while opening) has to sit on the one clock too. Compute the
+path first, then connect it:
+
+- **Motion:** sample the forward animation with the library's generators
+  (`Motion.spring({ keyframes: [360, 0], bounce, visualDuration })` or `Motion.keyframes`),
+  which return `next(ms) => { value, done }`. At the interrupt time read the value and the
+  velocity (difference of two nearby samples), start a second generator from there with
+  that velocity, and write the value yourself in `seek`:
+  `dhMotion.custom({ duration: () => total, seek: (s) => { el.style.transform = ... } })`.
+  Seeking plain `animate()` controls does not fire `onUpdate` while paused: values written
+  only in `onUpdate` never move.
+- **GSAP:** build the forward tween paused, seek it to the interrupt time, read the value
+  with `gsap.getProperty`, then build the return tween from that value and add both to one
+  timeline (`tl.add(forward, 0).add(back, t)` with `forward` cut at `t`); connect with
+  `dhMotion.gsap(tl)`.
+- The three usual behaviours: reverse from where it is, finish opening then close,
+  jump to closed.
 
 ## No library yet
 

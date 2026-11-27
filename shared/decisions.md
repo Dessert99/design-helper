@@ -39,7 +39,9 @@ The first skill that writes the record creates `README.md`. Its minimal form is 
 title, `기반`, `접근성 기준`, `구현 방침` (each `미정` until decided) and a contents list
 of the files below it. UX files are listed under `## 과제`, one line each:
 `` - `ux-<task>.md`: <task> (<steps settled>) ``; motion files the same way under
-`## 움직임`, and `icons.md` and `logo.md` with the area files. design-system adds the sections shown here (목적과 분위기, 출발점
+`## 움직임`. `## 과제` and `## 움직임` are top-level sections after the contents list,
+created by the first file of their kind. `icons.md` and `logo.md` join the contents list
+with the area files. design-system adds the sections shown here (목적과 분위기, 출발점
 값, 체크리스트, 결정 기록) when it is used; other skills never need them.
 
 ````markdown
@@ -129,7 +131,8 @@ verify: [본문 글자 대비 4.5:1 이상, 상태 색 대비 3:1 이상]
 - **쓰는 곳** names where the role appears in the product, in the screen's words. design-sync
   uses it to find code that bypasses the role.
 - `status` of the file is the lowest status among its rows: one `초안` row keeps the
-  file `초안`. Each checklist row in `README.md` carries its own status.
+  file `초안`. `보류` rows don't lower it: they are open questions, listed as such. Each
+  checklist row in `README.md` carries its own status.
 - **New tokens** follow the project's naming pattern (`--color-text` → `--color-success`)
   and read `(새 토큰)` in the table and `새 토큰 --color-success` in the caption's cost
   slot. The name rides on the role pick; it needs no sheet of its own.

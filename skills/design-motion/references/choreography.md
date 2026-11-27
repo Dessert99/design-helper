@@ -42,7 +42,9 @@ differently), and the narrowest real width when the layout reflows.
 | 직선 | `none` | `linear`; only for scroll-linked progress |
 
 Enter decelerates, exit accelerates (`.in`), and a moving element that stays on screen
-uses `inOut`. A spring has no set length: its time is measured, not chosen.
+uses `inOut`. A spring has no set length: its time is measured, not chosen. Step 4 decides
+the exit with the enter: the same curve, or an accelerating one, drawn as a pair; the
+spec gets a row per direction (`열 때`, `닫을 때`).
 
 ## Timing (step 5)
 
@@ -77,6 +79,6 @@ The reduced version keeps the meaning (what changed is still visible) and drops 
 ## Held constant
 
 Until their step is picked: everything together (choreography), `power2.out` or Motion's
-default `easeOut` (character), 400ms per element and a 60ms gap where a candidate needs
-one (timing), the code's travel or 16px when there is none, play once (trigger), and the
+default `easeOut` (character), 400ms per element (for a spring, `visualDuration` 0.4) and
+a 60ms gap where a candidate needs one (timing), the code's travel or 16px when there is none, play once (trigger), and the
 full version (reduced motion is its own step).

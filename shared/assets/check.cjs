@@ -164,8 +164,11 @@ async function launch() {
             // Each board's own page size, so its iframe can be given the board's real height.
             boards: [...s.querySelectorAll('iframe')].map(f => {
               try {
-                const d = f.contentDocument.documentElement;
-                return { src: f.getAttribute('src'), width: d.scrollWidth, height: d.scrollHeight };
+                // The content's own height: scrollHeight never reports less than the iframe.
+                const doc = f.contentDocument, body = doc.body, d = doc.documentElement;
+                const bottom = body ? body.getBoundingClientRect().bottom + doc.defaultView.scrollY
+                  + parseFloat(gcs(body).marginBottom || 0) : d.scrollHeight;
+                return { src: f.getAttribute('src'), width: d.scrollWidth, height: Math.ceil(bottom) };
               } catch { return { src: f.getAttribute('src'), width: null, height: null }; }
             }),
             clippedBoards: [...s.querySelectorAll('iframe:not([data-window])')].filter(f => {
@@ -273,6 +276,7 @@ async function launch() {
     }
     report.issues.push(...failures);
     report.ok = report.issues.length === 0;
+    if (!report.ok) console.error('검사 실패: ' + report.issues.join(' / '));   // seen even when stdout is filtered
     console.log(JSON.stringify(report, null, 1));
     if (!report.ok) process.exitCode = 1;
   } finally {
