@@ -35,8 +35,8 @@ other. Start the track the user asked for; doing only one is fine.
 |---|---|---|
 | 1 바탕 | name, what the product does, three personality words, where the mark appears, brands it must not resemble | conversation |
 | I2 세트 | which public icon set | sheet |
-| I3 굵기와 채움 | stroke width or weight; whether the selected state turns filled | sheet |
-| I4 크기 | the size per spot (beside text, in a button, in the menu) and how it lines up with text | sheet |
+| I3 굵기와 채움 | stroke width or weight; whether the selected state turns filled: two rows, two sections | sheet |
+| I4 크기 | the size per spot (beside text, in a button, in the menu): one section and one row per spot | sheet |
 | I5 개념별 그림 | one ambiguous concept at a time (settings: gear or sliders) | sheet, one concept each |
 | L2 형식 | wordmark, lettermark, symbol, or symbol with name | sheet |
 | L3 서체 | the typeface of the name | sheet |
@@ -60,6 +60,10 @@ names as one to avoid goes on the list; it never becomes a reference to draw fro
 
 Step 1's `쓰이는 자리` line is per track: when the second track starts, restate only that
 line for it and ask whether it is right; the rest stands.
+
+A section whose decision touches one spot (the selected fill, one concept's drawing) draws
+that spot only. Steps that don't depend on each other may be drawn in the same turn when
+the request names them all.
 
 **Where to start** follows the request: `아이콘 세트 골라줘` starts at I2, `로고 만들어줘`
 at L2, `파비콘이 뭉개져` at L6, `설정 아이콘이 애매해` at I5. Step 1 is never skipped,
@@ -128,6 +132,8 @@ navigation and add a menu button with the project's icon button class.
 2. Map each concept to a name in every candidate set with `find` (exact matches come
    first; try the set's own word too, `references/icons.md`, Names differ). Never guess a
    name; a concept a set doesn't have stays out of its map and shows as `없음`.
+   When the record already names a set's version, pin it in the map
+   (`"lucide": { "version": "1.81.0" }`), so the drawing is the settled one.
 3. `collect` writes `$WS/icons/<set>.js` (downloads stay in `$WS/icons/vendor`). A board
    page writes `<i data-ic="settings" data-size="16"></i>` where an icon goes.
 4. The captions carry, per set, what `collect` reported: version, license, how it draws,
@@ -169,7 +175,9 @@ Measured facts and judgments are kept apart.
   value of `check.cjs --a11y` (3:1), not `contrast`, which is for text. A failing one is still shown
   (`16px 가장 가는 부분 0.4px, 획이 끊깁니다`).
 - **Judgments**, one line labelled `판단`: a shape the mark leans on that many marks
-  share, or a resemblance to a brand from step 1 (`references/logo.md`). `없음` when none.
+  share, or a resemblance to a brand from step 1 (`references/logo.md`); for an icon in
+  I5, a reading the picture already carries elsewhere (sliders read as filters). `없음`
+  when none.
 - **Every logo candidate carries a `상표 검색 안 함` chip** (`dh-real` style). A search is
   the user's to do; it goes into `logo.md`'s `verify`.
 - Gains and losses as usual (`shared/writing.md`, The caption).
@@ -193,7 +201,8 @@ The recommendation weighs the facts at the smallest spot first, then the judgmen
 
 ## Recording a pick
 
-1. Screenshot the section (`check.cjs ... --section <id>`).
+1. Screenshot the section as `$WS/pick-<section id>.png` (`check.cjs ... --section <id>`),
+   so a later check on the same section doesn't overwrite it.
 2. End with a `기록 지시:` block (`shared/decisions.md`) for `icons.md` or `logo.md`: the
    step's row, a D entry with the measured facts and the judgment line, the screenshot.
    The first pick in a track creates its file with step 1 in `## 바탕`.

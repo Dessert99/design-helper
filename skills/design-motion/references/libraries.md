@@ -34,8 +34,8 @@ differs, and say so once in `실물과 다름`: the engine is the same, the impo
   `margin` makes the page reflow; `motion.cjs` reports it under `layout`.
 - Flip: record the state, change the layout, then build the timeline from
   `Flip.from(state, { ... })` and add it to `tl`.
-- ScrollTrigger with `scrub` belongs to the scroll, not to a clock: don't connect it to
-  `dhMotion`; the specimen scrolls inside its iframe (`worker.md`, Specimens).
+- ScrollTrigger (scrubbed or played by scrolling) is connected with `dhMotion.journey`, not
+  `dhMotion.gsap` (Scroll, below).
 
 ## Motion
 
@@ -63,7 +63,35 @@ differs, and say so once in `실물과 다름`: the engine is the same, the impo
 - When the code gives no transition, Motion picks a spring for `x`, `y`, `scale` and
   `rotate` and a tween for `opacity` and colors. `animate()` with no transition gives the
   same defaults, so copy the code's transition as it is, or leave it out the same way.
-- `scroll()` and `useScroll` belong to the scroll, like a scrubbed ScrollTrigger.
+- Motion's `scroll()`, `inView` and `useScroll` follow the page's own scroll on Motion's
+  frame loop, which `dhMotion.journey` can't drive. Draw them live (the person scrolls
+  inside the iframe) and say once that this section has no bar, graph or strip.
+
+## Scroll
+
+A scroll-linked moment has no clock, so the scroll becomes one. Put everything that builds
+the animations in one function and hand it to `dhMotion.journey`:
+
+    <script src="lib-gsap.js"></script>
+    <script src="lib-ScrollTrigger.js"></script>
+    <script src="../motion.js"></script>
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+      dhMotion.journey(() => {
+        gsap.from('.feature', { y: 60, opacity: 0, stagger: 0.15, ease: 'none',
+          scrollTrigger: { trigger: '.features', start: 'top 80%', end: 'top 20%', scrub: true } });
+      }, { track: ['.feature'], speed: 1000 });
+    </script>
+
+- The page scrolls one fixed path, the same in every specimen: down to the bottom, up to
+  the top, down again, at `speed` px/s with a short pause between legs. GSAP's clock is
+  driven by hand along it, so the bar, the frame strip and `motion.cjs` see exactly the same
+  scene, and going back in time rebuilds from the top (no reload needed).
+- The path is the interruption for scroll: scrolling back up mid-way and down again.
+- `scroller: '.wrap'` when the page scrolls inside an element instead of the window.
+- `motion.cjs` measures in page coordinates (the scroll itself is not motion) and adds,
+  per element, `seenAt` (its progress when it first became half visible: 100 means it
+  finished where nobody saw it) and `replays` (how often it played again).
 
 ## Interruption
 

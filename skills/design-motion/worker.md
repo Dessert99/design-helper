@@ -115,9 +115,12 @@ settled values applied, at real size.
   connects through `dhMotion.custom`. A round trip starts and ends in the same place, so
   its facts are `turnAt` (how soon it reverses), `settle` (until it is gone) and `maxStep`
   (the largest move per step: a jump shows here), not overshoot or p90.
-- **Scroll-linked specimens** (step 6) have no bar: the person scrolls inside the iframe.
-  Their frame strip is taken at scroll positions instead of times (seek the scroll,
-  screenshot), and the caption says which positions.
+- **Scroll-linked specimens** keep the whole page at a fixed window size (the scroll room
+  and the `start`/`end` percentages depend on it), shown in an iframe marked `data-window`
+  of that size, named once in `실물과 다름` (`창 520×720으로 고정`). They connect through
+  `dhMotion.journey` (`references/libraries.md`, Scroll), so the bar plays the same scroll
+  path in every specimen, and the person can also scroll inside each one by hand. Captions
+  add `seenAt` and `replays` (`아래 줄은 반쯤 보일 때 94% 진행 · 다시 내려도 재생 안 함`).
 
 ## Measuring
 
@@ -135,7 +138,8 @@ library drew:
   that differ: the largest overshoot (`peakAt`), the slowest specimen's `p90`. Drop a
   numbered frame equal to `end`; label the end frame `<ms>ms (끝)`.
 - Read the decided element's own line in `each` (start, p90, settle, maxStep, turnAt);
-  the overall values are the latest over every tracked element.
+  the overall values are the latest over every tracked element. Elements of one selector
+  share a color, so lines that move together draw as one: say so under the graph once.
 - Under each specimen: the progress graph (`<name>-graph.svg`, one color per tracked
   selector with a legend) and the frame strip: the screenshots in order, each labelled with
   its time, each at least a third of the clip's width and linked to its full PNG. A frame

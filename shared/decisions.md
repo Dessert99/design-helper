@@ -195,6 +195,13 @@ after the Korean report to the user. The main agent writes it (`shared/main.md`)
     - 체크리스트: 색 | 표면 | 확정
     - 다시 볼 곳: shape.md (reopen_when: 표면 변경)
 
+Changing a file that already exists uses these line forms, so the main agent never has to
+guess where a line goes:
+
+    - 바꿀 줄: `<the line as it is now>` → `<the new line>`
+    - 행 추가: `<an existing table row>` 바로 아래에 `<the new row>`
+    - 끝에 추가: `<heading or last line>` 다음에 (빈 줄 하나, then the text in a fenced block)
+
 One pick may touch several files, and one reply may hold several picks. Repeat the
 `- 문서:` line for each file and list that file's lines under it. A file that doesn't
 exist yet gets its full text instead of lines (`- 내용: 아래 전문 그대로`), followed by
@@ -300,7 +307,8 @@ verify: [16px에서 가장 가는 부분 1px 이상, 상표 검색 (사용자, �
   ```markdown
   ## 세트
   - Lucide 1.81.0 (React: `lucide-react`), 라이선스 ISC
-  - 굵기: 세트 기본값 (I3 전까지)
+  - 굵기: 세트 기본값 (I3 전까지). I3을 고르면 이 줄을 고른 값으로 바꾼다
+    (`굵기: 모든 크기에서 화면 1.5px, strokeWidth={1.5} absoluteStrokeWidth (D2)`)
 
   ## 개념 표
   | 개념 | 아이콘 이름 | 쓰는 곳 |

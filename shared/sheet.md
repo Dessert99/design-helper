@@ -109,6 +109,9 @@ empty band is left on the right however wide the window is:
 
 The kit's `.dh-grid` does this with `minmax(380px, 1fr)`; `.dh-frame` centers the specimen.
 
+A specimen iframe gets no `border` (the kit's `border-box` would take it out of the page's
+width); use `outline` if it needs an edge.
+
 Only the frame stretches. The specimen inside keeps its real pixel size, centered —
 never scale or `zoom` it to fill the cell, because size is part of what is judged.
 Set the minimum from the specimen's real width plus the frame padding (a 320 screen →

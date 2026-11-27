@@ -135,7 +135,7 @@ class KitTests(unittest.TestCase):
 
     def test_motion_connector_drives_by_seeking(self):
         source = (ASSETS / 'motion.js').read_text()
-        for needed in ['api.gsap', 'api.motion', 'api.custom', 'api.reduced', '.dh-play[data-for]', 'm.seek(']:
+        for needed in ['api.gsap', 'api.motion', 'api.custom', 'api.journey', 'api.reduced', '.dh-play[data-for]', 'm.seek(']:
             self.assertIn(needed, source)
 
     def test_checker_rejects_invalid_cli(self):

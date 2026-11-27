@@ -46,20 +46,23 @@ license allows use: draw it from its files, never from memory.
 
 | set | the ladder |
 |---|---|
-| stroke sets (Lucide, Tabler) | stroke 1.5 · 1.75 · 2 · 2.25, set with CSS `stroke-width` on `.ic` |
+| stroke sets (Lucide, Tabler) | stroke 1.5 · 1.75 · 2 · 2.25, set with CSS `stroke-width` on `.ic`; plus the same screen width at every size (Lucide `absoluteStrokeWidth`: `stroke-width` divided by size over 24) |
 | Phosphor | thin · light · regular · bold (one `collect` per weight) |
 | Heroicons | outline at 24 against solid at 20 and 16 |
 | Material Symbols | outlined · rounded · sharp, or `fill` for the selected state |
 
 The selected state is its own row: the selected menu item outlined like the rest, or
-filled. Draw both in the menu.
+filled. Draw both in the menu. A stroke-only set has no filled drawings: filling its
+outline (`fill: currentColor`) can swallow inner lines, so show that, and a light tint
+fill as the middle option.
 
 ## Sizes (I4)
 
 Sizes per spot: beside 14px text 16, in a 32 to 36px button 16 to 20, the menu 20 to
 24, an empty state 48 or more. Draw the ladder in the spot it decides, beside the real
-text, and check that the icon's middle lines up with the text's middle (`check.cjs` can
-read both boxes).
+text. Measure what changes: the row height (`check.cjs --props box`), the padding left in
+a fixed-size button. The icon's middle against the text's middle is usually 0 under the
+project's flex alignment; say it once, not per rung.
 
 ## Concepts that split (I5)
 

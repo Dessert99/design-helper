@@ -12,7 +12,8 @@
 // find lists exact matches first, then names starting with the word, then the rest.
 //
 // map.json:
-// { "sets": { "lucide": {}, "phosphor": { "weight": "regular" }, "tabler": { "style": "outline" },
+// A set's "version" pins the download (the version the record settled), ahead of the project's.
+// { "sets": { "lucide": { "version": "1.81.0" }, "phosphor": { "weight": "regular" }, "tabler": { "style": "outline" },
 //             "heroicons": { "style": "24/outline" }, "material": { "style": "rounded" } },
 //   "concepts": [ { "id": "settings", "label": "설정",
 //                   "names": { "lucide": "settings", "phosphor": "gear", "tabler": "settings" } } ] }
@@ -62,14 +63,14 @@ const pkgVersion = (name) => {
 };
 
 // Returns { root, version, license, source } for a set's SVG package.
-function resolveSet(set, vendor) {
+function resolveSet(set, vendor, pinned) {
   const s = SETS[set];
   try {
     const pj = require.resolve(s.pkg + '/package.json', { paths: [process.cwd()] });
     const meta = JSON.parse(fs.readFileSync(pj, 'utf8'));
     return { root: path.dirname(pj), version: meta.version, license: meta.license, source: '프로젝트' };
   } catch {}
-  const want = (s.react && pkgVersion(s.react)) || 'latest';
+  const want = pinned || (s.react && pkgVersion(s.react)) || 'latest';
   const dest = path.join(vendor, s.pkg.replace(/[@/]/g, '_') + '@' + want);
   if (!fs.existsSync(path.join(dest, 'package', 'package.json'))) {
     fs.mkdirSync(dest, { recursive: true });
@@ -84,7 +85,7 @@ function resolveSet(set, vendor) {
     fs.rmSync(path.join(dest, tgz));
   }
   const meta = JSON.parse(fs.readFileSync(path.join(dest, 'package', 'package.json'), 'utf8'));
-  const source = want === 'latest' ? '받음' : `받음 (프로젝트의 ${s.react} ${want}에 맞춤)`;
+  const source = pinned ? `받음 (지정한 버전 ${pinned})` : want === 'latest' ? '받음' : `받음 (프로젝트의 ${s.react} ${want}에 맞춤)`;
   return { root: path.join(dest, 'package'), version: meta.version, license: meta.license, source };
 }
 
@@ -148,7 +149,7 @@ if (cmd === 'find') {
   for (const set of sets) {
     const o = map.sets[set] || {};
     let info;
-    try { info = resolveSet(set, VENDOR); } catch (e) { report.issues.push(e.message); continue; }
+    try { info = resolveSet(set, VENDOR, o.version); } catch (e) { report.issues.push(e.message); continue; }
     let all;
     try { all = names(set, info, o); } catch (e) { report.issues.push(e.message); continue; }
     const icons = {}, missing = [];

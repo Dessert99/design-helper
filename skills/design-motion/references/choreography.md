@@ -63,7 +63,9 @@ A ladder of total length with the curve and order fixed: for a productive moment
 | 되감기 | the same control opens and closes |
 
 Interruption, drawn by triggering twice: continue from where it is (reverse), jump to the
-end, restart. A panel opened and closed fast must never jump.
+end, restart. A panel opened and closed fast must never jump. For a scroll moment the
+interruption is scrolling back up and down again: whether it reverses, stays, or plays
+again (`replays`).
 
 ## Reduced motion (step 7)
 

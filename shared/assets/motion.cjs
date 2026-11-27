@@ -21,6 +21,11 @@
 //              For a round trip (open then close) overshoot and p90 mean nothing: read
 //              turnAt, settle and maxStep
 //   peakAt     when the largest overshoot happens, ms: put a frame there
+//   scroll     for a dhMotion.journey page, positions are taken in page coordinates (the
+//              page's scroll is not motion), the graph adds the scroll position (dashed)
+//              with the upward leg shaded, and each element adds seenAt (its progress, %,
+//              when it first became half visible: 100 means it finished out of sight) and
+//              replays (how often it played again after finishing)
 //   starts     when each tracked element first moves, ms; spread is first to last start.
 //              Tells choreographies apart (together: spread 0; one after another: wide)
 //   concurrent most elements moving within one 10ms step
@@ -150,20 +155,32 @@ const sample = (p, track, stepMs) => p.evaluate(async ([sels, s]) => {
   const frame = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
   const els = sels.flatMap(sel => [...document.querySelectorAll(sel)].map((el, i) => ({ el, label: sel + (i ? `:${i + 1}` : '') })));
   const dur = window.dhMotion.duration();
-  const rows = [];
+  // A scroll journey: measure in page coordinates, so the page's own scroll is not motion.
+  const jr = window.dhMotion.scroll;
+  const sc = jr && jr.scroller ? document.querySelector(jr.scroller) : null;
+  const scrollTop = () => (sc ? sc.scrollTop : scrollY);
+  const view = () => { if (!sc) return { top: 0, bottom: innerHeight }; const b = sc.getBoundingClientRect(); return { top: b.top, bottom: b.bottom }; };
+  const rows = [], scrolls = [], seen = [];
   for (let ms = 0; ms <= dur * 1000 + s; ms += s) {
     window.dhMotion.seek(Math.min(ms, dur * 1000) / 1000);
     await frame();
+    const off = jr ? scrollTop() : 0, v = view();
+    scrolls.push(off);
+    seen.push(els.map(({ el }) => {
+      const r = el.getBoundingClientRect();
+      return r.height ? Math.max(0, Math.min(r.bottom, v.bottom) - Math.max(r.top, v.top)) / r.height : 0;
+    }));
     rows.push(els.map(({ el }) => {
       const r = el.getBoundingClientRect();
-      return [r.x + r.width / 2, r.y + r.height / 2, r.width, r.height, Number(getComputedStyle(el).opacity),
+      return [r.x + r.width / 2, r.y + off + r.height / 2, r.width, r.height, Number(getComputedStyle(el).opacity),
         el.offsetLeft, el.offsetTop, el.offsetWidth, el.offsetHeight];
     }));
   }
-  return { labels: els.map(e => e.label), dur, rows };
+  return { labels: els.map(e => e.label), dur, rows, scrolls: jr ? scrolls : null, seen,
+    legs: jr ? jr.legs() : null, max: jr ? jr.max() : 0 };
 }, [track, stepMs]);
 
-function analyse({ labels, dur, rows }, s) {
+function analyse({ labels, dur, rows, scrolls, seen }, s) {
   const n = labels.length, end = rows[rows.length - 1];
   const res = { duration: Math.round(dur * 1000), settle: 0, p90: 0, overshoot: 0, peakAt: null, concurrent: 0, layout: [], travel: 0, series: [], starts: {}, each: {} };
   for (let k = 0; k < n; k++) {
@@ -216,11 +233,32 @@ function analyse({ labels, dur, rows }, s) {
   res.travel = Math.round(res.travel * 10) / 10;
   const t = Object.values(res.starts);
   res.spread = t.length ? Math.max(...t) - Math.min(...t) : 0;
+  if (scrolls) {
+    // Per element: how far along it was when it first became half visible (100 means it
+    // finished before anyone could see it move), and how often it played again after
+    // finishing (dropping back under half way).
+    res.series.forEach((ser, k) => {
+      const i = seen.findIndex(r => r[k] >= 0.5);
+      const prog = ser.progress.map(v => Math.max(0, Math.min(1, v)));
+      let replays = 0, done = false;
+      prog.forEach(v => { if (v >= 0.99) done = true; else if (done && v < 0.5) { replays++; done = false; } });
+      Object.assign(res.each[ser.label], { seenAt: i < 0 ? null : Math.round(prog[i] * 100), replays });
+    });
+  }
   return res;
 }
 
+// A scroll journey: the page's scroll position as a dashed gray line, the upward leg shaded.
+function scrollLine({ scrolls, legs, max }, s, span, W, H, pad, plot) {
+  const x = (ms) => (pad + (ms / span) * (W - 2 * pad)).toFixed(1);
+  const y = (v) => (pad + 14 + plot - (max ? v / max : 0) * plot).toFixed(1);
+  const up = legs ? `<rect x="${x(legs[2])}" y="${pad + 14}" width="${(x(legs[3]) - x(legs[2])).toFixed(1)}" height="${plot}" fill="#f1f1f4"/>` : '';
+  const pts = scrolls.filter((_, i) => i % 2 === 0).map((v, i) => `${x(i * 2 * s)},${y(v)}`).join(' ');
+  return up + `<polyline fill="none" stroke="#a1a1aa" stroke-dasharray="3 3" stroke-width="1.2" points="${pts}"/>`;
+}
+
 // One color per selector (all cards share one), with a legend along the bottom.
-function graph(series, s, totalMs) {
+function graph(series, s, totalMs, scroll) {
   const W = 480, H = 136, pad = 8, plot = H - 2 * pad - 30;
   const span = Math.max(totalMs, s);
   const shades = ['#1f1f23', '#3b5bdb', '#2f9e8f', '#c2410c', '#8b5cf6', '#a1a1aa'];
@@ -242,7 +280,7 @@ function graph(series, s, totalMs) {
     `<rect width="${W}" height="${H}" rx="6" fill="#fafafa" stroke="#ececef"/>` +
     `<line x1="${pad}" x2="${W - pad}" y1="${pad + 14}" y2="${pad + 14}" stroke="#e4e4e7" stroke-dasharray="3 3"/>` +
     `<text x="${pad}" y="${pad + 8}" font-size="10" font-family="sans-serif" fill="#8b8b93">진행 (위가 끝), 0부터 ${span}ms</text>` +
-    lines.join('') + legend.join('') + '</svg>';
+    (scroll ? scrollLine(scroll, s, span, W, H, pad, plot) : '') + lines.join('') + legend.join('') + '</svg>';
 }
 
 (async () => {
@@ -261,7 +299,7 @@ function graph(series, s, totalMs) {
       Object.assign(report, { duration: m.duration, settle: m.settle, p90: m.p90, overshoot: m.overshoot, peakAt: m.peakAt,
         starts: m.starts, spread: m.spread, each: m.each, concurrent: m.concurrent, layout: m.layout, tracked: data.labels });
       const g = path.join(out, `${name}-graph.svg`);
-      fs.writeFileSync(g, graph(m.series, step, span || m.duration));
+      fs.writeFileSync(g, graph(m.series, step, span || m.duration, data.scrolls && data));
       report.graph = g;
       for (const f of frameList) {
         const ms = f === 'end' ? m.duration : Number(f);

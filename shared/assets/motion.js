@@ -4,6 +4,12 @@
 //   dhMotion.gsap(timeline, { track: ['h2', '.card'] })      // a GSAP timeline
 //   dhMotion.motion(controls, { track: ['.card'] })          // what Motion's animate() returned
 //   dhMotion.custom({ duration: () => s, seek: (s) => {} }, { track: [...] })
+//   dhMotion.journey(build, { track, scroller, speed, pause })   // scroll-linked GSAP
+// journey: a scroll-linked moment (ScrollTrigger) has no clock of its own, so the scroll
+// becomes one. The page scrolls a fixed path (down to the bottom, up to the top, down again)
+// at `speed` px/s with `pause` ms between legs, and GSAP's own clock is driven by hand, so
+// any moment of the path replays exactly. `build()` creates the animations and returns
+// nothing or a cleanup function; going back in time rebuilds from the top.
 // Each wraps the animation in the same two-call connector, pauses it at its end state (so
 // a page opened alone, or screenshotted, shows the finished layout), and marks it ready. `track` names the elements motion.cjs measures. `dhMotion.reduced` is true when
 // the page should draw its reduced-motion variant (prefers-reduced-motion, or "reduced" in
@@ -40,6 +46,51 @@
     return connect({ duration: dur, seek: (s) => { controls.time = Math.min(s, dur()); } }, opts);
   };
   api.custom = (c, opts) => connect(c, opts);
+
+  api.journey = (build, opts = {}) => {
+    const g = window.gsap, ST = window.ScrollTrigger;
+    const sc = opts.scroller ? document.querySelector(opts.scroller) : document.scrollingElement;
+    const speed = opts.speed || 1000, pause = (opts.pause || 400) / 1000;
+    g.ticker.remove(g.updateRoot);
+    g.ticker.lagSmoothing(0);
+    let root = 1, now = 0, cleanup = null, max = 0, legs = [];
+    const reset = () => {
+      if (typeof cleanup === 'function') cleanup();
+      if (ST) ST.getAll().forEach(t => t.kill(true));
+      g.globalTimeline.getChildren().forEach(c => c.kill());
+      sc.scrollTop = 0;
+      root += 1000;
+      g.updateRoot(root);
+      cleanup = build();
+      if (ST) ST.refresh();
+      max = sc.scrollHeight - sc.clientHeight;
+      const run = max / speed;
+      legs = [0, run, run + pause, 2 * run + pause, 2 * run + 2 * pause, 3 * run + 2 * pause];
+      now = 0;
+    };
+    const yAt = (t) => {
+      const [, a, b, c, d, e] = legs, run = a || 1;
+      if (t <= a) return (t / run) * max;
+      if (t <= b) return max;
+      if (t <= c) return max - ((t - b) / run) * max;
+      if (t <= d) return 0;
+      return t <= e ? ((t - d) / run) * max : max;
+    };
+    const step = (to) => {
+      for (let t = now; t <= to + 1e-9; t += 0.01) {
+        sc.scrollTop = yAt(t);
+        if (ST) ST.update();
+        g.updateRoot(root + t);
+      }
+      sc.scrollTop = yAt(to);
+      if (ST) ST.update();
+      g.updateRoot(root + to);
+      now = to;
+    };
+    reset();
+    api.scroll = { scroller: opts.scroller || null, legs: () => legs.map(v => Math.round(v * 1000)), max: () => max };
+    return connect({ duration: () => legs[5], seek: (s) => { if (s < now - 1e-9) reset(); step(s); } }, opts);
+  };
 
   // ---- sheet side --------------------------------------------------------------------
   const CSS = `.dh-play{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
