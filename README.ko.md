@@ -89,7 +89,6 @@ Playwright를 쓸 수 있으면 바뀐 표본의 적용값을 확인합니다.
 
 선택값은 메인이 반영 성공을 알린 뒤 코드 기준값이 됩니다.
 정리할 때는 이번 세션이 만든 근거가 있는 파일만 지웁니다.
-자세한 절차는 [공통 운영](docs/flows/operations.md)에 있습니다.
 
 ## 하지 않는 것
 
@@ -184,10 +183,6 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
 | `좋네` | 어느 표본인지 되묻습니다 |
 | `끝났어` · `됐어` | 서버를 끄고 임시 파일을 정리합니다 |
 
-상황별 예시 대화는 [사용 흐름 모음](docs/flows.ko.md)에 있습니다. 불만은 있는데 뭘 바꿀지
-모를 때, hover·focus 같은 상태 비교, 애니메이션 비교, 이미 정한 값 바꾸기 등 11가지
-상황을 다룹니다.
-
 ### 디자인 시스템 만들기
 
 이름을 불러야만 실행되는 스킬이 다섯 개 더 있습니다. 스스로 실행되지 않고, 각각 따로 쓸 수 있습니다. 어느 것도 다른 스킬을 먼저 쓸 필요가 없습니다.
@@ -281,8 +276,6 @@ UI를 만들거나 고치다가 평소처럼 말하면 됩니다. 이런 말에 
     - [`motion.js`](shared/assets/motion.js): 한 구역의 모션 시안을 한 시계로 재생하는 재생 막대와, 시안이 GSAP나 Motion을 연결하는 연결부
     - [`motion.cjs`](shared/assets/motion.cjs): 시안의 실제 애니메이션을 정해진 시각으로 옮겨 프레임 띠, 진행 그래프, 측정값을 만드는 스크립트
 - [`agents/worker.md`](agents/worker.md): 모든 스킬이 띄우는 Claude Code 플러그인 에이전트. `shared/core.md`와 스킬의 `worker.md`를 읽습니다. Codex 플러그인은 에이전트를 담을 수 없어서, Codex에서는 일반 서브에이전트를 띄웁니다
-- [`docs/architecture.ko.md`](docs/architecture.ko.md): 스킬 묶음의 설계. 스킬마다 있어야 하는 이유, 공통 구조, Claude Code와 Codex 지원
-- [`docs/flows.ko.md`](docs/flows.ko.md): 상황별 사용 흐름
 - [`scripts/bump-version.sh`](scripts/bump-version.sh): 플러그인 매니페스트의 버전을 한 번에 바꾸고 커밋과 태그까지 만드는 스크립트
 
 키트 회귀 검사는 브라우저 설치 없이 실행합니다.

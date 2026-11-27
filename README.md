@@ -99,7 +99,6 @@ including same-length edits within one second and delayed CSS builds.
 
 A recorded choice becomes the code baseline only after the main agent reports a successful
 apply. Cleanup removes project artifacts only with evidence that this session created them.
-See [operations](docs/flows/operations.md) for details.
 
 ## What it doesn't do
 
@@ -198,10 +197,6 @@ Specimens in the browser are lettered A · B · C. You answer in chat.
 | "Nice" | Asks which specimen you mean |
 | "Done" | Stops the server and cleans up the temporary files |
 
-Example conversations are in the [usage flows](docs/flows.ko.md) (Korean only). They
-cover 11 situations, including not knowing what to change, comparing hover and focus
-states, comparing animation, and changing a value you already picked.
-
 ### Building a design system
 
 Five more skills run only when you call them by name, never on their own. Each works alone; none needs another first:
@@ -296,8 +291,6 @@ and so on) need to change too.
     - [`motion.js`](shared/assets/motion.js): the play bar that runs a section's motion specimens on one clock, and the connector a specimen uses for GSAP or Motion
     - [`motion.cjs`](shared/assets/motion.cjs): seeks a specimen's real animation to fixed times for the frame strip, the progress graph and the measurements
 - [`agents/worker.md`](agents/worker.md): the Claude Code plugin agent every skill spawns. It reads `shared/core.md` and the skill's `worker.md`. Codex plugins can't ship agents, so Codex spawns a plain subagent instead
-- [`docs/architecture.ko.md`](docs/architecture.ko.md): the design of the skill family: why each skill exists, the shared structure, Claude Code and Codex support (Korean)
-- [`docs/flows.ko.md`](docs/flows.ko.md): usage flows by situation (Korean)
 - [`scripts/bump-version.sh`](scripts/bump-version.sh): sets the version in every plugin manifest, then commits and tags the release
 
 Kit regression checks run without installing a browser. They test HTTP responses,
